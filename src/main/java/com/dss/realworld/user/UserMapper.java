@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface UserMapper {
-    void addUser(Users users);
+    void addUser(User user);
 }

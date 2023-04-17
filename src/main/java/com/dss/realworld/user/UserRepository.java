@@ -9,8 +9,10 @@ public class UserRepository {
 
     private final UserMapper userMapper;
 
-    public void addUser(Users users) {
-        userMapper.addUser(users);
+    public void addUser(User user) {
+        userMapper.addUser(user);
+
     }
+
 
 }

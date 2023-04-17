@@ -5,7 +5,7 @@ import lombok.Getter;
 
 //todo token 필드 추가
 @Getter
-public class Users {
+public class User {
     private final Long userId;
     private final String username;
     private final String password;
@@ -14,12 +14,12 @@ public class Users {
     private final String image;
 
     @Builder
-    public Users(Long userId,
-                 String username,
-                 String password,
-                 String email,
-                 String bio,
-                 String image) {
+    public User(Long userId,
+                String username,
+                String password,
+                String email,
+                String bio,
+                String image) {
         this.userId = userId;
         this.username = username;
         this.password = password;

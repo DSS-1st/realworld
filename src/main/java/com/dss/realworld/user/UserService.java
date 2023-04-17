@@ -13,12 +13,13 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void addUser(AddUserDto addUserDto) {
-        Users users = Users.builder()
-                .username(addUserDto.getUsername())
-                .email(addUserDto.getEmail())
-                .password(addUserDto.getPassword())
+    public User addUser(AddUserRequestDto addUserRequestDto) {
+        User user = User.builder()
+                .username(addUserRequestDto.getUser().getUsername())
+                .email(addUserRequestDto.getUser().getEmail())
+                .password(addUserRequestDto.getUser().getPassword())
                 .build();
-        userRepository.addUser(users);
+        userRepository.addUser(user);
+        return user;  //todo 리파지토리에 getUser메서드 만들어서 처리 예정
     }
 }
