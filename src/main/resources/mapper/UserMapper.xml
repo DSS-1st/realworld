@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.user.UserMapper">
-    <insert id="addUser" parameterType="Users" useGeneratedKeys="true" keyProperty="userId">
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
         insert into users(username, email, password)
         values (#{username},#{email},#{password})
     </insert>

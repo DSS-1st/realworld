@@ -1,5 +1,6 @@
 package com.dss.realworld.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public void addUser(@RequestBody AddUserDto addUserDto) {
-        userService.addUser(addUserDto);
+    public User addUser(@Valid @RequestBody AddUserRequestDto addUserRequestDto) {
+        return userService.addUser(addUserRequestDto);
     }
 }
