@@ -1,7 +1,5 @@
 package com.dss.realworld.user;
 
-//todo 완성 후 인터페이스 추출
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +18,6 @@ public class UserService {
                 .password(addUserRequestDto.getUser().getPassword())
                 .build();
         userRepository.addUser(user);
-        return user;  //todo 리파지토리에 getUser메서드 만들어서 처리 예정
+        return user;
     }
 }

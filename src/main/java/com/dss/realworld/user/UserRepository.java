@@ -1,18 +1,8 @@
 package com.dss.realworld.user;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
-@Repository
-@RequiredArgsConstructor
-public class UserRepository {
-
-    private final UserMapper userMapper;
-
-    public void addUser(User user) {
-        userMapper.addUser(user);
-
-    }
-
-
+@Mapper
+public interface UserRepository {
+    void addUser(User user);
 }
