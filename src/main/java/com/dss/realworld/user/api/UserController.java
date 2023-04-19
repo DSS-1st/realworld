@@ -1,5 +1,7 @@
-package com.dss.realworld.user;
+package com.dss.realworld.user.api;
 
+import com.dss.realworld.user.app.UserService;
+import com.dss.realworld.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

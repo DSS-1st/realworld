@@ -1,5 +1,8 @@
-package com.dss.realworld.user;
+package com.dss.realworld.user.app;
 
+import com.dss.realworld.user.api.AddUserRequestDto;
+import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

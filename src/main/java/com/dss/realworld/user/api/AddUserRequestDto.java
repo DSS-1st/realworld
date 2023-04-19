@@ -1,4 +1,4 @@
-package com.dss.realworld.user;
+package com.dss.realworld.user.api;
 
 import lombok.Builder;
 import lombok.Getter;

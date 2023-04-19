@@ -1,12 +1,14 @@
-package com.dss.realworld.user;
+package com.dss.realworld.user.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.ibatis.type.Alias;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Alias("User")
 public class User {
 
     private final Long id;

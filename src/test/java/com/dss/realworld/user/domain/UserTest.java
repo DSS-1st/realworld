@@ -1,6 +1,5 @@
 package com.dss.realworld.user.domain;
 
-import com.dss.realworld.user.User;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

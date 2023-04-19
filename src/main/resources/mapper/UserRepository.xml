@@ -2,11 +2,25 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dss.realworld.user.UserRepository">
+<mapper namespace="com.dss.realworld.user.domain.repository.UserRepository">
     <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
         insert into users(username, email, password)
         values (#{username},#{email},#{password})
     </insert>
+    <sql id="getUsers">
+        select user_id, email, password, bio, image, username, created_at, updated_at
+        from users
+    </sql>
+    <select id="getUserByUsername" parameterType="String" resultType="GetUserDto">
+        <include refid="getUsers"/>
+        where username = #{username}
+    </select>
+    <select id="getUserByEmail" parameterType="String" resultType="GetUserDto">
+        <include refid="getUsers"/>
+        where email = #{email}
+    </select>
+    <select id="getUserById" parameterType="long" resultType="GetUserDto">
+        <include refid="getUsers"/>
+        where user_id = #{id}
+    </select>
 </mapper>
-
-<!--select 컬럼 전부 명시-->
