@@ -15,7 +15,7 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    void getUserByUsername() {
+    void Should_Success_When_FindByAddedUsername() {
         User newUser = User.builder()
                 .username("Jacob")
                 .password("jakejake")
@@ -26,7 +26,7 @@ public class UserRepositoryTest {
         Assertions.assertThat(addedUser.getUsername()).isEqualTo(newUser.getUsername());
     }
     @Test
-    void getUserByEmail() {
+    void Should_Success_When_FindByAddedEmail() {
         User newUser = User.builder()
                 .username("Jacob")
                 .password("jakejake")

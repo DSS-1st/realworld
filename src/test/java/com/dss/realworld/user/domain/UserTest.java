@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class UserTest {
 
     @Test
-    void addUser() {
+    void Should_Success_When_FieldsAreNotNull() {
         User user = User.builder()
                 .username("Jacob")
                 .password("jakejake")
@@ -20,21 +20,21 @@ public class UserTest {
     }
 
     @Test
-    void failWhenUsernameIsNull() {
+    void Should_ThrowException_When_UsernameIsNull() {
         assertThatThrownBy(() -> User.builder()
                 .password("jakejake")
                 .email("jake@jake.jake")
                 .build()).isInstanceOf(IllegalArgumentException.class);
     }
     @Test
-    void failWhenPasswordIsNull() {
+    void Should_ThrowException_When_PasswordIsNull() {
         assertThatThrownBy(() -> User.builder()
                 .username("Jacob")
                 .email("jake@jake.jake")
                 .build()).isInstanceOf(IllegalArgumentException.class);
     }
     @Test
-    void failWhenEmailIsNull() {
+    void Should_ThrowException_When_EmailIsNull() {
         assertThatThrownBy(() -> User.builder()
                 .username("Jacob")
                 .password("jakejake")

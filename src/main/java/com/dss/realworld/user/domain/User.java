@@ -27,12 +27,14 @@ public class User {
                 String email,
                 String bio,
                 String image) {
-        this.id = id;
+
         Assert.notNull(username,"username can not be null");
-        this.username = username;
         Assert.notNull(password,"password can not be null");
-        this.password = password;
         Assert.notNull(email,"email can not be null");
+
+        this.id = id;
+        this.username = username;
+        this.password = password;
         this.email = email;
         this.bio = bio;
         this.image = image;
