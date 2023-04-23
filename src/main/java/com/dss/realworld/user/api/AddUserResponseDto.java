@@ -1,26 +1,34 @@
 package com.dss.realworld.user.api;
 
-import lombok.Builder;
+import com.dss.realworld.user.domain.repository.GetUserDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 public class AddUserResponseDto {
 
-    private final AddUserDto user;
+    private AddUserDto user;
 
     @Getter
-    @Builder
-    public static class AddUserDto {
+    @AllArgsConstructor
+    public class AddUserDto {
 
-        private final String email;
-        private final String token;
-        private final String username;
-        private final String bio;
-        private final String image;
+        private String email;
+        private String token;
+        private String username;
+        private String bio;
+        private String image;
     }
 
-    @Builder
-    public AddUserResponseDto(AddUserDto user) {
-        this.user = user;
+    AddUserResponseDto getAddUserResponseDto(GetUserDto getUserDto) {
+        String email = getUserDto.getEmail();
+        String username = getUserDto.getUsername();
+        String bio = getUserDto.getBio();
+        String image = getUserDto.getImage();
+        AddUserDto addUserDto = new AddUserDto(email,"token",username,bio,image);
+        user = addUserDto;
+
+        return this;
     }
 }
+

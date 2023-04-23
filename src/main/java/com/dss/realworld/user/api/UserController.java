@@ -18,17 +18,8 @@ public class UserController {
     @PostMapping("/users")
     public AddUserResponseDto addUser(@RequestBody AddUserRequestDto addUserRequestDto) {
         GetUserDto getUserDto = userService.addUser(addUserRequestDto);
-        return this.getAddUserResponseDto(getUserDto);
-    }
+        AddUserResponseDto addUserResponseDto = new AddUserResponseDto();
 
-    private AddUserResponseDto getAddUserResponseDto(GetUserDto getUserDto) {
-        AddUserResponseDto.AddUserDto addUserDto = AddUserResponseDto.AddUserDto.builder()
-                .email(getUserDto.getEmail())
-                .username(getUserDto.getUsername())
-                .bio(getUserDto.getBio())
-                .image(getUserDto.getImage())
-                .token("token")
-                .build();
-        return AddUserResponseDto.builder().user(addUserDto).build();
+        return addUserResponseDto.getAddUserResponseDto(getUserDto);
     }
 }
