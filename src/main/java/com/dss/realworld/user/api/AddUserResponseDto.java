@@ -11,7 +11,7 @@ public class AddUserResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public class AddUserDto {
+    public static class AddUserDto {
 
         private String email;
         private String token;
@@ -25,8 +25,7 @@ public class AddUserResponseDto {
         String username = getUserDto.getUsername();
         String bio = getUserDto.getBio();
         String image = getUserDto.getImage();
-        AddUserDto addUserDto = new AddUserDto(email,"token",username,bio,image);
-        user = addUserDto;
+        user = new AddUserDto(email,"token",username,bio,image);
 
         return this;
     }
