@@ -7,6 +7,7 @@ import lombok.Getter;
 public class AddUserRequestDto {
 
     private AddUserDto user;
+
     @Getter
     @Builder
     public static class AddUserDto {
