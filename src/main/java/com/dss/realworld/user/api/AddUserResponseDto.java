@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class AddUserResponseDto {
 
-    private AddUserDto user;
+    private final AddUserDto user;
 
     @Getter
     @AllArgsConstructor
@@ -20,14 +20,12 @@ public class AddUserResponseDto {
         private String image;
     }
 
-    AddUserResponseDto getAddUserResponseDto(GetUserDto getUserDto) {
+    AddUserResponseDto(GetUserDto getUserDto) {
         String email = getUserDto.getEmail();
         String username = getUserDto.getUsername();
         String bio = getUserDto.getBio();
         String image = getUserDto.getImage();
         user = new AddUserDto(email,"token",username,bio,image);
-
-        return this;
     }
 }
 
