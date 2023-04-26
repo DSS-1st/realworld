@@ -25,6 +25,7 @@ public class AddUserResponseDto {
         String username = getUserDto.getUsername();
         String bio = getUserDto.getBio();
         String image = getUserDto.getImage();
+
         user = new AddUserDto(email,"token",username,bio,image);
     }
 }
