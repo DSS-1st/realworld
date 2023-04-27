@@ -1,9 +1,13 @@
 package com.dss.realworld.user.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddUserRequestDto {
 
     private AddUserDto user;
@@ -16,4 +20,5 @@ public class AddUserRequestDto {
         private String email;
         private String password;
     }
+
 }
