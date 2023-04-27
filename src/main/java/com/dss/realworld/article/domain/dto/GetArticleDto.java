@@ -1,4 +1,4 @@
-package com.dss.realworld.article.repository;
+package com.dss.realworld.article.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +19,6 @@ public class GetArticleDto {
     private String description;
     private String body;
     private Long userId;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

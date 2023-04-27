@@ -1,4 +1,4 @@
-package com.dss.realworld.article.api;
+package com.dss.realworld.article.api.dto;
 
 import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.Getter;
@@ -17,6 +17,6 @@ public class ArticleAuthorDto {
         this.username = getUserDto.getUsername();
         this.bio = getUserDto.getBio();
         this.image = getUserDto.getImage();
-        this.following = false; //todo Following 도메인 생성 후 주입
+        this.following = false;
     }
 }

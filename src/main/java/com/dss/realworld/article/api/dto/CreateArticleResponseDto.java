@@ -1,6 +1,6 @@
-package com.dss.realworld.article.api;
+package com.dss.realworld.article.api.dto;
 
-import com.dss.realworld.article.repository.GetArticleDto;
+import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class CreateArticleResponseDto {
         private ArticleAuthorDto author;
     }
 
-    CreateArticleResponseDto(GetArticleDto getArticleDto, GetUserDto getUserDto) {
+    public CreateArticleResponseDto(GetArticleDto getArticleDto, GetUserDto getUserDto) {
         String slug = getArticleDto.getSlug();
         String title = getArticleDto.getTitle();
         String description = getArticleDto.getDescription();
