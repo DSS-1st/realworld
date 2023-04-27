@@ -7,6 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ArticleRepository {
 
+    void deleteAll();
+
+    void resetAutoIncrement();
+
     void createArticle(Article article);
 
     GetArticleDto getArticleById(Long id);

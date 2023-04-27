@@ -2,7 +2,10 @@ package com.dss.realworld.article.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
+import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,10 +17,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class ArticleRepositoryTest {
 
-    //todo 기본 유저 1명 추가 기본값 설정
-
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void createDefaultUser() {
+        User newUser = User.builder()
+                .username("Jacob000")
+                .email("jake000@jake.jake")
+                .password("jakejake")
+                .build();
+        userRepository.addUser(newUser);
+    }
 
     @Test
     void Should_Success_When_RequiredFieldsAreNotNull() {

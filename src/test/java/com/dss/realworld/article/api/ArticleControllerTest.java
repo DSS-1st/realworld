@@ -1,9 +1,11 @@
 package com.dss.realworld.article.api;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
+import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ArticleControllerTest {
@@ -30,16 +30,34 @@ public class ArticleControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @BeforeEach
-    void createDefaultUser() {
+    void testDataInitialize() {
+        userRepository.deleteAll();
+        userRepository.resetAutoIncrement();
+
+        articleRepository.deleteAll();
+        articleRepository.resetAutoIncrement();
+
         User newUser = User.builder()
                 .username("Jacob000")
                 .email("jake000@jake.jake")
                 .password("jakejake")
                 .build();
         userRepository.addUser(newUser);
+    }
+
+    @AfterEach
+    void clearTestData() {
+        userRepository.deleteAll();
+        userRepository.resetAutoIncrement();
+
+        articleRepository.deleteAll();
+        articleRepository.resetAutoIncrement();
     }
 
     @Test
