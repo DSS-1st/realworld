@@ -1,6 +1,5 @@
-package com.dss.realworld.article;
+package com.dss.realworld.article.domain;
 
-import com.dss.realworld.article.domain.Article;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

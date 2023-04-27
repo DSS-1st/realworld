@@ -13,13 +13,13 @@
         from article
     </sql>
 
-    <select id="getArticleBySlug" parameterType="String" resultType="GetArticleDto">
-        <include refid="getArticle"/>
-        where slug like concat('%',#{slug},'%')
-    </select>
-
     <select id="getArticleById" parameterType="Long" resultType="GetArticleDto">
         <include refid="getArticle"/>
         where article_id = #{id}
+    </select>
+
+    <select id="getArticleBySlug" parameterType="String" resultType="GetArticleDto">
+        <include refid="getArticle"/>
+        where slug = #{slug}
     </select>
 </mapper>
