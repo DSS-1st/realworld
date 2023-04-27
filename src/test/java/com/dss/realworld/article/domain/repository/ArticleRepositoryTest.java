@@ -14,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class ArticleRepositoryTest {
 
+    //todo 기본 유저 1명 추가 기본값 설정
+
     @Autowired
     private ArticleRepository articleRepository;
 

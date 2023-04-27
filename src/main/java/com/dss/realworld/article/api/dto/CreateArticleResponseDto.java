@@ -36,7 +36,7 @@ public class CreateArticleResponseDto {
         String title = getArticleDto.getTitle();
         String description = getArticleDto.getDescription();
         String body = getArticleDto.getBody();
-        Set<String> tagList = new HashSet<>(Arrays.asList("dragons", "train"));
+        Set<String> tagList = new HashSet<>();
         LocalDateTime createdAt = getArticleDto.getCreatedAt();
         LocalDateTime updatedAt = getArticleDto.getUpdatedAt();
         ArticleAuthorDto author = new ArticleAuthorDto(getUserDto);
