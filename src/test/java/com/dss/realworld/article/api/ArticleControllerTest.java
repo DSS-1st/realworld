@@ -36,12 +36,8 @@ public class ArticleControllerTest {
     private ArticleRepository articleRepository;
 
     @BeforeEach
-    void testDataInitialize() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
+    void setUp() {
+        clearTable();
 
         User newUser = User.builder()
                 .username("Jacob000")
@@ -52,7 +48,11 @@ public class ArticleControllerTest {
     }
 
     @AfterEach
-    void clearTestData() {
+    void teatDown() {
+        clearTable();
+    }
+
+    private void clearTable() {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
 

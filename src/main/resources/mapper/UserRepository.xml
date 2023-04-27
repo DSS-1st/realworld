@@ -8,7 +8,7 @@
     </delete>
 
     <select id="resetAutoIncrement">
-        alter table users AUTO_INCREMENT = 1
+        alter table users auto_increment = 1
     </select>
 
     <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="user_id">

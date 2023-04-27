@@ -2,9 +2,8 @@ package com.dss.realworld.article.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
-import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +19,19 @@ public class ArticleRepositoryTest {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @BeforeEach
-    void createDefaultUser() {
-        User newUser = User.builder()
-                .username("Jacob000")
-                .email("jake000@jake.jake")
-                .password("jakejake")
-                .build();
-        userRepository.addUser(newUser);
+    void setUp() {
+        clearTable();
+    }
+
+    @AfterEach
+    void teatDown() {
+        clearTable();
+    }
+
+    private void clearTable() {
+        articleRepository.deleteAll();
+        articleRepository.resetAutoIncrement();
     }
 
     @Test
