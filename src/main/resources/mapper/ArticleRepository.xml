@@ -21,7 +21,7 @@
     </insert>
 
     <sql id="getArticle">
-        select article_id, slug, title, description, body, user_id, created_at, updated_at
+        select article_id as id, slug, title, description, body, user_id as userId, created_at as createdAt, updated_at as updatedAt
         from article
     </sql>
 
