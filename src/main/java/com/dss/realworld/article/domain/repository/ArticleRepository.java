@@ -13,7 +13,7 @@ public interface ArticleRepository {
 
     void createArticle(Article article);
 
-    void deleteArticle(Long id);
+    int deleteArticle(Long id);
 
     Long getMaxArticleId();
 

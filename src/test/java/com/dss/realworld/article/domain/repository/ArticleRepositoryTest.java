@@ -78,4 +78,32 @@ public class ArticleRepositoryTest {
 
         Assertions.assertThat(newArticle.getSlug()).isEqualTo(foundArticle.getSlug());
     }
+
+    @Test
+    void Should_Success_When_ArticleIdExist() {
+        Article newArticle = Article.builder()
+                .title("How to train your dragon")
+                .description("Ever wonder how?")
+                .body("You have to believe")
+                .build();
+        articleRepository.createArticle(newArticle);
+
+        int deletedCount = articleRepository.deleteArticle(newArticle.getId());
+
+        Assertions.assertThat(deletedCount).isEqualTo(1);
+    }
+
+    @Test
+    void Should_Success_When_DeletedCountIsZero() {
+        Article newArticle = Article.builder()
+                .title("How to train your dragon")
+                .description("Ever wonder how?")
+                .body("You have to believe")
+                .build();
+        articleRepository.createArticle(newArticle);
+
+        int deletedCount = articleRepository.deleteArticle(10L);
+
+        Assertions.assertThat(deletedCount).isEqualTo(0);
+    }
 }
