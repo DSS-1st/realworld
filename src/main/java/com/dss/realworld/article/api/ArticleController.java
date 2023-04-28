@@ -17,7 +17,7 @@ public class ArticleController {
 
     @PostMapping
     public CreateArticleResponseDto createArticle(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
-        GetArticleDto getArticleDto = articleService.createArticle(createArticleRequestDto);
+        GetArticleDto getArticleDto = articleService.createArticle(createArticleRequestDto, getLogonUserId());
 
         GetUserDto getUserDto = articleService.getArticleAuthor(getArticleDto.getUserId());
 
@@ -26,11 +26,11 @@ public class ArticleController {
 
     @DeleteMapping("{slug}")
     public void deleteArticle(@PathVariable String slug) {
-        articleService.deleteArticle(slug, getUserId());
+        articleService.deleteArticle(slug, getLogonUserId());
     }
 
-    // todo JWT을 통해 username 얻어오기
-    private Long getUserId(){
-        return null;
+    // todo SecurityContextHolder에서 인증 정보 얻기
+    private Long getLogonUserId(){
+        return 1L;
     }
 }

@@ -32,7 +32,7 @@ public class CreateArticleRequestDto {
         }
     }
 
-    public Article convertToArticle(Long userId, Long maxArticleId) {
+    public Article convertToArticle(Long logonUserId, Long maxArticleId) {
         String slugId = article.getTitle().trim().replace(" ", "-") +
                 "-" + (maxArticleId + 1);
 
@@ -41,7 +41,7 @@ public class CreateArticleRequestDto {
                 .title(article.getTitle().trim())
                 .description(article.getDescription())
                 .body(article.getBody())
-                .userId(userId)
+                .userId(logonUserId)
                 .build();
     }
 }

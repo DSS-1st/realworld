@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ArticleService {
 
     @Transactional
-    GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto);
+    GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto, Long logonUserId);
 
     @Transactional
     void deleteArticle(String slug, Long userId);

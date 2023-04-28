@@ -22,16 +22,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto) {
-        Long userId = 1L; //todo 인증기능 개발시 JWT 통해 획득
-
+    public GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
         Long maxArticleId = articleRepository.getMaxArticleId();
 
         if (maxArticleId == null) {
             maxArticleId = 0L;
         }
 
-        Article article = createArticleRequestDto.convertToArticle(userId, maxArticleId);
+        Article article = createArticleRequestDto.convertToArticle(logonUserId, maxArticleId);
         articleRepository.createArticle(article);
 
         return articleRepository.getArticleById(article.getId());
