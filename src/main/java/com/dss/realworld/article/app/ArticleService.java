@@ -11,5 +11,8 @@ public interface ArticleService {
     @Transactional
     GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto);
 
+    @Transactional
+    void deleteArticle(String slug, Long userId);
+
     GetUserDto getArticleAuthor(Long userId);
 }

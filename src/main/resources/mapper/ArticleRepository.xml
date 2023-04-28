@@ -7,6 +7,10 @@
         delete from article
     </delete>
 
+    <delete id="deleteArticle" parameterType="Long">
+        delete from article where article_id = #{id}
+    </delete>
+
     <select id="resetAutoIncrement">
         alter table article AUTO_INCREMENT = 1
     </select>
@@ -20,6 +24,10 @@
         select article_id, slug, title, description, body, user_id, created_at, updated_at
         from article
     </sql>
+
+    <select id="getMaxArticleId" resultType="Long">
+        select max(article_id) as max_id from article
+    </select>
 
     <select id="getArticleById" parameterType="Long" resultType="GetArticleDto">
         <include refid="getArticle"/>

@@ -6,10 +6,7 @@ import com.dss.realworld.article.app.ArticleService;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/articles")
 @RestController
@@ -25,5 +22,15 @@ public class ArticleController {
         GetUserDto getUserDto = articleService.getArticleAuthor(getArticleDto.getUserId());
 
         return new CreateArticleResponseDto(getArticleDto, getUserDto);
+    }
+
+    @DeleteMapping("{slug}")
+    public void deleteArticle(@PathVariable String slug) {
+        articleService.deleteArticle(slug, getUserId());
+    }
+
+    // todo JWT을 통해 username 얻어오기
+    private Long getUserId(){
+        return null;
     }
 }
