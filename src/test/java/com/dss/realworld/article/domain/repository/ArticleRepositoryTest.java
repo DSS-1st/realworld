@@ -74,7 +74,7 @@ public class ArticleRepositoryTest {
 
         articleRepository.createArticle(newArticle);
 
-        GetArticleDto foundArticle = articleRepository.getArticleById(newArticle.getId());
+        GetArticleDto foundArticle = articleRepository.getArticleBySlug(newArticle.getSlug());
 
         Assertions.assertThat(newArticle.getSlug()).isEqualTo(foundArticle.getSlug());
     }

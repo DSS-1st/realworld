@@ -82,7 +82,7 @@ public class ArticleControllerTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(title.trim().replace(" ", "-")))
+                .andExpect(jsonPath("$..slug").value(title.trim().replace(" ", "-") + "-1"))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob000"))
