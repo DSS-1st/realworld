@@ -63,7 +63,7 @@ public class ArticleRepositoryTest {
     @Test
     void Should_Success_When_FindByArticleSlug() {
         String title = "How to train your dragon";
-        String slug = title.trim().replace(" ", "-");
+        String slug = title.trim().replace(" ", "-") + "-1";
 
         Article newArticle = Article.builder()
                 .title(title)
