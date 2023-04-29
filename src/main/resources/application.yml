@@ -15,14 +15,14 @@ logging:
   level:
     com:
       zaxxer:
-        hikari: INFO
+        hikari: info
     javax:
       sql:
         DataSource: OFF
     jdbc:
       audit: OFF
       resultset: OFF
-      resultsettable: INFO
+      resultsettable: trace
       sqlonly: OFF
       sqltiming: INFO
       connection : OFF
