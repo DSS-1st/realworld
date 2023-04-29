@@ -4,6 +4,8 @@ import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
+import com.dss.realworld.error.exception.ArticleNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class ArticleServiceTest {
@@ -39,7 +42,40 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void Should_Success_When_ArticleDtoAndLogonIdIsValid() {
+    void Should_ThrownException_When_ArticleAuthorIsNotMatch() {
+        //given
+        Long validUserId = 1L;
+        Article newArticle = createArticle(validUserId);
+        GetArticleDto savedArticle = articleRepository.getArticleById(newArticle.getId());
+        assertThat(savedArticle.getId()).isEqualTo(validUserId);
+
+        //when
+        String savedSlug = savedArticle.getSlug();
+        Long wrongAuthorId = 10L;
+
+        //then
+        assertThatThrownBy(() -> articleService.deleteArticle(savedSlug, wrongAuthorId))
+                .isInstanceOf(ArticleAuthorNotMatchException.class);
+    }
+
+    @Test
+    void Should_ThrownException_When_ArticleIsNotFound() {
+        //given
+        Long validUserId = 1L;
+        Article newArticle = createArticle(validUserId);
+        GetArticleDto savedArticle = articleRepository.getArticleById(newArticle.getId());
+        assertThat(savedArticle.getId()).isEqualTo(validUserId);
+
+        //when
+        String wrongArticleSlug = "wrongArticleSlug";
+
+        //then
+        assertThatThrownBy(() -> articleService.deleteArticle(wrongArticleSlug, validUserId))
+                .isInstanceOf(ArticleNotFoundException.class);
+    }
+
+    @Test
+    void Should_CreateArticleSuccess_When_ArticleDtoAndLogonIdIsValid() {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
@@ -62,7 +98,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void Should_Success_When_ArticleSlugAndUserIdIsValid() {
+    void Should_ArticleDeleteSuccess_When_ArticleSlugAndUserIdIsValid() {
         //given
         Long validUserId = 1L;
         Article newArticle = createArticle(validUserId);

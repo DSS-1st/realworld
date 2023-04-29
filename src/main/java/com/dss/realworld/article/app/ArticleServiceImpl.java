@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,7 +40,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteArticle(String slug, Long userId) {
         GetArticleDto foundArticle = articleRepository.getArticleBySlug(slug);
-        if (foundArticle.getId() == null) {
+        if (Optional.ofNullable(foundArticle.getId()).isEmpty()) {
             throw new ArticleNotFoundException();
         }
 
