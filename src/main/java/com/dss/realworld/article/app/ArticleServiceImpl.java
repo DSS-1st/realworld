@@ -40,7 +40,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteArticle(String slug, Long userId) {
         GetArticleDto foundArticle = articleRepository.getArticleBySlug(slug);
-        if (Optional.ofNullable(foundArticle.getId()).isEmpty()) {
+        if (Optional.ofNullable(foundArticle).isEmpty()) {
             throw new ArticleNotFoundException();
         }
 
