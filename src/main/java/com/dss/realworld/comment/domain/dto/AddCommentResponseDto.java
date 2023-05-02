@@ -26,11 +26,11 @@ public class AddCommentResponseDto {
     }
     @Getter
     static class AddCommentDTO {
-        private Long id;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private String body;
-        private ArticleAuthorDto author;
+        private final Long id;
+        private final LocalDateTime createdAt;
+        private final LocalDateTime updatedAt;
+        private final String body;
+        private final ArticleAuthorDto author;
 
         @Builder
         public AddCommentDTO(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String body, ArticleAuthorDto author) {
@@ -52,10 +52,10 @@ public class AddCommentResponseDto {
     }
     @Getter
     static class ArticleAuthorDto {
-        private String username;
-        private String bio;
-        private String image;
-        private boolean following;
+        private final String username;
+        private final String bio;
+        private final String image;
+        private final boolean following;
 
         @Builder
         public ArticleAuthorDto(String username, String bio, String image, boolean following) {

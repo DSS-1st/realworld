@@ -7,21 +7,19 @@ import com.dss.realworld.comment.domain.dto.GetCommentAuthorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/articles")
+@RequestMapping(value = "/api/articles")
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("{slug}/comments")
+    @PostMapping(value = "{slug}/comments")
     public AddCommentResponseDto addComment(@RequestBody AddCommentRequestDto addCommentRequestDto,
                                             @PathVariable String slug) {
         GetCommentAuthorDto savedComment = commentService.addComment(addCommentRequestDto,getLogonUserId(),slug);
 
-        AddCommentResponseDto addCommentResponseDto = new AddCommentResponseDto(savedComment);
-
-        return addCommentResponseDto;
+        return new AddCommentResponseDto(savedComment);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
