@@ -81,12 +81,10 @@ class CommentServiceTest {
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
-        AddCommentDto addCommentDto = AddCommentRequestDto.AddCommentDto.builder()
+        AddCommentDto addCommentDto = AddCommentDto.builder()
                 .body("His name was my name too.")
                 .build();
 
-        AddCommentRequestDto commentRequestDto = new AddCommentRequestDto(addCommentDto);
-
-        return commentRequestDto;
+        return new AddCommentRequestDto(addCommentDto);
     }
 }
