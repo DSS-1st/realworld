@@ -3,6 +3,7 @@ package com.dss.realworld.comment.app;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.domain.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.domain.dto.AddCommentRequestDto.AddCommentDto;
 import com.dss.realworld.comment.domain.dto.GetCommentAuthorDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
@@ -10,12 +11,13 @@ import com.dss.realworld.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CommentServiceImplTest {
+class CommentServiceTest {
 
     @Autowired
     private CommentService commentService;
@@ -66,8 +68,9 @@ class CommentServiceImplTest {
         commentRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "매개변수들이 유효하면 댓글 작성 성공")
     @Test
-    void Should_AddCommentSuccess_When_ArgumentsAreValid() {
+    void t1() {
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
         Long logonUserId = 1L;
         String slug = "How-to-train-your-dragon";
@@ -78,7 +81,7 @@ class CommentServiceImplTest {
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
-        AddCommentRequestDto.AddCommentDto addCommentDto = AddCommentRequestDto.AddCommentDto.builder()
+        AddCommentDto addCommentDto = AddCommentRequestDto.AddCommentDto.builder()
                 .body("His name was my name too.")
                 .build();
 

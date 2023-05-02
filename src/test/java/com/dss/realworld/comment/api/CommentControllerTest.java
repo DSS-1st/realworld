@@ -3,12 +3,14 @@ package com.dss.realworld.comment.api;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.domain.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.domain.dto.AddCommentRequestDto.AddCommentDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -77,8 +79,9 @@ class CommentControllerTest {
         commentRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")
     @Test
-    void Should_AddCommentSuccess_When_AddCommentRequestDtoAndSlugIsNotNull() throws Exception {
+    void t1() throws Exception {
         //given
         String slug = "How-to-train-your-dragon";
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
@@ -100,7 +103,7 @@ class CommentControllerTest {
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
-        AddCommentRequestDto.AddCommentDto comment = AddCommentRequestDto.AddCommentDto.builder()
+        AddCommentDto comment = AddCommentDto.builder()
                 .body("His name was my name too.")
                 .build();
 

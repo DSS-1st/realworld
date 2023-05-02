@@ -8,6 +8,7 @@ import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,8 +66,9 @@ class CommentRepositoryTest {
         commentRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "articeId,body,userId가 NotNull이면 댓글 작성 성공")
     @Test
-    void Should_Success_When_RequiredFieldsAreNotNull() {
+    void t1() {
         Comment comment = Comment.builder()
                 .articleId(1L)
                 .body("His name was my name too.")
@@ -76,8 +78,9 @@ class CommentRepositoryTest {
         assertThat(comment.getBody()).isEqualTo("His name was my name too.");
     }
 
+    @DisplayName(value = "commentId가 존재하면 comment 반환 성공")
     @Test
-    void Should_Success_When_FindCommentById() {
+    void t2() {
         Comment comment = Comment.builder()
                 .articleId(1L)
                 .body("hello")
