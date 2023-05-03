@@ -17,6 +17,5 @@ public class ArticleAuthorDto {
         this.username = getUserDto.getUsername();
         this.bio = getUserDto.getBio();
         this.image = getUserDto.getImage();
-        this.following = false;
     }
 }
