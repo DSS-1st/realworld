@@ -33,15 +33,16 @@ public class CreateArticleRequestDto {
     }
 
     public Article convertToArticle(Long logonUserId, Long maxArticleId) {
-        String slugId = article.getTitle().trim().replace(" ", "-") +
-                "-" + (maxArticleId + 1);
-
         return Article.builder()
-                .slug(slugId)
+                .slug(getSlug(article.getTitle(), maxArticleId))
                 .title(article.getTitle().trim())
                 .description(article.getDescription())
                 .body(article.getBody())
                 .userId(logonUserId)
                 .build();
+    }
+
+    public static String getSlug(String title, Long maxArticleId) {
+        return title.trim().replace(" ", "-") + "-" + (maxArticleId + 1);
     }
 }

@@ -3,16 +3,12 @@ package com.dss.realworld.article.app;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.user.domain.repository.GetUserDto;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface ArticleService {
 
-    @Transactional
-    GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto, Long logonUserId);
+    GetArticleDto create(CreateArticleRequestDto createArticleRequestDto, Long logonUserId);
 
-    @Transactional
-    void deleteArticle(String slug, Long userId);
+    void delete(String slug, Long userId);
 
-    GetUserDto getArticleAuthor(Long userId);
+    GetUserDto getAuthor(Long userId);
 }

@@ -6,6 +6,8 @@ import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
+import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.dss.realworld.article.api.dto.CreateArticleRequestDto.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,7 +70,7 @@ public class ArticleControllerTest {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
-        GetArticleDto savedArticle = articleService.createArticle(articleDto, logonId);
+        GetArticleDto savedArticle = articleService.create(articleDto, logonId);
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
 
         //when
@@ -81,11 +84,7 @@ public class ArticleControllerTest {
     }
 
     private CreateArticleRequestDto createArticleDto() {
-        CreateArticleRequestDto.CreateArticleDto createArticleDto = CreateArticleRequestDto.CreateArticleDto.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
+        CreateArticleDto createArticleDto = ArticleFixtures.createRequestDto();
 
         return new CreateArticleRequestDto(createArticleDto);
     }
@@ -96,11 +95,7 @@ public class ArticleControllerTest {
         String title = "How to train your dragon";
         String description = "Ever wonder how?";
         String body = "You have to believe";
-        CreateArticleRequestDto.CreateArticleDto article = CreateArticleRequestDto.CreateArticleDto.builder()
-                .title(title)
-                .description(description)
-                .body(body)
-                .build();
+        CreateArticleDto article = ArticleFixtures.createRequestDto(title, description, body);
 
         //when
         CreateArticleRequestDto createArticleRequestDto = new CreateArticleRequestDto(article);
@@ -115,7 +110,7 @@ public class ArticleControllerTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(title.trim().replace(" ", "-") + "-1"))
+                .andExpect(jsonPath("$..slug").value(getSlug(title,0L)))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob000"))

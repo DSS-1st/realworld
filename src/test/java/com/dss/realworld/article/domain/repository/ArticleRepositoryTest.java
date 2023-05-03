@@ -1,7 +1,9 @@
 package com.dss.realworld.article.domain.repository;
 
+import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
+import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+import static com.dss.realworld.article.api.dto.CreateArticleRequestDto.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -36,26 +41,18 @@ public class ArticleRepositoryTest {
 
     @Test
     void Should_Success_When_RequiredFieldsAreNotNull() {
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
-        articleRepository.createArticle(newArticle);
+        Article newArticle = ArticleFixtures.createDefault();
+        articleRepository.create(newArticle);
 
         assertThat(newArticle.getId()).isNotNull();
     }
 
     @Test
     void Should_Success_When_FindByArticleId() {
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
-        articleRepository.createArticle(newArticle);
+        Article newArticle = ArticleFixtures.createDefault();
+        articleRepository.create(newArticle);
 
-        GetArticleDto foundArticle = articleRepository.getArticleById(newArticle.getId());
+        GetArticleDto foundArticle = articleRepository.getById(newArticle.getId());
 
         assertThat(foundArticle.getTitle()).isEqualTo(newArticle.getTitle());
     }
@@ -63,32 +60,22 @@ public class ArticleRepositoryTest {
     @Test
     void Should_Success_When_FindByArticleSlug() {
         String title = "How to train your dragon";
-        String slug = title.trim().replace(" ", "-") + "-1";
+        String slug = "How-to-train-your-dragon-1";
 
-        Article newArticle = Article.builder()
-                .title(title)
-                .slug(slug)
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
+        Article newArticle = ArticleFixtures.create(title, slug);
+        articleRepository.create(newArticle);
 
-        articleRepository.createArticle(newArticle);
+        Optional<GetArticleDto> foundArticle = articleRepository.getBySlug(newArticle.getSlug());
 
-        GetArticleDto foundArticle = articleRepository.getArticleBySlug(newArticle.getSlug());
-
-        Assertions.assertThat(newArticle.getSlug()).isEqualTo(foundArticle.getSlug());
+        Assertions.assertThat(newArticle.getSlug()).isEqualTo(foundArticle.get().getSlug());
     }
 
     @Test
     void Should_Success_When_ArticleIdExist() {
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
-        articleRepository.createArticle(newArticle);
+        Article newArticle = ArticleFixtures.createDefault();
+        articleRepository.create(newArticle);
 
-        int deletedCount = articleRepository.deleteArticle(newArticle.getId());
+        int deletedCount = articleRepository.delete(newArticle.getId());
 
         Assertions.assertThat(deletedCount).isEqualTo(1);
     }
@@ -100,9 +87,9 @@ public class ArticleRepositoryTest {
                 .description("Ever wonder how?")
                 .body("You have to believe")
                 .build();
-        articleRepository.createArticle(newArticle);
+        articleRepository.create(newArticle);
 
-        int deletedCount = articleRepository.deleteArticle(10L);
+        int deletedCount = articleRepository.delete(10L);
 
         Assertions.assertThat(deletedCount).isEqualTo(0);
     }

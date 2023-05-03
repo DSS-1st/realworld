@@ -4,6 +4,8 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Optional;
+
 @Mapper
 public interface ArticleRepository {
 
@@ -11,13 +13,13 @@ public interface ArticleRepository {
 
     void resetAutoIncrement();
 
-    void createArticle(Article article);
+    void create(Article article);
 
-    int deleteArticle(Long id);
+    int delete(Long id);
 
-    Long getMaxArticleId();
+    Long getMaxId();
 
-    GetArticleDto getArticleById(Long id);
+    GetArticleDto getById(Long id);
 
-    GetArticleDto getArticleBySlug(String slug);
+    Optional<GetArticleDto> getBySlug(String slug);
 }

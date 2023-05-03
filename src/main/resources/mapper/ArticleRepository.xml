@@ -7,7 +7,7 @@
         delete from article
     </delete>
 
-    <delete id="deleteArticle" parameterType="Long">
+    <delete id="delete" parameterType="Long">
         delete from article where article_id = #{id}
     </delete>
 
@@ -15,7 +15,7 @@
         alter table article AUTO_INCREMENT = 1
     </select>
 
-    <insert id="createArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
+    <insert id="create" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
         insert into article(slug, title, description, body, user_id)
         values (#{slug}, #{title}, #{description}, #{body}, #{userId})
     </insert>
@@ -25,16 +25,16 @@
         from article
     </sql>
 
-    <select id="getMaxArticleId" resultType="Long">
+    <select id="getMaxId" resultType="Long">
         select max(article_id) as max_id from article
     </select>
 
-    <select id="getArticleById" parameterType="Long" resultType="GetArticleDto">
+    <select id="getById" parameterType="Long" resultType="GetArticleDto">
         <include refid="getArticle"/>
         where article_id = #{id}
     </select>
 
-    <select id="getArticleBySlug" parameterType="String" resultType="GetArticleDto">
+    <select id="getBySlug" parameterType="String" resultType="GetArticleDto">
         <include refid="getArticle"/>
         where slug = #{slug}
     </select>

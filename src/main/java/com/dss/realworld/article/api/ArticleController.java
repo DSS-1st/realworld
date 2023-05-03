@@ -16,17 +16,17 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public CreateArticleResponseDto createArticle(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
-        GetArticleDto getArticleDto = articleService.createArticle(createArticleRequestDto, getLogonUserId());
+    public CreateArticleResponseDto create(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
+        GetArticleDto getArticleDto = articleService.create(createArticleRequestDto, getLogonUserId());
 
-        GetUserDto getUserDto = articleService.getArticleAuthor(getArticleDto.getUserId());
+        GetUserDto getUserDto = articleService.getAuthor(getArticleDto.getUserId());
 
         return new CreateArticleResponseDto(getArticleDto, getUserDto);
     }
 
     @DeleteMapping("{slug}")
-    public void deleteArticle(@PathVariable String slug) {
-        articleService.deleteArticle(slug, getLogonUserId());
+    public void delete(@PathVariable String slug) {
+        articleService.delete(slug, getLogonUserId());
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기

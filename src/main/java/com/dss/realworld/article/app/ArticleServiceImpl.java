@@ -24,35 +24,40 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
-        Long maxArticleId = articleRepository.getMaxArticleId();
+    public GetArticleDto create(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+        Long maxId = articleRepository.getMaxId();
 
-        if (maxArticleId == null) {
-            maxArticleId = 0L;
+        if (maxId == null) {
+            maxId = 0L;
         }
 
-        Article article = createArticleRequestDto.convertToArticle(logonUserId, maxArticleId);
-        articleRepository.createArticle(article);
+        Article article = createArticleRequestDto.convertToArticle(logonUserId, maxId);
+        articleRepository.create(article);
 
-        return articleRepository.getArticleById(article.getId());
+        return articleRepository.getById(article.getId());
     }
 
     @Override
-    public void deleteArticle(String slug, Long userId) {
-        GetArticleDto foundArticle = articleRepository.getArticleBySlug(slug);
-        if (Optional.ofNullable(foundArticle).isEmpty()) {
-            throw new ArticleNotFoundException();
-        }
+    @Transactional
+    public void delete(String slug, Long userId) {
+        Optional<GetArticleDto> foundArticle = articleRepository.getBySlug(slug);
+        if (isEmpty(foundArticle)) throw new ArticleNotFoundException();
 
-        if (foundArticle.getUserId().compareTo(userId) != 0) {
-            throw new ArticleAuthorNotMatchException();
-        }
+        if (isAuthorMatch(userId, foundArticle)) throw new ArticleAuthorNotMatchException();
 
-        articleRepository.deleteArticle(foundArticle.getId());
+        articleRepository.delete(foundArticle.get().getId());
+    }
+
+    private boolean isAuthorMatch(final Long userId, final Optional<GetArticleDto> foundArticle) {
+        return foundArticle.get().getUserId().compareTo(userId) != 0;
+    }
+
+    private boolean isEmpty(final Optional<GetArticleDto> foundArticle) {
+        return foundArticle.isEmpty();
     }
 
     @Override
-    public GetUserDto getArticleAuthor(Long userId) {
-        return userRepository.getUserById(userId);
+    public GetUserDto getAuthor(Long userId) {
+        return userRepository.getById(userId);
     }
 }
