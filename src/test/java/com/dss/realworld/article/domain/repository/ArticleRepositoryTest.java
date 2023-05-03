@@ -5,6 +5,7 @@ import com.dss.realworld.article.domain.dto.GetArticleDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,8 +35,9 @@ public class ArticleRepositoryTest {
         articleRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "필수 입력값이 NotNull이면 Article 생성 성공")
     @Test
-    void Should_Success_When_RequiredFieldsAreNotNull() {
+    void t1() {
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
@@ -46,8 +48,9 @@ public class ArticleRepositoryTest {
         assertThat(newArticle.getId()).isNotNull();
     }
 
+    @DisplayName(value = "Article 생성 후 DB에 부여된 PK로 조회 시 성공")
     @Test
-    void Should_Success_When_FindByArticleId() {
+    void t2() {
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
@@ -60,8 +63,9 @@ public class ArticleRepositoryTest {
         assertThat(foundArticle.getTitle()).isEqualTo(newArticle.getTitle());
     }
 
+    @DisplayName(value = "Article 생성 후 slug로 조회 시 성공")
     @Test
-    void Should_Success_When_FindByArticleSlug() {
+    void t3() {
         String title = "How to train your dragon";
         String slug = title.trim().replace(" ", "-") + "-1";
 
@@ -79,8 +83,9 @@ public class ArticleRepositoryTest {
         Assertions.assertThat(newArticle.getSlug()).isEqualTo(foundArticle.getSlug());
     }
 
+    @DisplayName(value = "Article Id가 유효하면 삭제 성공")
     @Test
-    void Should_Success_When_ArticleIdExist() {
+    void t4() {
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
@@ -93,8 +98,9 @@ public class ArticleRepositoryTest {
         Assertions.assertThat(deletedCount).isEqualTo(1);
     }
 
+    @DisplayName(value = "유효하지 않은 Id로 삭제 요청 시 삭제된 Article 0개")
     @Test
-    void Should_Success_When_DeletedCountIsZero() {
+    void t5() {
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
