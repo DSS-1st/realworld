@@ -13,7 +13,7 @@ public class Comment {
     private final Long id;
     private final Long articleId;
     private final String body;
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private final LocalDateTime createdAt = null;
     private final LocalDateTime updatedAt = LocalDateTime.now();
     private final Long userId;
 

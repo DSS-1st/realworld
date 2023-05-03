@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+
 @Getter
 public class GetCommentAuthorDto {
     private Long id;
@@ -22,5 +23,3 @@ public class GetCommentAuthorDto {
         this.updatedAt = updatedAt;
     }
 }
-
-

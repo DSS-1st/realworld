@@ -18,13 +18,7 @@ public class GetCommentDto {
     private Long userId;
 
     @Builder
-    public GetCommentDto(Long id,
-                         Long articleId,
-                         String body,
-                         LocalDateTime createdAt,
-                         LocalDateTime updatedAt,
-                         Long userId
-                         ) {
+    public GetCommentDto(Long id, Long articleId, String body, LocalDateTime createdAt, LocalDateTime updatedAt, Long userId) {
         this.id = id;
         this.articleId = articleId;
         this.body = body;

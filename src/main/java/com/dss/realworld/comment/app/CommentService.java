@@ -5,5 +5,5 @@ import com.dss.realworld.comment.domain.dto.GetCommentAuthorDto;
 
 public interface CommentService {
 
-    GetCommentAuthorDto addComment(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug);
+    GetCommentAuthorDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug);
 }

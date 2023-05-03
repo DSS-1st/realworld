@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AddCommentResponseDto {
 
-    private AddCommentDTO comment;
+    private AddCommentDto comment;
 
     public AddCommentResponseDto(GetCommentAuthorDto getCommentAuthorDto) {
         ArticleAuthorDto authorInfo = getAuthorInfo(getCommentAuthorDto.getAuthor());
 
-        comment = AddCommentDTO.builder()
+        comment = AddCommentDto.builder()
                 .id(getCommentAuthorDto.getId())
                 .createdAt(getCommentAuthorDto.getCreatedAt())
                 .updatedAt(getCommentAuthorDto.getUpdatedAt())
@@ -25,7 +25,7 @@ public class AddCommentResponseDto {
                 .build();
     }
     @Getter
-    static class AddCommentDTO {
+    static class AddCommentDto {
         private final Long id;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
@@ -33,7 +33,7 @@ public class AddCommentResponseDto {
         private final ArticleAuthorDto author;
 
         @Builder
-        public AddCommentDTO(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String body, ArticleAuthorDto author) {
+        public AddCommentDto(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String body, ArticleAuthorDto author) {
             this.id = id;
             this.createdAt = createdAt;
             this.updatedAt = updatedAt;

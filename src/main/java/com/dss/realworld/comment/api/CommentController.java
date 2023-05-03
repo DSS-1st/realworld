@@ -14,10 +14,10 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping(value = "{slug}/comments")
+    @PostMapping(value = "/{slug}/comments")
     public AddCommentResponseDto addComment(@RequestBody AddCommentRequestDto addCommentRequestDto,
                                             @PathVariable String slug) {
-        GetCommentAuthorDto savedComment = commentService.addComment(addCommentRequestDto,getLogonUserId(),slug);
+        GetCommentAuthorDto savedComment = commentService.add(addCommentRequestDto,getLogonUserId(),slug);
 
         return new AddCommentResponseDto(savedComment);
     }

@@ -35,9 +35,9 @@ public class CommentServiceImpl implements CommentService {
                 .userId(logonUserId)
                 .build();
 
-        commentRepository.addComment(comment);
-        GetCommentDto foundComment = commentRepository.getCommentById(comment.getId());
-        GetUserDto foundUser = userRepository.getUserById(comment.getUserId());
+        commentRepository.add(comment);
+        GetCommentDto foundComment = commentRepository.getById(comment.getId());
+        GetUserDto foundUser = userRepository.getById(comment.getUserId());
 
         return GetCommentAuthorDto.builder()
                 .id(foundComment.getId())

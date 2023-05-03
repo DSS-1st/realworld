@@ -6,9 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CommentRepository {
-    void addComment(Comment comment);
+    void add(Comment comment);
 
-    GetCommentDto getCommentById(Long id);
+    GetCommentDto getById(Long id);
 
     void deleteAll();
 
