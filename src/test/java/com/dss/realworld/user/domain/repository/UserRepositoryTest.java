@@ -1,8 +1,10 @@
 package com.dss.realworld.user.domain.repository;
 
 import com.dss.realworld.user.domain.User;
+import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,14 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    User newUser1;
+    User newUser2;
+
     @BeforeEach
     void setUp() {
         clearTable();
+        newUser1 = UserFixtures.create("Jacob","jakejake", "jake@jake.jake");
+        newUser2 = UserFixtures.create("Kate", "katekate", "kate@kate.kate");
     }
 
     @AfterEach
