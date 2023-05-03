@@ -17,13 +17,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public GetUserDto addUser(AddUserRequestDto addUserRequestDto) {
+    public GetUserDto add(AddUserRequestDto addUserRequestDto) {
         User user = User.builder()
                 .username(addUserRequestDto.getUser().getUsername())
                 .email(addUserRequestDto.getUser().getEmail())
                 .password(addUserRequestDto.getUser().getPassword())
                 .build();
-        userRepository.addUser(user);
-        return userRepository.getUserByEmail(user.getEmail());
+        userRepository.add(user);
+        return userRepository.getByEmail(user.getEmail());
     }
 }

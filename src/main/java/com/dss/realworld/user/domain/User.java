@@ -17,17 +17,11 @@ public class User {
     private final String email;
     private final String bio;
     private final String image;
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private final LocalDateTime createdAt = null;
     private final LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public User(Long id,
-                String username,
-                String password,
-                String email,
-                String bio,
-                String image) {
-
+    public User(Long id, String username, String password, String email, String bio, String image) {
         Assert.notNull(username,"username can not be null");
         Assert.notNull(password,"password can not be null");
         Assert.notNull(email,"email can not be null");

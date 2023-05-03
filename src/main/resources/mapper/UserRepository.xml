@@ -11,7 +11,7 @@
         alter table users auto_increment = 1
     </select>
 
-    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="user_id">
+    <insert id="add" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="user_id">
         insert into users(username, email, password)
         values (#{username},#{email},#{password})
     </insert>
@@ -21,17 +21,17 @@
         from users
     </sql>
 
-    <select id="getUserByUsername" parameterType="String" resultType="GetUserDto">
+    <select id="getByUsername" parameterType="String" resultType="GetUserDto">
         <include refid="getUsers"/>
         where username = #{username}
     </select>
 
-    <select id="getUserByEmail" parameterType="String" resultType="GetUserDto">
+    <select id="getByEmail" parameterType="String" resultType="GetUserDto">
         <include refid="getUsers"/>
         where email = #{email}
     </select>
 
-    <select id="getUserById" parameterType="long" resultType="GetUserDto">
+    <select id="getById" parameterType="long" resultType="GetUserDto">
         <include refid="getUsers"/>
         where user_id = #{id}
     </select>

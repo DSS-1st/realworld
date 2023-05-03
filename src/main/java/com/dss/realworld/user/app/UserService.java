@@ -6,5 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
     @Transactional
-    GetUserDto addUser(AddUserRequestDto addUserRequestDto);
+    GetUserDto add(AddUserRequestDto addUserRequestDto);
 }
