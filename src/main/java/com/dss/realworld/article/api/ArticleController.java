@@ -8,7 +8,7 @@ import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/articles")
+@RequestMapping(value = "/api/articles")
 @RestController
 @RequiredArgsConstructor
 public class ArticleController {
@@ -24,7 +24,7 @@ public class ArticleController {
         return new CreateArticleResponseDto(getArticleDto, getUserDto);
     }
 
-    @DeleteMapping("{slug}")
+    @DeleteMapping(value = "{slug}")
     public void deleteArticle(@PathVariable String slug) {
         articleService.deleteArticle(slug, getLogonUserId());
     }

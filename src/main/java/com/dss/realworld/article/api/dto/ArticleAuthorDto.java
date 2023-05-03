@@ -13,10 +13,9 @@ public class ArticleAuthorDto {
     private String image;
     private boolean following;
 
-    ArticleAuthorDto(GetUserDto getUserDto) {
+    ArticleAuthorDto(final GetUserDto getUserDto) {
         this.username = getUserDto.getUsername();
         this.bio = getUserDto.getBio();
         this.image = getUserDto.getImage();
-        this.following = false;
     }
 }
