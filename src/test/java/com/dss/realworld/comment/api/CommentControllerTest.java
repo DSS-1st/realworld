@@ -46,12 +46,8 @@ class CommentControllerTest {
     void setUp() {
         clearTable();
 
-        User newUser = User.builder()
-                .username("Jacob000")
-                .email("jake000@jake.jake")
-                .password("jakejake")
-                .build();
-        userRepository.addUser(newUser);
+        User newUser = UserFixtures.create();
+        userRepository.add(newUser);
 
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
@@ -83,7 +79,7 @@ class CommentControllerTest {
     @Test
     void t1() throws Exception {
         //given
-        String slug = "How-to-train-your-dragon";
+        String slug = "How-to-train-your-dragon-1";
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
 
         //when

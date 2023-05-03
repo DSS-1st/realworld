@@ -6,6 +6,8 @@ import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.dto.GetCommentDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
+import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.CommentFixtures;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,12 +35,8 @@ class CommentRepositoryTest {
     void setUp() {
         clearTable();
 
-        User newUser = User.builder()
-                .username("Jacob000")
-                .email("jake000@jake.jake")
-                .password("jakejake")
-                .build();
-        userRepository.addUser(newUser);
+        User newUser = UserFixtures.create();
+        userRepository.add(newUser);
 
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
@@ -69,25 +67,17 @@ class CommentRepositoryTest {
     @DisplayName(value = "articeId,body,userId가 NotNull이면 댓글 작성 성공")
     @Test
     void t1() {
-        Comment comment = Comment.builder()
-                .articleId(1L)
-                .body("His name was my name too.")
-                .userId(1L)
-                .build();
-        commentRepository.addComment(comment);
+        Comment comment = CommentFixtures.create();
+        commentRepository.add(comment);
         assertThat(comment.getBody()).isEqualTo("His name was my name too.");
     }
 
     @DisplayName(value = "commentId가 존재하면 comment 반환 성공")
     @Test
     void t2() {
-        Comment comment = Comment.builder()
-                .articleId(1L)
-                .body("hello")
-                .userId(1L)
-                .build();
-        commentRepository.addComment(comment);
-        GetCommentDto getCommentDto = commentRepository.getCommentById(comment.getId());
-        assertThat(getCommentDto.getBody()).isEqualTo("hello");
+        Comment comment = CommentFixtures.create();
+        commentRepository.add(comment);
+        GetCommentDto getCommentDto = commentRepository.getById(comment.getId());
+        assertThat(getCommentDto.getBody()).isEqualTo("His name was my name too.");
     }
 }

@@ -35,12 +35,8 @@ class CommentServiceTest {
     void setUp() {
         clearTable();
 
-        User newUser = User.builder()
-                .username("Jacob000")
-                .email("jake000@jake.jake")
-                .password("jakejake")
-                .build();
-        userRepository.addUser(newUser);
+        User newUser = UserFixtures.create();
+        userRepository.add(newUser);
 
         Article newArticle = Article.builder()
                 .title("How to train your dragon")
@@ -73,9 +69,9 @@ class CommentServiceTest {
     void t1() {
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
         Long logonUserId = 1L;
-        String slug = "How-to-train-your-dragon";
+        String slug = "How-to-train-your-dragon-1";
 
-        GetCommentAuthorDto saveComment = commentService.addComment(addCommentRequestDto, logonUserId, slug);
+        GetCommentAuthorDto saveComment = commentService.add(addCommentRequestDto, logonUserId, slug);
 
         Assertions.assertThat(saveComment.getBody()).isEqualTo("His name was my name too.");
     }

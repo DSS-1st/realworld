@@ -33,41 +33,19 @@ public class UserRepositoryTest {
 
     @Test
     void Should_Success_When_FindByAddedUsername() {
-        User newUser1 = User.builder()
-                .username("Jacob")
-                .password("jakejake")
-                .email("jake@jake.jake")
-                .build();
-        User newUser2 = User.builder()
-                .username("Kate")
-                .password("katekate")
-                .email("kate@kate.kate")
-                .build();
+        userRepository.add(newUser1);
+        userRepository.add(newUser2);
 
-        userRepository.addUser(newUser1);
-        userRepository.addUser(newUser2);
-
-        GetUserDto addedUser = userRepository.getUserByUsername("Jacob");
+        GetUserDto addedUser = userRepository.getByUsername("Jacob");
         Assertions.assertThat(addedUser.getUsername()).isEqualTo(newUser1.getUsername());
     }
 
     @Test
     void Should_Success_When_FindByAddedEmail() {
-        User newUser1 = User.builder()
-                .username("Jacob")
-                .password("jakejake")
-                .email("jake@jake.jake")
-                .build();
-        User newUser2 = User.builder()
-                .username("Kate")
-                .password("katekate")
-                .email("kate@kate.kate")
-                .build();
+        userRepository.add(newUser1);
+        userRepository.add(newUser2);
 
-        userRepository.addUser(newUser1);
-        userRepository.addUser(newUser2);
-
-        GetUserDto addedUser = userRepository.getUserByEmail("jake@jake.jake");
+        GetUserDto addedUser = userRepository.getByEmail("jake@jake.jake");
         Assertions.assertThat(addedUser.getEmail()).isEqualTo(newUser1.getEmail());
     }
 }

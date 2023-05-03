@@ -45,12 +45,8 @@ public class ArticleControllerTest {
     void setUp() {
         clearTable();
 
-        User newUser = User.builder()
-                .username("Jacob000")
-                .email("jake000@jake.jake")
-                .password("jakejake")
-                .build();
-        userRepository.addUser(newUser);
+        User newUser = UserFixtures.create();
+        userRepository.add(newUser);
     }
 
     @AfterEach
