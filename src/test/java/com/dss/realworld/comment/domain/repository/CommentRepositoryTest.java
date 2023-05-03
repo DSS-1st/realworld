@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import com.dss.realworld.util.UserFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,14 +39,8 @@ class CommentRepositoryTest {
         User newUser = UserFixtures.create();
         userRepository.add(newUser);
 
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .slug("How-to-train-your-dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .userId(newUser.getId())
-                .build();
-        articleRepository.createArticle(newArticle);
+        Article newArticle = ArticleFixtures.create(newUser.getId());
+        articleRepository.create(newArticle);
     }
 
     @AfterEach

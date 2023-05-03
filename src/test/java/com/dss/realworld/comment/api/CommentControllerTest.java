@@ -7,6 +7,8 @@ import com.dss.realworld.comment.domain.dto.AddCommentRequestDto.AddCommentDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
+import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,14 +51,8 @@ class CommentControllerTest {
         User newUser = UserFixtures.create();
         userRepository.add(newUser);
 
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .slug("How-to-train-your-dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .userId(newUser.getId())
-                .build();
-        articleRepository.createArticle(newArticle);
+        Article newArticle = ArticleFixtures.create(newUser.getId());
+        articleRepository.create(newArticle);
     }
 
     @AfterEach
