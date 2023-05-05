@@ -41,7 +41,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public void delete(String slug, Long userId) {
         Optional<GetArticleDto> foundArticle = articleRepository.getBySlug(slug);
-        if (isEmpty(foundArticle)) throw new ArticleNotFoundException();
+        foundArticle.orElseThrow(ArticleNotFoundException::new);
 
         if (isAuthorMatch(userId, foundArticle)) throw new ArticleAuthorNotMatchException();
 
