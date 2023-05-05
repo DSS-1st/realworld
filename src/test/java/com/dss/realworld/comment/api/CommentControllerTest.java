@@ -2,8 +2,8 @@ package com.dss.realworld.comment.api;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.comment.domain.dto.AddCommentRequestDto;
-import com.dss.realworld.comment.domain.dto.AddCommentRequestDto.AddCommentDto;
+import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -95,10 +95,8 @@ class CommentControllerTest {
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
-        AddCommentDto comment = AddCommentDto.builder()
-                .body("His name was my name too.")
-                .build();
+        String body = "His name was my name too.";
 
-        return new AddCommentRequestDto(comment);
+        return new AddCommentRequestDto(body);
     }
 }

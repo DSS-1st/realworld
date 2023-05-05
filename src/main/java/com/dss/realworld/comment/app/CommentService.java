@@ -1,9 +1,10 @@
 package com.dss.realworld.comment.app;
 
-import com.dss.realworld.comment.domain.dto.AddCommentRequestDto;
-import com.dss.realworld.comment.domain.dto.GetCommentAuthorDto;
+import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
+import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 
 public interface CommentService {
 
-    GetCommentAuthorDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug);
+    AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug);
 }

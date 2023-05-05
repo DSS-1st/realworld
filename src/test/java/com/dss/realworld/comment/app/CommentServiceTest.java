@@ -2,9 +2,10 @@ package com.dss.realworld.comment.app;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.comment.domain.dto.AddCommentRequestDto;
-import com.dss.realworld.comment.domain.dto.AddCommentRequestDto.AddCommentDto;
-import com.dss.realworld.comment.domain.dto.GetCommentAuthorDto;
+import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
+import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -67,16 +68,14 @@ class CommentServiceTest {
         Long logonUserId = 1L;
         String slug = "How-to-train-your-dragon-1";
 
-        GetCommentAuthorDto saveComment = commentService.add(addCommentRequestDto, logonUserId, slug);
+        AddCommentResponseDto saveComment = commentService.add(addCommentRequestDto, logonUserId, slug);
 
         Assertions.assertThat(saveComment.getBody()).isEqualTo("His name was my name too.");
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
-        AddCommentDto addCommentDto = AddCommentDto.builder()
-                .body("His name was my name too.")
-                .build();
+        String body = "His name was my name too.";
 
-        return new AddCommentRequestDto(addCommentDto);
+        return new AddCommentRequestDto(body);
     }
 }
