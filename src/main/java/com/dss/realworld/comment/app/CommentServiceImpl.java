@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
         foundArticle.orElseThrow(ArticleNotFoundException::new);
 
         Comment comment = Comment.builder()
-                .body(addCommentRequestDto.getComment().getBody())
+                .body(addCommentRequestDto.getBody())
                 .articleId(foundArticle.get().getId())
                 .userId(logonUserId) // todo 로그인 안 했을 때 예외 추가
                 .build();
