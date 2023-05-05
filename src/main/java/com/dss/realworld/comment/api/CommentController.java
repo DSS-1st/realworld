@@ -1,9 +1,8 @@
 package com.dss.realworld.comment.api;
 
-import com.dss.realworld.comment.app.CommentService;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.CommentAuthorDto;
+import com.dss.realworld.comment.app.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

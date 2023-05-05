@@ -4,13 +4,12 @@ import com.dss.realworld.comment.domain.dto.GetCommentDto;
 import com.dss.realworld.user.domain.repository.GetUserDto;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@JsonRootName("comment")
+@JsonRootName(value = "comment")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

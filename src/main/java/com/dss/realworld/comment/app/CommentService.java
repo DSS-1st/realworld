@@ -2,7 +2,6 @@ package com.dss.realworld.comment.app;
 
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 
 public interface CommentService {
 
