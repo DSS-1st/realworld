@@ -17,7 +17,7 @@ public class Article {
     private String description;
     private String body;
     private Long userId;
-    private LocalDateTime createdAt = null;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
