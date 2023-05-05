@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Alias("GetArticleDto")
+@Alias(value = "GetArticleDto")
 public class GetArticleDto {
 
     private Long id;

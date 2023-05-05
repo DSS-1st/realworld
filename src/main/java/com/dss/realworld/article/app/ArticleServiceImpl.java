@@ -27,9 +27,7 @@ public class ArticleServiceImpl implements ArticleService {
     public GetArticleDto create(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
         Long maxId = articleRepository.getMaxId();
 
-        if (maxId == null) {
-            maxId = 0L;
-        }
+        if (maxId == null) maxId = 0L;
 
         Article article = createArticleRequestDto.convertToArticle(logonUserId, maxId);
         articleRepository.create(article);
@@ -46,10 +44,6 @@ public class ArticleServiceImpl implements ArticleService {
         if (foundArticle.get().isAuthorMatch(userId)) throw new ArticleAuthorNotMatchException();
 
         articleRepository.delete(foundArticle.get().getId());
-    }
-
-    private boolean isEmpty(final Optional<GetArticleDto> foundArticle) {
-        return foundArticle.isEmpty();
     }
 
     @Override
