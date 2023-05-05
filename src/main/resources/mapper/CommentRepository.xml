@@ -5,8 +5,8 @@
 <mapper namespace="com.dss.realworld.comment.domain.repository.CommentRepository">
 
     <insert id="add" parameterType="Comment" useGeneratedKeys="true" keyProperty="id" keyColumn="comment_id">
-        insert into comments(comment_id , article_id, body, user_id, created_at,updated_at)
-        values (#{id}, #{articleId}, #{body},#{userId},#{createdAt},#{updatedAt})
+        insert into comments(comment_id , article_id, body, user_id)
+        values (#{id}, #{articleId}, #{body},#{userId})
     </insert>
 
     <select id="getById" parameterType="Long" resultType="GetCommentDto">
@@ -20,5 +20,4 @@
     <select id="resetAutoIncrement">
         alter table comments AUTO_INCREMENT = 1
     </select>
-
 </mapper>
