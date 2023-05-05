@@ -21,4 +21,8 @@ public class GetArticleDto {
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public boolean isAuthorMatch(final Long userId){
+        return this.userId.compareTo(userId) != 0;
+    }
 }

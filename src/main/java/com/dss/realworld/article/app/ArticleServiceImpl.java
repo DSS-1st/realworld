@@ -43,13 +43,9 @@ public class ArticleServiceImpl implements ArticleService {
         Optional<GetArticleDto> foundArticle = articleRepository.getBySlug(slug);
         foundArticle.orElseThrow(ArticleNotFoundException::new);
 
-        if (isAuthorMatch(userId, foundArticle)) throw new ArticleAuthorNotMatchException();
+        if (foundArticle.get().isAuthorMatch(userId)) throw new ArticleAuthorNotMatchException();
 
         articleRepository.delete(foundArticle.get().getId());
-    }
-
-    private boolean isAuthorMatch(final Long userId, final Optional<GetArticleDto> foundArticle) {
-        return foundArticle.get().getUserId().compareTo(userId) != 0;
     }
 
     private boolean isEmpty(final Optional<GetArticleDto> foundArticle) {
