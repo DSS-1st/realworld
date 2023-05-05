@@ -28,11 +28,11 @@ CREATE TABLE `article`
 
 CREATE TABLE 'comments'
 (
-    comment_id   bigint       NOT NULL AUTO_INCREMENT,
-    article_id   bigint,
-    body         varchar(255) NOT NULL,
-    user_id      bigint,
-    created_at   datetime DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    `comment_id`   bigint       NOT NULL AUTO_INCREMENT,
+    `article_id`   bigint,
+    `body`         varchar(255) NOT NULL,
+    `user_id`      bigint,
+    `created_at`   datetime DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id)
 );
