@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.dss.realworld.article.api.dto.CreateArticleRequestDto.*;
+import static com.dss.realworld.article.domain.Slug.getSlug;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,9 +84,7 @@ public class ArticleControllerTest {
     }
 
     private CreateArticleRequestDto createArticleDto() {
-        CreateArticleDto createArticleDto = ArticleFixtures.createRequestDto();
-
-        return new CreateArticleRequestDto(createArticleDto);
+        return ArticleFixtures.createRequestDto();
     }
 
     @Test
@@ -95,11 +93,10 @@ public class ArticleControllerTest {
         String title = "How to train your dragon";
         String description = "Ever wonder how?";
         String body = "You have to believe";
-        CreateArticleDto article = ArticleFixtures.createRequestDto(title, description, body);
+        CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body);
 
         //when
-        CreateArticleRequestDto createArticleRequestDto = new CreateArticleRequestDto(article);
-        String jsonString = objectMapper.writeValueAsString(createArticleRequestDto);
+        String jsonString = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/api/articles")
                 .contentType(MediaType.APPLICATION_JSON)

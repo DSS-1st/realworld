@@ -79,19 +79,17 @@ public class ArticleServiceTest {
     void Should_CreateArticleSuccess_When_ArticleDtoAndLogonIdIsValid() {
         //given
         Long logonId = 1L;
-        CreateArticleRequestDto articleDto = createArticleDto();
+        CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        GetArticleDto savedArticle = articleService.create(articleDto, logonId);
+        GetArticleDto savedArticle = articleService.create(createArticleRequestDto, logonId);
 
         //then
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
     }
 
     private CreateArticleRequestDto createArticleDto() {
-        CreateArticleRequestDto.CreateArticleDto createArticleDto = ArticleFixtures.createRequestDto();
-
-        return new CreateArticleRequestDto(createArticleDto);
+        return ArticleFixtures.createRequestDto();
     }
 
     @Test

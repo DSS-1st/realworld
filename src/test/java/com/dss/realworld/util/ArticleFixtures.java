@@ -1,8 +1,7 @@
 package com.dss.realworld.util;
 
+import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
-
-import static com.dss.realworld.article.api.dto.CreateArticleRequestDto.*;
 
 public class ArticleFixtures {
 
@@ -33,16 +32,16 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static CreateArticleDto createRequestDto(){
-        return CreateArticleDto.builder()
+    public static CreateArticleRequestDto createRequestDto(){
+        return CreateArticleRequestDto.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
                 .body("You have to believe")
                 .build();
     }
 
-    public static CreateArticleDto createRequestDto(String title, String description, String body){
-        return CreateArticleDto.builder()
+    public static CreateArticleRequestDto createRequestDto(String title, String description, String body){
+        return CreateArticleRequestDto.builder()
                 .title(title)
                 .description(description)
                 .body(body)
