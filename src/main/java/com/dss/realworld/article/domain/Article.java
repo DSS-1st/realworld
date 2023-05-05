@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 
 @Getter
-@Alias("Article")
+@Alias(value = "Article")
 public class Article {
 
     private Long id;

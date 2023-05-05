@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 
 @Getter
-@Alias("User")
+@Alias(value = "User")
 public class User {
 
     private Long id;
@@ -17,7 +17,7 @@ public class User {
     private String email;
     private String bio;
     private String image;
-    private LocalDateTime createdAt = null;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder

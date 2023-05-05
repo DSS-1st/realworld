@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 
 @Getter
-@Alias("Comment")
+@Alias(value = "Comment")
 public class Comment {
     private Long id;
     private Long articleId;
