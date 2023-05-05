@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Alias("Article")
 public class Article {
 
-    private final Long id;
-    private final String slug;
-    private final String title;
-    private final String description;
-    private final String body;
-    private final Long userId;
-    private final LocalDateTime createdAt = null;
-    private final LocalDateTime updatedAt = LocalDateTime.now();
+    private Long id;
+    private String slug;
+    private String title;
+    private String description;
+    private String body;
+    private Long userId;
+    private LocalDateTime createdAt = null;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
     public Article(Long id, String slug, String title, String description, String body, Long userId) {

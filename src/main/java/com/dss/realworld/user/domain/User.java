@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Alias("User")
 public class User {
 
-    private final Long id;
-    private final String username;
-    private final String password;
-    private final String email;
-    private final String bio;
-    private final String image;
-    private final LocalDateTime createdAt = null;
-    private final LocalDateTime updatedAt = LocalDateTime.now();
+    private Long id;
+    private String username;
+    private String password;
+    private String email;
+    private String bio;
+    private String image;
+    private LocalDateTime createdAt = null;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
     public User(Long id, String username, String password, String email, String bio, String image) {

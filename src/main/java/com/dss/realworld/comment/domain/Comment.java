@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 @Getter
 @Alias("Comment")
 public class Comment {
-    private final Long id;
-    private final Long articleId;
-    private final String body;
-    private final LocalDateTime createdAt = null;
-    private final LocalDateTime updatedAt = LocalDateTime.now();
-    private final Long userId;
+    private Long id;
+    private Long articleId;
+    private String body;
+    private LocalDateTime createdAt = null;
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    private Long userId;
 
     @Builder
     public Comment(Long id, String body, Long userId, Long articleId ) {
