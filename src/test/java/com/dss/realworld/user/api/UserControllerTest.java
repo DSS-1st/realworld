@@ -50,14 +50,13 @@ class UserControllerTest {
     void Should_Success_When_AddUserDtoIsNotNull() throws Exception {
         String username = "Jacob";
         String email = "jake@jake.jake";
-        AddUserRequestDto.AddUserDto user = AddUserRequestDto.AddUserDto.builder()
+        AddUserRequestDto user = AddUserRequestDto.builder()
                 .username(username)
                 .email(email)
                 .password("jakejake")
                 .build();
-        AddUserRequestDto addUserRequestDto = new AddUserRequestDto(user);
 
-        String jsonString = objectMapper.writeValueAsString(addUserRequestDto);
+        String jsonString = objectMapper.writeValueAsString(user);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,24 +1,23 @@
 package com.dss.realworld.user.api;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@JsonRootName("user")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class AddUserRequestDto {
 
-    private AddUserDto user;
+    private String username;
+    private String email;
+    private String password;
 
-    @Getter
     @Builder
-    public static class AddUserDto {
-
-        private String username;
-        private String email;
-        private String password;
+    public AddUserRequestDto(final String username, final String email, final String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
-
 }

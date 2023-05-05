@@ -19,11 +19,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public GetUserDto add(AddUserRequestDto addUserRequestDto) {
         User user = User.builder()
-                .username(addUserRequestDto.getUser().getUsername())
-                .email(addUserRequestDto.getUser().getEmail())
-                .password(addUserRequestDto.getUser().getPassword())
+                .username(addUserRequestDto.getUsername())
+                .email(addUserRequestDto.getEmail())
+                .password(addUserRequestDto.getPassword())
                 .build();
         userRepository.add(user);
+
         return userRepository.getByEmail(user.getEmail());
     }
 }
