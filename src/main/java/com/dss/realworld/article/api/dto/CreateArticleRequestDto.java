@@ -3,7 +3,9 @@ package com.dss.realworld.article.api.dto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
