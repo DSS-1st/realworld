@@ -16,9 +16,9 @@ public class CommentAuthorDto {
     private String image;
     private boolean following;
 
-    CommentAuthorDto(GetUserDto getUserDto) {
-        this.username = getUserDto.getUsername();
-        this.bio = getUserDto.getBio();
-        this.image = getUserDto.getImage();
+    CommentAuthorDto(String username, String bio, String image) {
+        this.username = username;
+        this.bio = bio;
+        this.image = image;
     }
 }

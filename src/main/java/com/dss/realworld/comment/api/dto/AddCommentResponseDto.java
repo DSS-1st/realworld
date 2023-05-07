@@ -24,6 +24,6 @@ public class AddCommentResponseDto {
         this.createdAt = foundComment.getCreatedAt();
         this.updatedAt = foundComment.getUpdatedAt();
         this.body = foundComment.getBody();
-        this.author = new CommentAuthorDto(foundUser);
+        this.author = new CommentAuthorDto(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage());
     }
 }
