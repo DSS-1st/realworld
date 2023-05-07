@@ -18,7 +18,7 @@ public interface ArticleRepository {
 
     Long findMaxId();
 
-    Article findById(Long id);
+    Optional<Article> findById(Long id);
 
     Optional<Article> findBySlug(String slug);
 }

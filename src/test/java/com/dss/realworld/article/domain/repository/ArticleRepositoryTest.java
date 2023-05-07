@@ -1,6 +1,7 @@
 package com.dss.realworld.article.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
+import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -49,7 +50,7 @@ public class ArticleRepositoryTest {
         Article newArticle = ArticleFixtures.createDefault();
         articleRepository.persist(newArticle);
 
-        Article foundArticle = articleRepository.findById(newArticle.getId());
+        Article foundArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
 
         assertThat(foundArticle.getTitle()).isEqualTo(newArticle.getTitle());
     }

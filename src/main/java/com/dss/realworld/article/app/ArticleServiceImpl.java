@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,7 +24,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+    public Optional<Article> save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
         Long maxId = articleRepository.findMaxId();
 
         if (maxId == null) maxId = 0L;

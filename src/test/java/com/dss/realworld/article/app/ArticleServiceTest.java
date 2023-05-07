@@ -5,13 +5,12 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -45,7 +44,7 @@ public class ArticleServiceTest {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
-        Article savedArticle = articleRepository.findById(newArticle.getId());
+        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
@@ -62,7 +61,7 @@ public class ArticleServiceTest {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
-        Article savedArticle = articleRepository.findById(newArticle.getId());
+        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
@@ -80,7 +79,7 @@ public class ArticleServiceTest {
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        Article savedArticle = articleService.save(createArticleRequestDto, logonId);
+        Article savedArticle = articleService.save(createArticleRequestDto, logonId).orElseThrow(ArticleNotFoundException::new);
 
         //then
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
@@ -95,15 +94,14 @@ public class ArticleServiceTest {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
-        Article savedArticle = articleRepository.findById(newArticle.getId());
-        assertThat(savedArticle.getId()).isEqualTo(validUserId);
+        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
+        assertThat(savedArticle.getUserId()).isEqualTo(validUserId);
 
         //when
         articleService.delete(savedArticle.getSlug(), validUserId);
-        Optional<Article> foundArticle = Optional.ofNullable(articleRepository.findById(validUserId));
 
         //then
-        assertThat(foundArticle).isEmpty();
+        Assertions.assertThatThrownBy(()->articleRepository.findBySlug(savedArticle.getSlug()).orElseThrow(ArticleNotFoundException::new)).isInstanceOf(ArticleNotFoundException.class);
     }
 
     private Article saveArticle(Long userId) {
