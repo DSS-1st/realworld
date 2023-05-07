@@ -15,7 +15,7 @@
         alter table article AUTO_INCREMENT = 1
     </select>
 
-    <insert id="create" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
+    <insert id="persist" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
         insert into article(slug, title, description, body, user_id)
         values (#{slug}, #{title}, #{description}, #{body}, #{userId})
     </insert>

@@ -13,7 +13,7 @@ public interface ArticleRepository {
 
     void resetAutoIncrement();
 
-    void create(Article article);
+    void persist(Article article);
 
     int delete(Long id);
 
