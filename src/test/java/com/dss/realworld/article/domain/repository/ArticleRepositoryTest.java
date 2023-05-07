@@ -86,11 +86,7 @@ public class ArticleRepositoryTest {
     @DisplayName(value = "유효하지 않은 Id로 삭제 요청 시 삭제된 Article 0개")
     @Test
     void t5() {
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
+        Article newArticle = ArticleFixtures.createDefault();
         articleRepository.persist(newArticle);
 
         int deletedCount = articleRepository.delete(10L);
