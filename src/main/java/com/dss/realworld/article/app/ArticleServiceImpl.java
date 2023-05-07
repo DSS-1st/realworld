@@ -1,6 +1,6 @@
 package com.dss.realworld.article.app;
 
-import com.dss.realworld.article.api.dto.ArticleAuthorDto;
+import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
@@ -45,8 +45,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleAuthorDto getAuthor(Long userId) {
+    public AuthorDto getAuthor(Long userId) {
         GetUserDto foundAuthor = userRepository.getById(userId);
-        return ArticleAuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
+        return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
     }
 }

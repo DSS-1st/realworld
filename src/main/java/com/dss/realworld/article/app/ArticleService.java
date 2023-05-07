@@ -1,6 +1,6 @@
 package com.dss.realworld.article.app;
 
-import com.dss.realworld.article.api.dto.ArticleAuthorDto;
+import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 
@@ -10,5 +10,5 @@ public interface ArticleService {
 
     void delete(String slug, Long userId);
 
-    ArticleAuthorDto getAuthor(Long userId);
+    AuthorDto getAuthor(Long userId);
 }

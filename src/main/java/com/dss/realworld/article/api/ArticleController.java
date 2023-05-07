@@ -1,6 +1,6 @@
 package com.dss.realworld.article.api;
 
-import com.dss.realworld.article.api.dto.ArticleAuthorDto;
+import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.article.api.dto.ArticleContentDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.CreateArticleResponseDto;
@@ -20,7 +20,7 @@ public class ArticleController {
     public CreateArticleResponseDto create(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
         GetArticleDto article = articleService.save(createArticleRequestDto, getLogonUserId());
         ArticleContentDto content = ArticleContentDto.of(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
-        ArticleAuthorDto author = articleService.getAuthor(article.getUserId());
+        AuthorDto author = articleService.getAuthor(article.getUserId());
 
         return new CreateArticleResponseDto(content, author);
     }

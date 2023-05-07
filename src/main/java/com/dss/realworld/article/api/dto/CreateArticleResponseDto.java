@@ -1,8 +1,8 @@
 package com.dss.realworld.article.api.dto;
 
+import com.dss.realworld.common.dto.AuthorDto;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -21,9 +21,9 @@ public class CreateArticleResponseDto {
     private final LocalDateTime updatedAt;
     private final boolean favorited = false; // todo Following 도메인 추가 후 구현
     private final int favoritesCount = 0; // todo Following 도메인 추가 후 구현
-    private final ArticleAuthorDto author;
+    private final AuthorDto author;
 
-    public CreateArticleResponseDto(ArticleContentDto content, ArticleAuthorDto author) {
+    public CreateArticleResponseDto(ArticleContentDto content, AuthorDto author) {
         this.slug = content.getSlug();
         this.title = content.getTitle();
         this.description = content.getDescription();
