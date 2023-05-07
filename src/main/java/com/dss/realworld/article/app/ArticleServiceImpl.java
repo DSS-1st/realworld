@@ -39,7 +39,7 @@ public class ArticleServiceImpl implements ArticleService {
     public void delete(String slug, Long userId) {
         GetArticleDto foundArticle = articleRepository.getBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
-        assert !foundArticle.isAuthorMatch(userId) : new ArticleAuthorNotMatchException();
+        if (foundArticle.isAuthorMatch(userId)) throw new ArticleAuthorNotMatchException();
 
         articleRepository.delete(foundArticle.getId());
     }
