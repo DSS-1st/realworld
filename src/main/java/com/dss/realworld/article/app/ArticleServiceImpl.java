@@ -2,7 +2,6 @@ package com.dss.realworld.article.app;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
@@ -23,30 +22,30 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public GetArticleDto save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
-        Long maxId = articleRepository.getMaxId();
+    public Article save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+        Long maxId = articleRepository.findMaxId();
 
         if (maxId == null) maxId = 0L;
 
         Article article = createArticleRequestDto.convert(logonUserId, maxId);
         articleRepository.persist(article);
 
-        return articleRepository.getById(article.getId());
+        return articleRepository.findById(article.getId());
     }
 
     @Override
     @Transactional
-    public void delete(String slug, Long userId) {
-        GetArticleDto foundArticle = articleRepository.getBySlug(slug).orElseThrow(ArticleNotFoundException::new);
-
-        if (foundArticle.isAuthorMatch(userId)) throw new ArticleAuthorNotMatchException();
+    public void delete(String slug, Long loginId) {
+        Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        if (foundArticle.isAuthorMatch(loginId)) throw new ArticleAuthorNotMatchException();
 
         articleRepository.delete(foundArticle.getId());
     }
 
     @Override
     public AuthorDto getAuthor(Long userId) {
-        User foundAuthor = userRepository.findById(userId);
-        return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
+        User foundUser = userRepository.findById(userId);
+
+        return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage());
     }
 }

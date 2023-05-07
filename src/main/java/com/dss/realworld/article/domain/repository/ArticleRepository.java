@@ -1,7 +1,6 @@
 package com.dss.realworld.article.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
@@ -17,9 +16,9 @@ public interface ArticleRepository {
 
     int delete(Long id);
 
-    Long getMaxId();
+    Long findMaxId();
 
-    GetArticleDto getById(Long id);
+    Article findById(Long id);
 
-    Optional<GetArticleDto> getBySlug(String slug);
+    Optional<Article> findBySlug(String slug);
 }

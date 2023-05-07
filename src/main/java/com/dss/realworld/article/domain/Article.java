@@ -16,12 +16,12 @@ public class Article {
     private String title;
     private String description;
     private String body;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Long userId;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public Article(Long id, String slug, String title, String description, String body, Long userId) {
+    public Article(Long id, String slug, String title, String description, String body, LocalDateTime createdAt, LocalDateTime updatedAt, Long userId) {
         Assert.notNull(title, "title can not be null");
         Assert.notNull(description, "description can not be null");
         Assert.notNull(body, "body can not be null");
@@ -31,6 +31,12 @@ public class Article {
         this.title = title;
         this.description = description;
         this.body = body;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.userId = userId;
+    }
+
+    public boolean isAuthorMatch(final Long loginId) {
+        return this.userId.compareTo(loginId) != 0;
     }
 }

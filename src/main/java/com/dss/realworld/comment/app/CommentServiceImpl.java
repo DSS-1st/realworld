@@ -1,6 +1,6 @@
 package com.dss.realworld.comment.app;
 
-import com.dss.realworld.article.domain.dto.GetArticleDto;
+import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug) {
-        GetArticleDto foundArticle = articleRepository.getBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         Comment comment = Comment.builder()
                 .body(addCommentRequestDto.getBody())

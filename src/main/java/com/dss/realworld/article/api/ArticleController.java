@@ -1,11 +1,11 @@
 package com.dss.realworld.article.api;
 
-import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.article.api.dto.ArticleContentDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.CreateArticleResponseDto;
 import com.dss.realworld.article.app.ArticleService;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
+import com.dss.realworld.article.domain.Article;
+import com.dss.realworld.common.dto.AuthorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class ArticleController {
 
     @PostMapping
     public CreateArticleResponseDto create(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
-        GetArticleDto article = articleService.save(createArticleRequestDto, getLogonUserId());
+        Article article = articleService.save(createArticleRequestDto, getLogonUserId());
         ArticleContentDto content = ArticleContentDto.of(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
         AuthorDto author = articleService.getAuthor(article.getUserId());
 

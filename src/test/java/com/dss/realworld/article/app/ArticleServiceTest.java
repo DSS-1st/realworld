@@ -2,7 +2,6 @@ package com.dss.realworld.article.app;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
@@ -46,7 +45,7 @@ public class ArticleServiceTest {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
-        GetArticleDto savedArticle = articleRepository.getById(newArticle.getId());
+        Article savedArticle = articleRepository.findById(newArticle.getId());
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
@@ -63,7 +62,7 @@ public class ArticleServiceTest {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
-        GetArticleDto savedArticle = articleRepository.getById(newArticle.getId());
+        Article savedArticle = articleRepository.findById(newArticle.getId());
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
@@ -81,7 +80,7 @@ public class ArticleServiceTest {
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        GetArticleDto savedArticle = articleService.save(createArticleRequestDto, logonId);
+        Article savedArticle = articleService.save(createArticleRequestDto, logonId);
 
         //then
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
@@ -96,12 +95,12 @@ public class ArticleServiceTest {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
-        GetArticleDto savedArticle = articleRepository.getById(newArticle.getId());
+        Article savedArticle = articleRepository.findById(newArticle.getId());
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
         articleService.delete(savedArticle.getSlug(), validUserId);
-        Optional<GetArticleDto> foundArticle = Optional.ofNullable(articleRepository.getById(validUserId));
+        Optional<Article> foundArticle = Optional.ofNullable(articleRepository.findById(validUserId));
 
         //then
         assertThat(foundArticle).isEmpty();

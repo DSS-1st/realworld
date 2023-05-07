@@ -2,8 +2,8 @@ package com.dss.realworld.article.api;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
+import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -70,7 +70,7 @@ public class ArticleControllerTest {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
-        GetArticleDto savedArticle = articleService.save(articleDto, logonId);
+        Article savedArticle = articleService.save(articleDto, logonId);
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
 
         //when
