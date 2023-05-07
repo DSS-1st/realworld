@@ -1,12 +1,35 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/realworld
+    driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/realworld
     username: admin_dss
     password: 1234
 
 mybatis:
-  mapper-locations: classpath:mapper/**/**.xml
-  type-aliases-package: com.dss.realworld
+  mapperLocations: classpath:mapper/**/**.xml
+  typeAliasesPackage: com.dss.realworld
   configuration:
     mapUnderscoreToCamelCase: true
+
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: info
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: trace
+      sqlonly: OFF
+      sqltiming: INFO
+      connection : OFF
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

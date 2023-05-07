@@ -1,12 +1,16 @@
 package com.dss.realworld.article.api;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
+import com.dss.realworld.article.api.dto.CreateArticleRequestDto.CreateArticleDto;
+import com.dss.realworld.article.app.ArticleService;
+import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +39,9 @@ public class ArticleControllerTest {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleService articleService;
 
     @BeforeEach
     void setUp() {
@@ -60,17 +68,49 @@ public class ArticleControllerTest {
         articleRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
     @Test
-    void Should_Success_When_CreateArticleDtoIsNotNull() throws Exception {
+    void t1() throws Exception {
+        //given
+        Long logonId = 1L;
+        CreateArticleRequestDto articleDto = createArticleDto();
+        GetArticleDto savedArticle = articleService.createArticle(articleDto, logonId);
+        assertThat(savedArticle.getUserId()).isEqualTo(logonId);
+
+        //when
+        String slug = savedArticle.getSlug();
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .delete("/api/articles/" + slug)
+                .contentType(MediaType.TEXT_PLAIN);
+
+        //then
+        mockMvc.perform(mockRequest).andExpect(status().isOk());
+    }
+
+    private CreateArticleRequestDto createArticleDto() {
+        CreateArticleDto createArticleDto = CreateArticleDto.builder()
+                .title("How to train your dragon")
+                .description("Ever wonder how?")
+                .body("You have to believe")
+                .build();
+
+        return new CreateArticleRequestDto(createArticleDto);
+    }
+
+    @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공")
+    @Test
+    void t2() throws Exception {
+        //given
         String title = "How to train your dragon";
         String description = "Ever wonder how?";
         String body = "You have to believe";
-        CreateArticleRequestDto.CreateArticleDto article = CreateArticleRequestDto.CreateArticleDto.builder()
+        CreateArticleDto article = CreateArticleDto.builder()
                 .title(title)
                 .description(description)
                 .body(body)
                 .build();
 
+        //when
         CreateArticleRequestDto createArticleRequestDto = new CreateArticleRequestDto(article);
         String jsonString = objectMapper.writeValueAsString(createArticleRequestDto);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -79,10 +119,11 @@ public class ArticleControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(jsonString);
 
+        //then
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(title.trim().replace(" ", "-")))
+                .andExpect(jsonPath("$..slug").value(title.trim().replace(" ", "-") + "-1"))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob000"))

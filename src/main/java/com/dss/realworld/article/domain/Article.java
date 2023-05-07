@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 
 @Getter
-@Alias("Article")
+@Alias(value = "Article")
 public class Article {
 
     private final Long id;
@@ -17,12 +17,10 @@ public class Article {
     private final String description;
     private final String body;
     private final Long userId;
-    private final LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private final LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
     public Article(Long id, String slug, String title, String description, String body, Long userId) {
-
         Assert.notNull(title, "title can not be null");
         Assert.notNull(description, "description can not be null");
         Assert.notNull(body, "body can not be null");

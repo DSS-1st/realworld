@@ -6,12 +6,9 @@ import com.dss.realworld.article.app.ArticleService;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/articles")
+@RequestMapping(value = "/api/articles")
 @RestController
 @RequiredArgsConstructor
 public class ArticleController {
@@ -20,10 +17,20 @@ public class ArticleController {
 
     @PostMapping
     public CreateArticleResponseDto createArticle(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
-        GetArticleDto getArticleDto = articleService.createArticle(createArticleRequestDto);
+        GetArticleDto getArticleDto = articleService.createArticle(createArticleRequestDto, getLogonUserId());
 
         GetUserDto getUserDto = articleService.getArticleAuthor(getArticleDto.getUserId());
 
         return new CreateArticleResponseDto(getArticleDto, getUserDto);
+    }
+
+    @DeleteMapping(value = "{slug}")
+    public void deleteArticle(@PathVariable String slug) {
+        articleService.deleteArticle(slug, getLogonUserId());
+    }
+
+    // todo SecurityContextHolder에서 인증 정보 얻기
+    private Long getLogonUserId(){
+        return 1L;
     }
 }
