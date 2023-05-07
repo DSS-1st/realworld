@@ -2,6 +2,8 @@ package com.dss.realworld.user.domain.repository;
 
 import com.dss.realworld.user.domain.User;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +15,21 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        clearTable();
+    }
+
+    @AfterEach
+    void tearDown() {
+        clearTable();
+    }
+
+    private void clearTable() {
+        userRepository.deleteAll();
+        userRepository.resetAutoIncrement();
+    }
 
     @Test
     void Should_Success_When_FindByAddedUsername() {

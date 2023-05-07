@@ -11,4 +11,17 @@ CREATE TABLE `users`
     PRIMARY KEY (`user_id`),
     UNIQUE KEY `UK_email` (`email`),
     UNIQUE KEY `UK_username` (`username`)
-)
+);
+
+CREATE TABLE `article`
+(
+    `article_id`  bigint       NOT NULL AUTO_INCREMENT,
+    `body`        varchar(255) NOT NULL,
+    `description` varchar(255) NOT NULL,
+    `slug`        varchar(255) DEFAULT NULL,
+    `title`       varchar(255) NOT NULL,
+    `user_id`     bigint       DEFAULT NULL,
+    `created_at`  datetime     DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  datetime     DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`article_id`)
+);

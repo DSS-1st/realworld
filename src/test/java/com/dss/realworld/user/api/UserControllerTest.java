@@ -1,5 +1,9 @@
 package com.dss.realworld.user.api;
 
+import com.dss.realworld.user.domain.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,24 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        clearTable();
+    }
+
+    @AfterEach
+    void tearDown() {
+        clearTable();
+    }
+
+    private void clearTable() {
+        userRepository.deleteAll();
+        userRepository.resetAutoIncrement();
+    }
 
     @Test
     void Should_Success_When_AddUserDtoIsNotNull() throws Exception {
