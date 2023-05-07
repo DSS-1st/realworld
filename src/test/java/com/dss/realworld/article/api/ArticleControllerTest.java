@@ -13,6 +13,7 @@ import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -66,8 +67,9 @@ public class ArticleControllerTest {
         articleRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
     @Test
-    void Should_DeleteSuccess_When_ArticleSlugAndUserIdIsValid() throws Exception {
+    void t1() throws Exception {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
@@ -88,8 +90,9 @@ public class ArticleControllerTest {
         return ArticleFixtures.createRequestDto();
     }
 
+    @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공")
     @Test
-    void Should_CreateArticleSuccess_When_CreateArticleDtoIsNotNull() throws Exception {
+    void t2() throws Exception {
         //given
         String title = "How to train your dragon";
         String description = "Ever wonder how?";

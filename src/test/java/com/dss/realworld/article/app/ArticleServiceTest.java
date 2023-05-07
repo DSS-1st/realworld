@@ -8,6 +8,7 @@ import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,8 +40,9 @@ public class ArticleServiceTest {
         articleRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "게시글 작성자가 아닐 때 삭제 시도 시 예외 발생")
     @Test
-    void Should_ThrownException_When_ArticleAuthorIsNotMatch() {
+    void t1() {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
@@ -56,8 +58,9 @@ public class ArticleServiceTest {
                 .hasMessageContaining("작성자가 일치하지 않습니다.");
     }
 
+    @DisplayName(value = "존재하지 않는 게시글을 삭제 시도 시 예외 발생")
     @Test
-    void Should_ThrownException_When_ArticleIsNotFound() {
+    void t2() {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
@@ -72,8 +75,9 @@ public class ArticleServiceTest {
                 .isInstanceOf(ArticleNotFoundException.class);
     }
 
+    @DisplayName(value = "필수 입력값, 로그인 ID가 유효하면 Article 작성 성공")
     @Test
-    void Should_CreateArticleSuccess_When_ArticleDtoAndLogonIdIsValid() {
+    void t3() {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
@@ -89,8 +93,9 @@ public class ArticleServiceTest {
         return ArticleFixtures.createRequestDto();
     }
 
+    @DisplayName(value = "slug와 작성자가 일치하면 Article 삭제 성공")
     @Test
-    void Should_ArticleDeleteSuccess_When_ArticleSlugAndUserIdIsValid() {
+    void t4() {
         //given
         Long validUserId = 1L;
         Article newArticle = saveArticle(validUserId);
