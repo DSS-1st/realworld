@@ -49,7 +49,7 @@ public class ArticleControllerTest {
         clearTable();
 
         User newUser = UserFixtures.create();
-        userRepository.add(newUser);
+        userRepository.persist(newUser);
     }
 
     @AfterEach

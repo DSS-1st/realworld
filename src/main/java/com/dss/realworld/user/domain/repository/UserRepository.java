@@ -10,11 +10,11 @@ public interface UserRepository {
 
     void resetAutoIncrement();
 
-    void add(User user);
+    void persist(User user);
 
-    GetUserDto getByUsername(String username);
+    User findByUsername(String username);
 
-    GetUserDto getByEmail(String email);
+    User findByEmail(String email);
 
-    GetUserDto getById(Long id);
+    User findById(Long id);
 }

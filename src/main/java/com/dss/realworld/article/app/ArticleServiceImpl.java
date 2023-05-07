@@ -1,13 +1,13 @@
 package com.dss.realworld.article.app;
 
-import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.user.domain.repository.GetUserDto;
+import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public AuthorDto getAuthor(Long userId) {
-        GetUserDto foundAuthor = userRepository.getById(userId);
+        User foundAuthor = userRepository.findById(userId);
         return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
     }
 }

@@ -8,7 +8,7 @@ import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.dto.GetCommentDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.user.domain.repository.GetUserDto;
+import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.add(comment);
         GetCommentDto foundComment = commentRepository.getById(comment.getId());
-        GetUserDto foundUser = userRepository.getById(comment.getUserId());
+        User foundUser = userRepository.findById(comment.getUserId());
 
         return new AddCommentResponseDto(foundComment, foundUser);
     }

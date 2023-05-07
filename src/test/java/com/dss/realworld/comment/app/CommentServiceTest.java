@@ -37,7 +37,7 @@ class CommentServiceTest {
         clearTable();
 
         User newUser = UserFixtures.create();
-        userRepository.add(newUser);
+        userRepository.persist(newUser);
 
         Article newArticle = ArticleFixtures.create(newUser.getId());
         articleRepository.persist(newArticle);

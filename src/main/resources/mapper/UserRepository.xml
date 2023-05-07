@@ -11,27 +11,27 @@
         alter table users auto_increment = 1
     </select>
 
-    <insert id="add" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="user_id">
+    <insert id="persist" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="user_id">
         insert into users(username, email, password)
         values (#{username},#{email},#{password})
     </insert>
 
     <sql id="getUsers">
-        select user_id, email, password, bio, image, username, created_at, updated_at
+        select user_id, email, username, password, bio, image, created_at, updated_at
         from users
     </sql>
 
-    <select id="getByUsername" parameterType="String" resultType="GetUserDto">
+    <select id="findByUsername" parameterType="String" resultType="User">
         <include refid="getUsers"/>
         where username = #{username}
     </select>
 
-    <select id="getByEmail" parameterType="String" resultType="GetUserDto">
+    <select id="findByEmail" parameterType="String" resultType="User">
         <include refid="getUsers"/>
         where email = #{email}
     </select>
 
-    <select id="getById" parameterType="long" resultType="GetUserDto">
+    <select id="findById" parameterType="long" resultType="User">
         <include refid="getUsers"/>
         where user_id = #{id}
     </select>

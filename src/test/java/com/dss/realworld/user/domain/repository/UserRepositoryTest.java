@@ -44,10 +44,10 @@ public class UserRepositoryTest {
                 .email("kate@kate.kate")
                 .build();
 
-        userRepository.add(newUser1);
-        userRepository.add(newUser2);
+        userRepository.persist(newUser1);
+        userRepository.persist(newUser2);
 
-        GetUserDto addedUser = userRepository.getByUsername("Jacob");
+        User addedUser = userRepository.findByUsername("Jacob");
         Assertions.assertThat(addedUser.getUsername()).isEqualTo(newUser1.getUsername());
     }
 
@@ -64,10 +64,10 @@ public class UserRepositoryTest {
                 .email("kate@kate.kate")
                 .build();
 
-        userRepository.add(newUser1);
-        userRepository.add(newUser2);
+        userRepository.persist(newUser1);
+        userRepository.persist(newUser2);
 
-        GetUserDto addedUser = userRepository.getByEmail("jake@jake.jake");
+        User addedUser = userRepository.findByEmail("jake@jake.jake");
         Assertions.assertThat(addedUser.getEmail()).isEqualTo(newUser1.getEmail());
     }
 }

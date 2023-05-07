@@ -1,6 +1,6 @@
 package com.dss.realworld.user.api;
 
-import com.dss.realworld.user.domain.repository.GetUserDto;
+import com.dss.realworld.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
 
@@ -14,10 +14,10 @@ public class AddUserResponseDto {
     private final String bio;
     private final String image;
 
-    AddUserResponseDto(GetUserDto getUserDto) {
-        this.email = getUserDto.getEmail();
-        this.username = getUserDto.getUsername();
-        this.bio = getUserDto.getBio();
-        this.image = getUserDto.getImage();
+    AddUserResponseDto(User user) {
+        this.email = user.getEmail();
+        this.username = user.getUsername();
+        this.bio = user.getBio();
+        this.image = user.getImage();
     }
 }
