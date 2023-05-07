@@ -1,21 +1,22 @@
 package com.dss.realworld.article.api.dto;
 
-import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class ArticleAuthorDto {
 
-    private String username;
-    private String bio;
-    private String image;
-    private boolean following;
+    private final String username;
+    private final String bio;
+    private final String image;
+    private final boolean following = false;
 
-    ArticleAuthorDto(GetUserDto getUserDto) {
-        this.username = getUserDto.getUsername();
-        this.bio = getUserDto.getBio();
-        this.image = getUserDto.getImage();
+    private ArticleAuthorDto(String username, String bio, String image) {
+        this.username = username;
+        this.bio = bio;
+        this.image = image;
+    }
+
+    public static ArticleAuthorDto of(String username, String bio, String image) {
+        return new ArticleAuthorDto(username, bio, image);
     }
 }

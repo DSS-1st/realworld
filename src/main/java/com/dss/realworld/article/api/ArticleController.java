@@ -1,14 +1,15 @@
 package com.dss.realworld.article.api;
 
+import com.dss.realworld.article.api.dto.ArticleAuthorDto;
+import com.dss.realworld.article.api.dto.ArticleContentDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.CreateArticleResponseDto;
 import com.dss.realworld.article.app.ArticleService;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
-import com.dss.realworld.user.domain.repository.GetUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/articles")
+@RequestMapping(value = "/api/articles")
 @RestController
 @RequiredArgsConstructor
 public class ArticleController {
@@ -17,20 +18,20 @@ public class ArticleController {
 
     @PostMapping
     public CreateArticleResponseDto create(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
-        GetArticleDto getArticleDto = articleService.create(createArticleRequestDto, getLogonUserId());
+        GetArticleDto article = articleService.save(createArticleRequestDto, getLogonUserId());
+        ArticleContentDto content = ArticleContentDto.of(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
+        ArticleAuthorDto author = articleService.getAuthor(article.getUserId());
 
-        GetUserDto getUserDto = articleService.getAuthor(getArticleDto.getUserId());
-
-        return new CreateArticleResponseDto(getArticleDto, getUserDto);
+        return new CreateArticleResponseDto(content, author);
     }
 
-    @DeleteMapping("{slug}")
+    @DeleteMapping(value = "{slug}")
     public void delete(@PathVariable String slug) {
         articleService.delete(slug, getLogonUserId());
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
-    private Long getLogonUserId(){
+    private Long getLogonUserId() {
         return 1L;
     }
 }

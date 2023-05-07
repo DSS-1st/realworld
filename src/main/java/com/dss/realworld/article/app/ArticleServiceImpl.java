@@ -1,5 +1,6 @@
 package com.dss.realworld.article.app;
 
+import com.dss.realworld.article.api.dto.ArticleAuthorDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
@@ -22,7 +23,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public GetArticleDto create(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+    public GetArticleDto save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
         Long maxId = articleRepository.getMaxId();
 
         if (maxId == null) maxId = 0L;
@@ -44,7 +45,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public GetUserDto getAuthor(Long userId) {
-        return userRepository.getById(userId);
+    public ArticleAuthorDto getAuthor(Long userId) {
+        GetUserDto foundAuthor = userRepository.getById(userId);
+        return ArticleAuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
     }
 }
