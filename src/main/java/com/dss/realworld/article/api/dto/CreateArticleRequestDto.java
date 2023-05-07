@@ -25,14 +25,13 @@ public class CreateArticleRequestDto {
         this.tagList = tagList;
     }
 
-    public Article convertToArticle(Long logonUserId, Long maxArticleId) {
+    public Article convert(Long logonUserId, Long maxArticleId) {
         return Article.builder()
-                .slug(Slug.getSlug(this.title, maxArticleId))
+                .slug(Slug.of(this.title, maxArticleId).getString())
                 .title(this.title.trim())
                 .description(this.description)
                 .body(this.body)
                 .userId(logonUserId)
                 .build();
     }
-
 }
