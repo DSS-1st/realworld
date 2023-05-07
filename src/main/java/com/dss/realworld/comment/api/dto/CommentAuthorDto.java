@@ -1,11 +1,7 @@
 package com.dss.realworld.comment.api.dto;
 
-import com.dss.realworld.user.domain.repository.GetUserDto;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

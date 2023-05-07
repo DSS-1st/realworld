@@ -19,7 +19,7 @@ public class AddCommentResponseDto {
     private final String body;
     private final CommentAuthorDto author;
 
-    public AddCommentResponseDto(GetCommentDto foundComment, GetUserDto foundUser){
+    public AddCommentResponseDto(GetCommentDto foundComment, GetUserDto foundUser) {
         this.id = foundComment.getId();
         this.createdAt = foundComment.getCreatedAt();
         this.updatedAt = foundComment.getUpdatedAt();
