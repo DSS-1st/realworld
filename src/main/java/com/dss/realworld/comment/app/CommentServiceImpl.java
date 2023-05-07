@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,12 +28,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug) {
-        Optional<GetArticleDto> foundArticle = articleRepository.getBySlug(slug);
-        foundArticle.orElseThrow(ArticleNotFoundException::new);
+        GetArticleDto foundArticle = articleRepository.getBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         Comment comment = Comment.builder()
                 .body(addCommentRequestDto.getBody())
-                .articleId(foundArticle.get().getId())
+                .articleId(foundArticle.getId())
                 .userId(logonUserId) // todo 로그인 안 했을 때 예외 추가
                 .build();
 

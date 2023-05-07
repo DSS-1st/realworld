@@ -4,7 +4,6 @@ import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.junit.jupiter.api.AfterEach;
@@ -56,7 +55,7 @@ public class ArticleServiceTest {
 
         //then
         assertThatThrownBy(() -> articleService.delete(savedSlug, wrongAuthorId))
-                .isInstanceOf(ArticleAuthorNotMatchException.class);
+                .hasMessageContaining("작성자가 일치하지 않습니다.");
     }
 
     @Test
@@ -110,7 +109,7 @@ public class ArticleServiceTest {
 
     private Article saveArticle(Long userId) {
         Article newArticle = ArticleFixtures.create(userId);
-        articleRepository.create(newArticle);
+        articleRepository.persist(newArticle);
 
         return newArticle;
     }

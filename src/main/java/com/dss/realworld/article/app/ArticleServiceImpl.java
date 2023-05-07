@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,8 +27,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         if (maxId == null) maxId = 0L;
 
-        Article article = createArticleRequestDto.convertToArticle(logonUserId, maxId);
-        articleRepository.create(article);
+        Article article = createArticleRequestDto.convert(logonUserId, maxId);
+        articleRepository.persist(article);
 
         return articleRepository.getById(article.getId());
     }
@@ -38,12 +36,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public void delete(String slug, Long userId) {
-        Optional<GetArticleDto> foundArticle = articleRepository.getBySlug(slug);
-        foundArticle.orElseThrow(ArticleNotFoundException::new);
+        GetArticleDto foundArticle = articleRepository.getBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
-        if (foundArticle.get().isAuthorMatch(userId)) throw new ArticleAuthorNotMatchException();
+        assert !foundArticle.isAuthorMatch(userId) : new ArticleAuthorNotMatchException();
 
-        articleRepository.delete(foundArticle.get().getId());
+        articleRepository.delete(foundArticle.getId());
     }
 
     @Override
