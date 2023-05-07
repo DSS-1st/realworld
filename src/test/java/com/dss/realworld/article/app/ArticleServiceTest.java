@@ -81,7 +81,7 @@ public class ArticleServiceTest {
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        GetArticleDto savedArticle = articleService.create(createArticleRequestDto, logonId);
+        GetArticleDto savedArticle = articleService.save(createArticleRequestDto, logonId);
 
         //then
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);

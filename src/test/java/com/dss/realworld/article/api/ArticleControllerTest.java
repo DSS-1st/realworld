@@ -70,7 +70,7 @@ public class ArticleControllerTest {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
-        GetArticleDto savedArticle = articleService.create(articleDto, logonId);
+        GetArticleDto savedArticle = articleService.save(articleDto, logonId);
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
 
         //when
