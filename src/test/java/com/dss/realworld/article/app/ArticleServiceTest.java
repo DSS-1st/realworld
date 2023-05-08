@@ -1,10 +1,14 @@
 package com.dss.realworld.article.app;
 
+import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +25,9 @@ public class ArticleServiceTest {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -79,14 +86,17 @@ public class ArticleServiceTest {
     @Test
     void t3() {
         //given
-        Long logonId = 1L;
+        User user = UserFixtures.create();
+        userRepository.persist(user);
+        Long loginId = user.getId();
+
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        Article savedArticle = articleService.save(createArticleRequestDto, logonId).orElseThrow(ArticleNotFoundException::new);
+        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, loginId);
 
         //then
-        assertThat(savedArticle.getUserId()).isEqualTo(logonId);
+        assertThat(articleResponseDto.getTitle()).isEqualTo(createArticleRequestDto.getTitle());
     }
 
     private CreateArticleRequestDto createArticleDto() {

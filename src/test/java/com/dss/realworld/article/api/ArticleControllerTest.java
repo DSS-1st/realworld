@@ -1,11 +1,10 @@
 package com.dss.realworld.article.api;
 
+import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
-import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
@@ -73,11 +72,11 @@ public class ArticleControllerTest {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
-        Article savedArticle = articleService.save(articleDto, logonId).orElseThrow(ArticleNotFoundException::new);
-        assertThat(savedArticle.getUserId()).isEqualTo(logonId);
+        ArticleResponseDto articleResponseDto = articleService.save(articleDto, logonId);
+        assertThat(articleResponseDto.getTitle()).isEqualTo(articleDto.getTitle());
 
         //when
-        String slug = savedArticle.getSlug();
+        String slug = articleResponseDto.getSlug();
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .delete("/api/articles/" + slug)
                 .contentType(MediaType.TEXT_PLAIN);
@@ -109,7 +108,7 @@ public class ArticleControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(title))
                 .andExpect(jsonPath("$..slug").value(Slug.of(title,0L).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
