@@ -43,6 +43,9 @@ public class ArticleServiceTest {
     }
 
     private void clearTable() {
+        userRepository.deleteAll();
+        userRepository.resetAutoIncrement();
+
         articleRepository.deleteAll();
         articleRepository.resetAutoIncrement();
     }
@@ -101,7 +104,7 @@ public class ArticleServiceTest {
     }
 
     private Article saveArticle(Long userId) {
-        Article newArticle = ArticleFixtures.create(userId);
+        Article newArticle = ArticleFixtures.of(userId);
         articleRepository.persist(newArticle);
 
         return newArticle;
