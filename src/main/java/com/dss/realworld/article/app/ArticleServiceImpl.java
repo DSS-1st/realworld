@@ -1,5 +1,7 @@
 package com.dss.realworld.article.app;
 
+import com.dss.realworld.article.api.dto.ArticleContentDto;
+import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
@@ -12,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,16 +23,27 @@ public class ArticleServiceImpl implements ArticleService {
     private final UserRepository userRepository;
 
     @Override
+    public ArticleResponseDto findBySlug(String slug) {
+        Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        ArticleContentDto content = ArticleContentDto.of(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
+        AuthorDto author = getAuthor(article.getUserId());
+
+        return new ArticleResponseDto(content, author);
+    }
+
+    @Override
     @Transactional
-    public Optional<Article> save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+    public ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
         Long maxId = articleRepository.findMaxId();
-
         if (maxId == null) maxId = 0L;
-
         Article article = createArticleRequestDto.convert(logonUserId, maxId);
         articleRepository.persist(article);
 
-        return articleRepository.findById(article.getId());
+        Article savedArticle = articleRepository.findById(article.getId()).orElseThrow(ArticleNotFoundException::new);
+        ArticleContentDto content = ArticleContentDto.of(savedArticle.getSlug(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getBody(), savedArticle.getCreatedAt(), savedArticle.getUpdatedAt());
+        AuthorDto author = getAuthor(savedArticle.getUserId());
+
+        return new ArticleResponseDto(content, author);
     }
 
     @Override
