@@ -48,6 +48,7 @@ public class ArticleControllerTest {
     @BeforeEach
     void setUp() {
         clearTable();
+        userRepository.persist(UserFixtures.create());
     }
 
     @AfterEach
@@ -134,7 +135,7 @@ public class ArticleControllerTest {
     }
 
     private Long getSampleUserId() {
-        User user = UserFixtures.create();
+        User user = UserFixtures.create("kate","katepwd","kate@kate.kate");
         userRepository.persist(user);
 
         return user.getId();
