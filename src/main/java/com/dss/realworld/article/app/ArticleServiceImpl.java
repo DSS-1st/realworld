@@ -33,9 +33,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+    public ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginUserId) {
         Long maxId = articleRepository.findMaxId().orElse(0L);
-        Article article = createArticleRequestDto.convert(logonUserId, maxId);
+        Article article = createArticleRequestDto.convert(loginUserId, maxId);
         articleRepository.persist(article);
 
         Article savedArticle = articleRepository.findById(article.getId()).orElseThrow(ArticleNotFoundException::new);

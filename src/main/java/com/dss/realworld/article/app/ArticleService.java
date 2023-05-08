@@ -8,7 +8,7 @@ public interface ArticleService {
 
     ArticleResponseDto findBySlug(String slug);
 
-    ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId);
+    ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginUserId);
 
     void delete(String slug, Long userId);
 
