@@ -48,9 +48,6 @@ public class ArticleControllerTest {
     @BeforeEach
     void setUp() {
         clearTable();
-
-        User newUser = UserFixtures.create();
-        userRepository.persist(newUser);
     }
 
     @AfterEach
@@ -66,9 +63,39 @@ public class ArticleControllerTest {
         articleRepository.resetAutoIncrement();
     }
 
-    @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
+    @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공")
     @Test
     void t1() throws Exception {
+        //given
+        String title = "How to train your dragon";
+        String description = "Ever wonder how?";
+        String body = "You have to believe";
+        CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body);
+
+        //when
+        String jsonString = objectMapper.writeValueAsString(newArticle);
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/api/articles")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(jsonString);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$..title").value(title))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L).getValue()))
+                .andExpect(jsonPath("$..favorited").value(false))
+                .andExpect(jsonPath("$..following").value(false))
+                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..description").value(description))
+                .andExpect(jsonPath("$..body").value(body))
+                .andExpect(jsonPath("$..tagList.length()").value(0));
+    }
+
+    @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
+    @Test
+    void t2() throws Exception {
         //given
         Long logonId = 1L;
         CreateArticleRequestDto articleDto = createArticleDto();
@@ -89,33 +116,27 @@ public class ArticleControllerTest {
         return ArticleFixtures.createRequestDto();
     }
 
-    @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공")
+    @DisplayName(value = "유효한 slug 사용 시 조회 성공")
     @Test
-    void t2() throws Exception {
+    void t3() throws Exception {
         //given
-        String title = "How to train your dragon";
-        String description = "Ever wonder how?";
-        String body = "You have to believe";
-        CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body);
+        String slug = "How-to-train-your-dragon-1";
+        articleRepository.persist(ArticleFixtures.of(slug, getSampleUserId()));
 
         //when
-        String jsonString = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/api/articles")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(jsonString);
+                .get("/api/articles/" + slug);
 
         //then
         mockMvc.perform(mockRequest)
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title,0L).getValue()))
-                .andExpect(jsonPath("$..favorited").value(false))
-                .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
-                .andExpect(jsonPath("$..description").value(description))
-                .andExpect(jsonPath("$..body").value(body))
-                .andExpect(jsonPath("$..tagList.length()").value(0));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..slug").value(slug));
+    }
+
+    private Long getSampleUserId() {
+        User user = UserFixtures.create();
+        userRepository.persist(user);
+
+        return user.getId();
     }
 }
