@@ -16,7 +16,7 @@ public interface ArticleRepository {
 
     int delete(Long id);
 
-    Long findMaxId();
+    Optional<Long> findMaxId();
 
     Optional<Article> findById(Long id);
 
