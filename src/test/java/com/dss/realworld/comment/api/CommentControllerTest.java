@@ -50,7 +50,7 @@ class CommentControllerTest {
         User newUser = UserFixtures.create();
         userRepository.persist(newUser);
 
-        Article newArticle = ArticleFixtures.create(newUser.getId());
+        Article newArticle = ArticleFixtures.of(newUser.getId());
         articleRepository.persist(newArticle);
     }
 

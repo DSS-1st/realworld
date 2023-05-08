@@ -13,7 +13,7 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static Article create(Long userId) {
+    public static Article of(Long userId) {
         return Article.builder()
                 .title("How to train your dragon")
                 .slug("How-to-train-your-dragon-1")
@@ -23,7 +23,17 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static Article create(String title, String slug) {
+    public static Article of(String slug, Long userId) {
+        return Article.builder()
+                .title("How to train your dragon")
+                .slug(slug)
+                .description("Ever wonder how?")
+                .body("You have to believe")
+                .userId(userId)
+                .build();
+    }
+
+    public static Article of(String title, String slug) {
         return Article.builder()
                 .title(title)
                 .slug(slug)
