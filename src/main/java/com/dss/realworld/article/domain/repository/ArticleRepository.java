@@ -14,6 +14,8 @@ public interface ArticleRepository {
 
     void persist(Article article);
 
+    int update(Article article);
+
     int delete(Long id);
 
     Optional<Long> findMaxId();

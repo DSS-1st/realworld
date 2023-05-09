@@ -20,6 +20,15 @@
         values (#{slug}, #{title}, #{description}, #{body}, #{userId})
     </insert>
 
+    <update id="update" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
+        update article
+        set slug        = #{slug},
+            title       = #{title},
+            description = #{description},
+            body        = #{body}
+        where article_id = #{id}
+    </update>
+
     <sql id="findArticle">
         select article_id as id, slug, title, description, body, created_at as createdAt, updated_at as updatedAt, user_id as userId
         from article
