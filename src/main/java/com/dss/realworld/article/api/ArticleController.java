@@ -2,6 +2,7 @@ package com.dss.realworld.article.api;
 
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
+import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,14 +24,21 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateArticleRequestDto createArticleRequestDto) {
+    public ResponseEntity<?> create(@RequestBody final CreateArticleRequestDto createArticleRequestDto) {
         ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLogonUserId());
 
         return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
     }
 
+    @PutMapping(value = "/{slug}")
+    public ResponseEntity<?> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto, @PathVariable final String slug) {
+        ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLogonUserId(), slug);
+
+        return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
+    }
+
     @DeleteMapping(value = "/{slug}")
-    public ResponseEntity<?> delete(@PathVariable String slug) {
+    public ResponseEntity<?> delete(@PathVariable final String slug) {
         articleService.delete(slug, getLogonUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
