@@ -85,7 +85,7 @@ public class ArticleControllerTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L).getValue()))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L, true).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob000"))
@@ -135,7 +135,7 @@ public class ArticleControllerTest {
     }
 
     private Long getSampleUserId() {
-        User user = UserFixtures.create("kate","katepwd","kate@kate.kate");
+        User user = UserFixtures.create("kate", "katepwd", "kate@kate.kate");
         userRepository.persist(user);
 
         return user.getId();

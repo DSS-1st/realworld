@@ -29,7 +29,7 @@ public class CreateArticleRequestDto {
 
     public Article convert(Long logonUserId, Long maxArticleId) {
         return Article.builder()
-                .slug(Slug.of(this.title, maxArticleId).getValue())
+                .slug(Slug.of(this.title, maxArticleId, true).getValue())
                 .title(this.title.trim())
                 .description(this.description)
                 .body(this.body)

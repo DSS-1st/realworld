@@ -42,7 +42,7 @@ public class Article {
     }
 
     public Article updateArticle(final UpdateArticleRequestDto updateArticleRequestDto) {
-        this.slug = Slug.of(updateArticleRequestDto.getTitle(), this.id).getValue();
+        this.slug = Slug.of(updateArticleRequestDto.getTitle(), this.id,false).getValue();
         this.title = updateArticleRequestDto.getTitle();
         this.description = updateArticleRequestDto.getDescription();
         this.body = updateArticleRequestDto.getBody();
