@@ -25,7 +25,8 @@
         set slug        = #{slug},
             title       = #{title},
             description = #{description},
-            body        = #{body}
+            body        = #{body},
+            updated_at  = current_timestamp
         where article_id = #{id}
     </update>
 
