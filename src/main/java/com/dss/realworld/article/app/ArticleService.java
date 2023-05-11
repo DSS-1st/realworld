@@ -11,7 +11,7 @@ public interface ArticleService {
 
     ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginUserId);
 
-    ArticleResponseDto update(UpdateArticleRequestDto updateArticleRequestDto, Long logonUserId, String slug);
+    ArticleResponseDto update(UpdateArticleRequestDto updateArticleRequestDto, Long loginUserId, String slug);
 
     void delete(String slug, Long userId);
 
