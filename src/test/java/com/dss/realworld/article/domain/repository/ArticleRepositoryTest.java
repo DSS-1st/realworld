@@ -96,7 +96,7 @@ public class ArticleRepositoryTest {
         Assertions.assertThat(deletedCount).isEqualTo(0);
     }
 
-    @DisplayName(value = "Article Ttitle 수정 시 slug도 변경 성공")
+    @DisplayName(value = "Article title 수정 시 slug도 변경 성공")
     @Test
     void t6() {
         Article newArticle = ArticleFixtures.createDefault();
