@@ -1,6 +1,8 @@
 package com.dss.realworld.article.domain.repository;
 
+import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
+import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
@@ -92,5 +94,24 @@ public class ArticleRepositoryTest {
         int deletedCount = articleRepository.delete(10L);
 
         Assertions.assertThat(deletedCount).isEqualTo(0);
+    }
+
+    @DisplayName(value = "Article Ttitle 수정 시 slug도 변경 성공")
+    @Test
+    void t6() {
+        Article newArticle = ArticleFixtures.createDefault();
+        articleRepository.persist(newArticle);
+
+        String newTitle = "updated title";
+        String newDescription = "";
+        String newBody = "";
+        String newSlug = Slug.of(newTitle, newArticle.getId(), false).getValue();
+
+        UpdateArticleRequestDto updateArticleRequestDto = new UpdateArticleRequestDto(newTitle, newDescription, newBody);
+        articleRepository.update(newArticle.updateArticle(updateArticleRequestDto));
+
+        Article updatedArticle = articleRepository.findById(newArticle.getId()).get();
+        Assertions.assertThat(updatedArticle.getTitle()).isEqualTo(newTitle);
+        Assertions.assertThat(updatedArticle.getSlug()).isEqualTo(newSlug);
     }
 }
