@@ -1,5 +1,8 @@
 package com.dss.realworld.article.domain;
 
+import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
+import com.dss.realworld.util.ArticleFixtures;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -47,5 +50,21 @@ public class ArticleTest {
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
                 .build());
+    }
+
+    @DisplayName(value = "Article 수정 성공")
+    @Test
+    void t5() {
+        //given
+        Article newArticle = ArticleFixtures.of(1L,"old title");
+        String newTitle = "new title";
+        UpdateArticleRequestDto updateDto = new UpdateArticleRequestDto(newTitle,"","");
+
+        //when
+        newArticle.updateArticle(updateDto);
+
+        //then
+        Assertions.assertThat(newArticle.getTitle()).isEqualTo(newTitle);
+        assertThat(newArticle.getSlug()).isEqualTo("new-title-1");
     }
 }

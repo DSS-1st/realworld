@@ -13,6 +13,15 @@ public class ArticleFixtures {
                 .build();
     }
 
+    public static Article of(Long id, String title) {
+        return Article.builder()
+                .id(id)
+                .title(title)
+                .description("Ever wonder how?")
+                .body("You have to believe")
+                .build();
+    }
+
     public static Article of(Long userId) {
         return Article.builder()
                 .title("How to train your dragon")
@@ -42,7 +51,17 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static CreateArticleRequestDto createRequestDto(){
+    public static Article of(String title, String slug, Long userId) {
+        return Article.builder()
+                .title(title)
+                .slug(slug)
+                .description("Ever wonder how?")
+                .body("You have to believe")
+                .userId(userId)
+                .build();
+    }
+
+    public static CreateArticleRequestDto createRequestDto() {
         return CreateArticleRequestDto.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
@@ -50,7 +69,7 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static CreateArticleRequestDto createRequestDto(String title, String description, String body){
+    public static CreateArticleRequestDto createRequestDto(String title, String description, String body) {
         return CreateArticleRequestDto.builder()
                 .title(title)
                 .description(description)
