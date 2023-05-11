@@ -25,27 +25,27 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody final CreateArticleRequestDto createArticleRequestDto) {
-        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLogonUserId());
+        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLoginUserId());
 
         return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{slug}")
     public ResponseEntity<?> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto, @PathVariable final String slug) {
-        ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLogonUserId(), slug);
+        ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLoginUserId(), slug);
 
         return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{slug}")
     public ResponseEntity<?> delete(@PathVariable final String slug) {
-        articleService.delete(slug, getLogonUserId());
+        articleService.delete(slug, getLoginUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
-    private Long getLogonUserId() {
+    private Long getLoginUserId() {
         return 1L;
     }
 }
