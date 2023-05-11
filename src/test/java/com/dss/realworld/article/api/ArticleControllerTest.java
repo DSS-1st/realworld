@@ -2,6 +2,7 @@ package com.dss.realworld.article.api;
 
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
+import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
@@ -48,7 +49,6 @@ public class ArticleControllerTest {
     @BeforeEach
     void setUp() {
         clearTable();
-        userRepository.persist(UserFixtures.create());
     }
 
     @AfterEach
@@ -68,6 +68,8 @@ public class ArticleControllerTest {
     @Test
     void t1() throws Exception {
         //given
+        userRepository.persist(UserFixtures.create());
+
         String title = "How to train your dragon";
         String description = "Ever wonder how?";
         String body = "You have to believe";
@@ -98,9 +100,9 @@ public class ArticleControllerTest {
     @Test
     void t2() throws Exception {
         //given
-        Long logonId = 1L;
+        userRepository.persist(UserFixtures.create());
         CreateArticleRequestDto articleDto = createArticleDto();
-        ArticleResponseDto articleResponseDto = articleService.save(articleDto, logonId);
+        ArticleResponseDto articleResponseDto = articleService.save(articleDto, 1L);
         assertThat(articleResponseDto.getTitle()).isEqualTo(articleDto.getTitle());
 
         //when
@@ -139,5 +141,33 @@ public class ArticleControllerTest {
         userRepository.persist(user);
 
         return user.getId();
+    }
+
+    @DisplayName(value = "Article 수정 시 slug도 수정 성공")
+    @Test
+    void t4() throws Exception {
+        //given
+        String title = "How to train your dragon";
+        String slug = Slug.of(title, 0L, true).getValue();
+        articleRepository.persist(ArticleFixtures.of(title, slug, getSampleUserId()));
+
+        String newTitle = "new title";
+        String newDescription = "new description";
+        String newBody = "new body";
+        UpdateArticleRequestDto updateDto = new UpdateArticleRequestDto(newTitle, newDescription, newBody);
+        String requestBody = objectMapper.writeValueAsString(updateDto);
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .put("/api/articles/" + slug)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody);
+
+        //then
+        mockMvc.perform(mockRequest).andExpect(status().isCreated())
+                .andExpect(jsonPath("$..title").value(newTitle))
+                .andExpect(jsonPath("$..slug").value(Slug.of(newTitle, 1L, false).getValue()))
+                .andExpect(jsonPath("$..description").value(newDescription))
+                .andExpect(jsonPath("$..body").value(newBody));
     }
 }
