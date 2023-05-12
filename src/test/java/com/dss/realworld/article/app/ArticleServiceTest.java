@@ -146,4 +146,6 @@ public class ArticleServiceTest {
         //then
         Assertions.assertThatThrownBy(()->articleRepository.findBySlug(savedArticle.getSlug()).orElseThrow(ArticleNotFoundException::new)).isInstanceOf(ArticleNotFoundException.class);
     }
+
+    // Article Service Test는 Article Controller Test(t4)를 통해 수정 전후 DTO 검증
 }

@@ -3,6 +3,7 @@ package com.dss.realworld.article.app;
 import com.dss.realworld.article.api.dto.ArticleContentDto;
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
+import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.common.dto.AuthorDto;
@@ -24,9 +25,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleResponseDto findBySlug(String slug) {
-        Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
-        ArticleContentDto content = ArticleContentDto.of(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
-        AuthorDto author = getAuthor(article.getUserId());
+        Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        ArticleContentDto content = ArticleContentDto.of(foundArticle);
+        AuthorDto author = getAuthor(foundArticle.getUserId());
 
         return new ArticleResponseDto(content, author);
     }
@@ -38,11 +39,28 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = createArticleRequestDto.convert(loginUserId, maxId);
         articleRepository.persist(article);
 
-        Article savedArticle = articleRepository.findById(article.getId()).orElseThrow(ArticleNotFoundException::new);
-        ArticleContentDto content = ArticleContentDto.of(savedArticle.getSlug(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getBody(), savedArticle.getCreatedAt(), savedArticle.getUpdatedAt());
-        AuthorDto author = getAuthor(savedArticle.getUserId());
+        return getArticleResponseDto(article);
+    }
+
+    private ArticleResponseDto getArticleResponseDto(final Article newArticle) {
+        Article foundArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
+
+        ArticleContentDto content = ArticleContentDto.of(foundArticle);
+        AuthorDto author = getAuthor(foundArticle.getUserId());
 
         return new ArticleResponseDto(content, author);
+    }
+
+    @Override
+    @Transactional
+    public ArticleResponseDto update(final UpdateArticleRequestDto updateArticleRequestDto, final Long loginUserId, final String slug) {
+        Article savedArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        if(savedArticle.isAuthorMatch(loginUserId)) throw new ArticleAuthorNotMatchException();
+
+        Article toBeUpdatedArticle = savedArticle.updateArticle(updateArticleRequestDto);
+        articleRepository.update(toBeUpdatedArticle);
+
+        return getArticleResponseDto(toBeUpdatedArticle);
     }
 
     @Override

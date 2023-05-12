@@ -1,10 +1,13 @@
 package com.dss.realworld.article.domain;
 
+import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
+import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.util.ArticleFixtures;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 
 public class ArticleTest {
 
@@ -47,5 +50,35 @@ public class ArticleTest {
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
                 .build());
+    }
+
+    @DisplayName(value = "Article 수정 성공")
+    @Test
+    void t5() {
+        //given
+        Article newArticle = ArticleFixtures.of(1L,"old title");
+        String newTitle = "new title";
+        UpdateArticleRequestDto updateDto = new UpdateArticleRequestDto(newTitle,"","");
+
+        //when
+        newArticle.updateArticle(updateDto);
+
+        //then
+        Assertions.assertThat(newArticle.getTitle()).isEqualTo(newTitle);
+        assertThat(newArticle.getSlug()).isEqualTo("new-title-1");
+    }
+
+    @DisplayName(value = "loginId가 null이면 예외 발생")
+    @Test
+    void t6() {
+        Article newArticle = ArticleFixtures.createDefault();
+        assertThatThrownBy(() -> newArticle.isAuthorMatch(null)).isInstanceOf(UserNotFoundException.class);
+    }
+
+    @DisplayName(value = "Article의 userId가 null이면 예외 발생")
+    @Test
+    void t7() {
+        Article newArticle = ArticleFixtures.createDefault();
+        assertThatThrownBy(() -> newArticle.isAuthorMatch(1L)).isInstanceOf(UserNotFoundException.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.dss.realworld.article.api.dto;
 
+import com.dss.realworld.article.domain.Article;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class ArticleContentDto {
         this.updatedAt = updatedAt;
     }
 
-    public static ArticleContentDto of(final String slug, final String title, final String description, final String body, final LocalDateTime createdAt, final LocalDateTime updatedAt) {
-        return new ArticleContentDto(slug, title, description, body, createdAt, updatedAt);
+    public static ArticleContentDto of(Article article) {
+        return new ArticleContentDto(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
     }
 }
