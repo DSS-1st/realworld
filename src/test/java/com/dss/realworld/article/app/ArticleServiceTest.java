@@ -2,18 +2,16 @@ package com.dss.realworld.article.app;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.util.ArticleFixtures;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -47,8 +45,8 @@ public class ArticleServiceTest {
     void t1() {
         //given
         Long validUserId = 1L;
-        Article newArticle = createArticle(validUserId);
-        GetArticleDto savedArticle = articleRepository.getArticleById(newArticle.getId());
+        Article newArticle = saveArticle(validUserId);
+        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
@@ -56,8 +54,8 @@ public class ArticleServiceTest {
         Long wrongAuthorId = 10L;
 
         //then
-        assertThatThrownBy(() -> articleService.deleteArticle(savedSlug, wrongAuthorId))
-                .isInstanceOf(ArticleAuthorNotMatchException.class);
+        assertThatThrownBy(() -> articleService.delete(savedSlug, wrongAuthorId))
+                .hasMessageContaining("작성자가 일치하지 않습니다.");
     }
 
     @DisplayName(value = "존재하지 않는 게시글을 삭제 시도 시 예외 발생")
@@ -65,15 +63,15 @@ public class ArticleServiceTest {
     void t2() {
         //given
         Long validUserId = 1L;
-        Article newArticle = createArticle(validUserId);
-        GetArticleDto savedArticle = articleRepository.getArticleById(newArticle.getId());
+        Article newArticle = saveArticle(validUserId);
+        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
         assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
         String wrongArticleSlug = "wrongArticleSlug";
 
         //then
-        assertThatThrownBy(() -> articleService.deleteArticle(wrongArticleSlug, validUserId))
+        assertThatThrownBy(() -> articleService.delete(wrongArticleSlug, validUserId))
                 .isInstanceOf(ArticleNotFoundException.class);
     }
 
@@ -82,23 +80,17 @@ public class ArticleServiceTest {
     void t3() {
         //given
         Long logonId = 1L;
-        CreateArticleRequestDto articleDto = createArticleDto();
+        CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        GetArticleDto savedArticle = articleService.createArticle(articleDto, logonId);
+        Article savedArticle = articleService.save(createArticleRequestDto, logonId).orElseThrow(ArticleNotFoundException::new);
 
         //then
         assertThat(savedArticle.getUserId()).isEqualTo(logonId);
     }
 
     private CreateArticleRequestDto createArticleDto() {
-        CreateArticleRequestDto.CreateArticleDto createArticleDto = CreateArticleRequestDto.CreateArticleDto.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
-
-        return new CreateArticleRequestDto(createArticleDto);
+        return ArticleFixtures.createRequestDto();
     }
 
     @DisplayName(value = "slug와 작성자가 일치하면 Article 삭제 성공")
@@ -106,27 +98,20 @@ public class ArticleServiceTest {
     void t4() {
         //given
         Long validUserId = 1L;
-        Article newArticle = createArticle(validUserId);
-        GetArticleDto savedArticle = articleRepository.getArticleById(newArticle.getId());
-        assertThat(savedArticle.getId()).isEqualTo(validUserId);
+        Article newArticle = saveArticle(validUserId);
+        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
+        assertThat(savedArticle.getUserId()).isEqualTo(validUserId);
 
         //when
-        articleService.deleteArticle(savedArticle.getSlug(), validUserId);
-        Optional<GetArticleDto> foundArticle = Optional.ofNullable(articleRepository.getArticleById(validUserId));
+        articleService.delete(savedArticle.getSlug(), validUserId);
 
         //then
-        assertThat(foundArticle).isEmpty();
+        Assertions.assertThatThrownBy(()->articleRepository.findBySlug(savedArticle.getSlug()).orElseThrow(ArticleNotFoundException::new)).isInstanceOf(ArticleNotFoundException.class);
     }
 
-    private Article createArticle(Long userId) {
-        Article newArticle = Article.builder()
-                .title("How to train your dragon")
-                .slug("How-to-train-your-dragon-1")
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .userId(userId)
-                .build();
-        articleRepository.createArticle(newArticle);
+    private Article saveArticle(Long userId) {
+        Article newArticle = ArticleFixtures.create(userId);
+        articleRepository.persist(newArticle);
 
         return newArticle;
     }

@@ -1,7 +1,7 @@
 package com.dss.realworld.user.api;
 
 import com.dss.realworld.user.app.UserService;
-import com.dss.realworld.user.domain.repository.GetUserDto;
+import com.dss.realworld.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +16,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/users")
-    public AddUserResponseDto addUser(@RequestBody final AddUserRequestDto addUserRequestDto) {
-        final GetUserDto getUserDto = userService.addUser(addUserRequestDto);
+    public AddUserResponseDto add(@RequestBody AddUserRequestDto addUserRequestDto) {
+        User user = userService.save(addUserRequestDto);
 
-        return new AddUserResponseDto(getUserDto);
+        return new AddUserResponseDto(user);
     }
 }

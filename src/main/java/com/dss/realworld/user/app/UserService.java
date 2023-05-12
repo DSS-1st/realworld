@@ -1,10 +1,10 @@
 package com.dss.realworld.user.app;
 
 import com.dss.realworld.user.api.AddUserRequestDto;
-import com.dss.realworld.user.domain.repository.GetUserDto;
+import com.dss.realworld.user.domain.User;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
     @Transactional
-    GetUserDto addUser(AddUserRequestDto addUserRequestDto);
+    User save(AddUserRequestDto addUserRequestDto);
 }

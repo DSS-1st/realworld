@@ -2,7 +2,6 @@ package com.dss.realworld.user.app;
 
 import com.dss.realworld.user.api.AddUserRequestDto;
 import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.GetUserDto;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public GetUserDto addUser(AddUserRequestDto addUserRequestDto) {
+    public User save(AddUserRequestDto addUserRequestDto) {
         User user = User.builder()
-                .username(addUserRequestDto.getUser().getUsername())
-                .email(addUserRequestDto.getUser().getEmail())
-                .password(addUserRequestDto.getUser().getPassword())
+                .username(addUserRequestDto.getUsername())
+                .email(addUserRequestDto.getEmail())
+                .password(addUserRequestDto.getPassword())
                 .build();
-        userRepository.addUser(user);
-        return userRepository.getUserByEmail(user.getEmail());
+        userRepository.persist(user);
+
+        return userRepository.findByEmail(user.getEmail());
     }
 }

@@ -2,11 +2,11 @@ package com.dss.realworld.article.app;
 
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
-import com.dss.realworld.article.domain.dto.GetArticleDto;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.user.domain.repository.GetUserDto;
+import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,35 +24,30 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public GetArticleDto createArticle(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
-        Long maxArticleId = articleRepository.getMaxArticleId();
+    public Optional<Article> save(CreateArticleRequestDto createArticleRequestDto, Long logonUserId) {
+        Long maxId = articleRepository.findMaxId();
 
-        if (maxArticleId == null) {
-            maxArticleId = 0L;
-        }
+        if (maxId == null) maxId = 0L;
 
-        Article article = createArticleRequestDto.convertToArticle(logonUserId, maxArticleId);
-        articleRepository.createArticle(article);
+        Article article = createArticleRequestDto.convert(logonUserId, maxId);
+        articleRepository.persist(article);
 
-        return articleRepository.getArticleById(article.getId());
+        return articleRepository.findById(article.getId());
     }
 
     @Override
-    public void deleteArticle(String slug, Long userId) {
-        GetArticleDto foundArticle = articleRepository.getArticleBySlug(slug);
-        if (Optional.ofNullable(foundArticle).isEmpty()) {
-            throw new ArticleNotFoundException();
-        }
+    @Transactional
+    public void delete(String slug, Long loginId) {
+        Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        if (foundArticle.isAuthorMatch(loginId)) throw new ArticleAuthorNotMatchException();
 
-        if (foundArticle.getUserId().compareTo(userId) != 0) {
-            throw new ArticleAuthorNotMatchException();
-        }
-
-        articleRepository.deleteArticle(foundArticle.getId());
+        articleRepository.delete(foundArticle.getId());
     }
 
     @Override
-    public GetUserDto getArticleAuthor(Long userId) {
-        return userRepository.getUserById(userId);
+    public AuthorDto getAuthor(Long userId) {
+        User foundUser = userRepository.findById(userId);
+
+        return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage());
     }
 }

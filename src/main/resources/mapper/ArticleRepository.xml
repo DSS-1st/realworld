@@ -7,7 +7,7 @@
         delete from article
     </delete>
 
-    <delete id="deleteArticle" parameterType="Long">
+    <delete id="delete" parameterType="Long">
         delete from article where article_id = #{id}
     </delete>
 
@@ -15,27 +15,27 @@
         alter table article AUTO_INCREMENT = 1
     </select>
 
-    <insert id="createArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
+    <insert id="persist" parameterType="Article" useGeneratedKeys="true" keyProperty="id" keyColumn="article_id">
         insert into article(slug, title, description, body, user_id)
         values (#{slug}, #{title}, #{description}, #{body}, #{userId})
     </insert>
 
-    <sql id="getArticle">
-        select article_id as id, slug, title, description, body, user_id as userId, created_at as createdAt, updated_at as updatedAt
+    <sql id="findArticle">
+        select article_id as id, slug, title, description, body, created_at as createdAt, updated_at as updatedAt, user_id as userId
         from article
     </sql>
 
-    <select id="getMaxArticleId" resultType="Long">
+    <select id="findMaxId" resultType="Long">
         select max(article_id) as max_id from article
     </select>
 
-    <select id="getArticleById" parameterType="Long" resultType="GetArticleDto">
-        <include refid="getArticle"/>
+    <select id="findById" parameterType="Long" resultType="Article">
+        <include refid="findArticle"/>
         where article_id = #{id}
     </select>
 
-    <select id="getArticleBySlug" parameterType="String" resultType="GetArticleDto">
-        <include refid="getArticle"/>
+    <select id="findBySlug" parameterType="String" resultType="Article">
+        <include refid="findArticle"/>
         where slug = #{slug}
     </select>
 </mapper>

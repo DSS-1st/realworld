@@ -4,7 +4,7 @@ import com.dss.realworld.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,18 +47,18 @@ class UserControllerTest {
         userRepository.resetAutoIncrement();
     }
 
+    @DisplayName(value = "AddUserRequestDto가 NotNull이면 User 생성 성공")
     @Test
-    void Should_Success_When_AddUserDtoIsNotNull() throws Exception {
+    void t1() throws Exception {
         String username = "Jacob";
         String email = "jake@jake.jake";
-        AddUserRequestDto.AddUserDto user = AddUserRequestDto.AddUserDto.builder()
+        AddUserRequestDto user = AddUserRequestDto.builder()
                 .username(username)
                 .email(email)
                 .password("jakejake")
                 .build();
-        AddUserRequestDto addUserRequestDto = new AddUserRequestDto(user);
 
-        String jsonString = objectMapper.writeValueAsString(addUserRequestDto);
+        String jsonString = objectMapper.writeValueAsString(user);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)

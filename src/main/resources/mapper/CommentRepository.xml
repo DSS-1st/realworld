@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dss.realworld.comment.domain.repository.CommentRepository">
+
+    <insert id="add" parameterType="Comment" useGeneratedKeys="true" keyProperty="id" keyColumn="comment_id">
+        insert into comments(comment_id , article_id, body, user_id)
+        values (#{id}, #{articleId}, #{body},#{userId})
+    </insert>
+
+    <select id="getById" parameterType="Long" resultType="GetCommentDto">
+        select comment_id as id, article_id, body,  created_at, updated_at,user_id from comments where comment_id = #{id}
+    </select>
+
+    <delete id="deleteAll" parameterType="Long">
+        delete from comments
+    </delete>
+
+    <select id="resetAutoIncrement">
+        alter table comments AUTO_INCREMENT = 1
+    </select>
+</mapper>

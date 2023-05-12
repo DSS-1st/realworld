@@ -1,7 +1,8 @@
 package com.dss.realworld.article.api.dto;
 
 import com.dss.realworld.article.domain.Article;
-import lombok.AllArgsConstructor;
+import com.dss.realworld.article.domain.Slug;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,38 +10,29 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Getter
+@JsonRootName(value = "article")
 @NoArgsConstructor
-@AllArgsConstructor
 public class CreateArticleRequestDto {
 
-    private CreateArticleDto article;
+    private String title;
+    private String description;
+    private String body;
+    private Set<String> tagList;
 
-    @Getter
-    public static class CreateArticleDto {
-
-        private final String title;
-        private final String description;
-        private final String body;
-        private final Set<String> tagList;
-
-        @Builder
-        public CreateArticleDto(String title, String description, String body, Set<String> tagList) {
-            this.title = title;
-            this.description = description;
-            this.body = body;
-            this.tagList = tagList;
-        }
+    @Builder
+    public CreateArticleRequestDto(final String title, final String description, final String body, final Set<String> tagList) {
+        this.title = title;
+        this.description = description;
+        this.body = body;
+        this.tagList = tagList;
     }
 
-    public Article convertToArticle(Long logonUserId, Long maxArticleId) {
-        String slugId = article.getTitle().trim().replace(" ", "-") +
-                "-" + (maxArticleId + 1);
-
+    public Article convert(Long logonUserId, Long maxArticleId) {
         return Article.builder()
-                .slug(slugId)
-                .title(article.getTitle().trim())
-                .description(article.getDescription())
-                .body(article.getBody())
+                .slug(Slug.of(this.title, maxArticleId).getValue())
+                .title(this.title.trim())
+                .description(this.description)
+                .body(this.body)
                 .userId(logonUserId)
                 .build();
     }
