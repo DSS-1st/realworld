@@ -74,4 +74,19 @@ class CommentRepositoryTest {
         Comment getCommentDto = commentRepository.getById(comment.getId());
         assertThat(getCommentDto.getBody()).isEqualTo("His name was my name too.");
     }
+
+    @DisplayName(value = "commentId가 NotNull이면 댓글 삭제 성공")
+    @Test
+    void t3() {
+        Long articleId = 1L;
+        Long userId = 1L;
+        Comment comment = Comment.builder()
+                .articleId(articleId)
+                .body("His name was my name too.")
+                .userId(userId)
+                .build();
+        commentRepository.add(comment);
+        final int result = commentRepository.deleteComment(comment.getId(),articleId,userId);
+        assertThat(result).isEqualTo(1);
+    }
 }
