@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Getter
 @JsonRootName(value = "article")
-public class CreateArticleResponseDto {
+public class ArticleResponseDto {
 
     private final String slug;
     private final String title;
@@ -23,7 +23,7 @@ public class CreateArticleResponseDto {
     private final int favoritesCount = 0; // todo Following 도메인 추가 후 구현
     private final AuthorDto author;
 
-    public CreateArticleResponseDto(ArticleContentDto content, AuthorDto author) {
+    public ArticleResponseDto(ArticleContentDto content, AuthorDto author) {
         this.slug = content.getSlug();
         this.title = content.getTitle();
         this.description = content.getDescription();

@@ -64,7 +64,7 @@ public class ArticleRepositoryTest {
         String title = "How to train your dragon";
         String slug = "How-to-train-your-dragon-1";
 
-        Article newArticle = ArticleFixtures.create(title, slug);
+        Article newArticle = ArticleFixtures.of(title, slug);
         articleRepository.persist(newArticle);
 
         Optional<Article> foundArticle = articleRepository.findBySlug(newArticle.getSlug());

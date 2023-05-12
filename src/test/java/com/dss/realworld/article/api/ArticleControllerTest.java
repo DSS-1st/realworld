@@ -1,11 +1,10 @@
 package com.dss.realworld.article.api;
 
+import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
-import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
@@ -49,9 +48,7 @@ public class ArticleControllerTest {
     @BeforeEach
     void setUp() {
         clearTable();
-
-        User newUser = UserFixtures.create();
-        userRepository.persist(newUser);
+        userRepository.persist(UserFixtures.create());
     }
 
     @AfterEach
@@ -67,32 +64,9 @@ public class ArticleControllerTest {
         articleRepository.resetAutoIncrement();
     }
 
-    @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
-    @Test
-    void t1() throws Exception {
-        //given
-        Long logonId = 1L;
-        CreateArticleRequestDto articleDto = createArticleDto();
-        Article savedArticle = articleService.save(articleDto, logonId).orElseThrow(ArticleNotFoundException::new);
-        assertThat(savedArticle.getUserId()).isEqualTo(logonId);
-
-        //when
-        String slug = savedArticle.getSlug();
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/api/articles/" + slug)
-                .contentType(MediaType.TEXT_PLAIN);
-
-        //then
-        mockMvc.perform(mockRequest).andExpect(status().isOk());
-    }
-
-    private CreateArticleRequestDto createArticleDto() {
-        return ArticleFixtures.createRequestDto();
-    }
-
     @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공")
     @Test
-    void t2() throws Exception {
+    void t1() throws Exception {
         //given
         String title = "How to train your dragon";
         String description = "Ever wonder how?";
@@ -109,14 +83,61 @@ public class ArticleControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title,0L).getValue()))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob000"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tagList.length()").value(0));
+    }
+
+    @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
+    @Test
+    void t2() throws Exception {
+        //given
+        Long logonId = 1L;
+        CreateArticleRequestDto articleDto = createArticleDto();
+        ArticleResponseDto articleResponseDto = articleService.save(articleDto, logonId);
+        assertThat(articleResponseDto.getTitle()).isEqualTo(articleDto.getTitle());
+
+        //when
+        String slug = articleResponseDto.getSlug();
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .delete("/api/articles/" + slug)
+                .contentType(MediaType.TEXT_PLAIN);
+
+        //then
+        mockMvc.perform(mockRequest).andExpect(status().isOk());
+    }
+
+    private CreateArticleRequestDto createArticleDto() {
+        return ArticleFixtures.createRequestDto();
+    }
+
+    @DisplayName(value = "유효한 slug 사용 시 조회 성공")
+    @Test
+    void t3() throws Exception {
+        //given
+        String slug = "How-to-train-your-dragon-1";
+        articleRepository.persist(ArticleFixtures.of(slug, getSampleUserId()));
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles/" + slug);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..slug").value(slug));
+    }
+
+    private Long getSampleUserId() {
+        User user = UserFixtures.create("kate","katepwd","kate@kate.kate");
+        userRepository.persist(user);
+
+        return user.getId();
     }
 }
