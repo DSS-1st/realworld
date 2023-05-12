@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -40,5 +42,12 @@ public class CommentServiceImpl implements CommentService {
         User foundUser = userRepository.findById(comment.getUserId());
 
         return new AddCommentResponseDto(foundComment, foundUser);
+    }
+
+    @Override
+    @Transactional
+    public int deleteComment(final String slug, final Long commentId, Long userId) {
+        Optional<Article> article = articleRepository.findBySlug(slug);
+        return commentRepository.deleteComment(commentId, article.get().getId(), userId);
     }
 }
