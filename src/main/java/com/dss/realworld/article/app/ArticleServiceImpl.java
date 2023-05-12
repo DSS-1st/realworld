@@ -25,9 +25,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleResponseDto findBySlug(String slug) {
-        Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
-        ArticleContentDto content = ArticleContentDto.of(article.getSlug(), article.getTitle(), article.getDescription(), article.getBody(), article.getCreatedAt(), article.getUpdatedAt());
-        AuthorDto author = getAuthor(article.getUserId());
+        Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+        ArticleContentDto content = ArticleContentDto.of(foundArticle);
+        AuthorDto author = getAuthor(foundArticle.getUserId());
 
         return new ArticleResponseDto(content, author);
     }
@@ -45,7 +45,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleResponseDto getArticleResponseDto(final Article newArticle) {
         Article foundArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
 
-        ArticleContentDto content = ArticleContentDto.of(foundArticle.getSlug(), foundArticle.getTitle(), foundArticle.getDescription(), foundArticle.getBody(), foundArticle.getCreatedAt(), foundArticle.getUpdatedAt());
+        ArticleContentDto content = ArticleContentDto.of(foundArticle);
         AuthorDto author = getAuthor(foundArticle.getUserId());
 
         return new ArticleResponseDto(content, author);
