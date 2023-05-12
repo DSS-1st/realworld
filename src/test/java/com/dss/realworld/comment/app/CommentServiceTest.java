@@ -83,7 +83,7 @@ class CommentServiceTest {
 
         final int deleteComment = commentRepository.deleteComment(commnetId,articleId,userId);
 
-        assertThat(deleteComment).isEqualTo(deleteComment);
+        assertThat(deleteComment).isEqualTo(1);
     }
 
 
