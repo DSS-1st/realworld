@@ -1,6 +1,7 @@
 package com.dss.realworld.article.domain;
 
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
+import com.dss.realworld.error.exception.UserNotFoundException;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.ibatis.type.Alias;
@@ -38,6 +39,8 @@ public class Article {
     }
 
     public boolean isAuthorMatch(final Long loginId) {
+        if(loginId == null || this.userId == null) throw new UserNotFoundException();
+
         return this.userId.compareTo(loginId) != 0;
     }
 

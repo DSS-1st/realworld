@@ -19,4 +19,13 @@ public class UserFixtures {
                 .email(email)
                 .build();
     }
+
+    public static User create(Long id, String username, String email, String password) {
+        return User.builder()
+                .id(id)
+                .username(username)
+                .email(email)
+                .password(password)
+                .build();
+    }
 }
