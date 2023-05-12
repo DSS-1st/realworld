@@ -3,11 +3,11 @@ package com.dss.realworld.comment.domain.repository;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.domain.Comment;
-import com.dss.realworld.comment.domain.dto.GetCommentDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.CommentFixtures;
+import com.dss.realworld.util.UserFixtures;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import com.dss.realworld.util.UserFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,7 +71,7 @@ class CommentRepositoryTest {
     void t2() {
         Comment comment = CommentFixtures.create();
         commentRepository.add(comment);
-        GetCommentDto getCommentDto = commentRepository.getById(comment.getId());
+        Comment getCommentDto = commentRepository.getById(comment.getId());
         assertThat(getCommentDto.getBody()).isEqualTo("His name was my name too.");
     }
 }
