@@ -19,6 +19,12 @@ public class CommentController {
         return commentService.add(addCommentRequestDto,getLogonUserId(),slug);
     }
 
+    @DeleteMapping("{slug}/comments/{id}")
+    public void deleteComment(@PathVariable String slug,
+                              @PathVariable Long id) {
+        commentService.deleteComment(slug,id,getLogonUserId());
+    }
+
     // todo SecurityContextHolder에서 인증 정보 얻기
     private Long getLogonUserId(){
         return 1L;
