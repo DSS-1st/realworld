@@ -24,4 +24,8 @@
     <delete id="deleteComment" parameterType="Long">
         delete from comments where comment_id=#{id} and article_id=#{articleId} and user_id=#{userId}
     </delete>
+
+    <select id="getComments" parameterType="Long" resultType="Comment">
+        select comment_id as id, article_id, body , created_at, updated_at, user_id from comments where article_id = #{articleId}
+    </select>
 </mapper>
