@@ -1,20 +1,30 @@
 package com.dss.realworld.comment.api.dto;
 
+import com.dss.realworld.common.dto.AuthorDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
-@NoArgsConstructor
 public class CommentAuthorDto {
+    private Long id;
+    private String body;
+    private AuthorDto author;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    private String username;
-    private String bio;
-    private String image;
-    private boolean following;
+    @Builder
+    public CommentAuthorDto(Long id, String body, AuthorDto author, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.body = body;
+        this.author = author;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
-    CommentAuthorDto(String username, String bio, String image) {
-        this.username = username;
-        this.bio = bio;
-        this.image = image;
+    public static CommentAuthorDto of(final Long id, final String body, final AuthorDto author, final LocalDateTime createdAt, final LocalDateTime updatedAt) {
+        return new CommentAuthorDto(id, body, author, createdAt, updatedAt);
     }
 }
