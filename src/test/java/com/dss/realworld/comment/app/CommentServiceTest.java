@@ -4,10 +4,13 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
+import com.dss.realworld.comment.api.dto.CommentAuthorDto;
+import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.CommentFixtures;
 import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +19,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -76,7 +81,9 @@ class CommentServiceTest {
     @DisplayName(value = "commentId가 유효하면 댓글 삭제 성공")
     @Test
     void t2() {
-        t1();
+        Comment comment1 = CommentFixtures.create();
+        commentRepository.add(comment1);
+
         Long commnetId = 1L;
         Long articleId = 1L;
         Long userId = 1L;
@@ -84,6 +91,20 @@ class CommentServiceTest {
         final int deleteComment = commentRepository.deleteComment(commnetId,articleId,userId);
 
         assertThat(deleteComment).isEqualTo(1);
+    }
+
+    @DisplayName(value = "slug 유효하면 comment 리스트 가져오기")
+    @Test
+    void t3() {
+        Comment comment1 = CommentFixtures.create();
+        Comment comment2 = CommentFixtures.create();
+        commentRepository.add(comment1);
+        commentRepository.add(comment2);
+
+        String slug = "How-to-train-your-dragon-1";
+        List<CommentAuthorDto> comments = commentService.getComments(slug);
+
+        assertThat(comments.size()).isEqualTo(2);
     }
 
 

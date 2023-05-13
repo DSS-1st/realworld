@@ -4,10 +4,12 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.app.CommentService;
+import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.CommentFixtures;
 import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -115,6 +117,34 @@ class CommentControllerTest {
         //then
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName(value = "Slug 값 유효하면 댓글 리스트 가져오기 성공")
+    @Test
+    void t3() throws Exception {
+        Comment comment1 = CommentFixtures.create();
+        Comment comment2 = CommentFixtures.create();
+
+        commentRepository.add(comment1);
+        commentRepository.add(comment2);
+
+        String slug = "How-to-train-your-dragon-1";
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles/{slug}/comments", slug)
+                .contentType(MediaType.APPLICATION_JSON);
+
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments.comments[0].id").value(1))
+                .andExpect(jsonPath("$.comments.comments[1].id").isNumber())
+                .andExpect(jsonPath("$.comments.comments[0].createdAt").exists())
+                .andExpect(jsonPath("$.comments.comments[0].updatedAt").exists())
+                .andExpect(jsonPath("$.comments.comments[0].body").exists())
+                .andExpect(jsonPath("$.comments.comments[0].author.username").exists())
+                .andExpect(jsonPath("$.comments.comments[0].author.following").value(false))
+                .andExpect(jsonPath("$.comments.comments[1].author.following").value(false));
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

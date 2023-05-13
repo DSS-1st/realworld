@@ -2,6 +2,7 @@ package com.dss.realworld.comment.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -88,5 +91,19 @@ class CommentRepositoryTest {
         commentRepository.add(comment);
         final int result = commentRepository.deleteComment(comment.getId(),articleId,userId);
         assertThat(result).isEqualTo(1);
+    }
+
+    @DisplayName(value = "articleId가 NotNull이면 댓글 가져오기 성공")
+    @Test
+    void t4() {
+        Comment comment1 = CommentFixtures.create();
+        Comment comment2 = CommentFixtures.create();
+
+        commentRepository.add(comment1);
+        commentRepository.add(comment2);
+
+        List<Comment> comments = commentRepository.getComments(1L);
+
+        assertThat(comments.size()).isEqualTo(2);
     }
 }
