@@ -3,7 +3,6 @@ package com.dss.realworld.comment.api.dto;
 import com.dss.realworld.common.dto.AuthorDto;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

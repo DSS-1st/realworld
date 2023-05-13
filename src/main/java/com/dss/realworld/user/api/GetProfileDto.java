@@ -1,6 +1,5 @@
 package com.dss.realworld.user.api;
 
-import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;

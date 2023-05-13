@@ -2,7 +2,6 @@ package com.dss.realworld.comment.api.dto;
 
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.common.dto.AuthorDto;
-import com.dss.realworld.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
