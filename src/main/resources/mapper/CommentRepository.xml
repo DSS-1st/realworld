@@ -9,8 +9,8 @@
         values (#{id}, #{articleId}, #{body},#{userId})
     </insert>
 
-    <select id="getById" parameterType="Long" resultType="GetCommentDto">
-        select comment_id as id, article_id, body,  created_at, updated_at,user_id from comments where comment_id = #{id}
+    <select id="getById" parameterType="Long" resultType="Comment">
+        select comment_id as id, article_id, body, created_at, updated_at,user_id from comments where comment_id = #{id}
     </select>
 
     <delete id="deleteAll" parameterType="Long">

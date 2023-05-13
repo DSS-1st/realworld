@@ -5,7 +5,6 @@ import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
 import com.dss.realworld.comment.domain.Comment;
-import com.dss.realworld.comment.domain.dto.GetCommentDto;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.user.domain.User;
@@ -37,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         commentRepository.add(comment);
-        GetCommentDto foundComment = commentRepository.getById(comment.getId());
+        Comment foundComment = commentRepository.getById(comment.getId());
         User foundUser = userRepository.findById(comment.getUserId());
 
         return new AddCommentResponseDto(foundComment, foundUser);
