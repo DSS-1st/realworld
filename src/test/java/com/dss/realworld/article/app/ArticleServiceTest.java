@@ -10,16 +10,16 @@ import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Sql(value = {"classpath:db/UserTeardown.sql","classpath:db/ArticleTeardown.sql"})
 @SpringBootTest
 public class ArticleServiceTest {
 
@@ -31,24 +31,6 @@ public class ArticleServiceTest {
 
     @Autowired
     private ArticleService articleService;
-
-    @BeforeEach
-    void setUp() {
-        clearTable();
-    }
-
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
-    }
 
     @DisplayName(value = "필수 입력값, 로그인 ID가 유효하면 Article 작성 성공")
     @Test

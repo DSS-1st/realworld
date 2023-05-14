@@ -6,39 +6,24 @@ import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql(value = "classpath:db/ArticleTeardown.sql")
 @SpringBootTest
 @Transactional
 public class ArticleRepositoryTest {
 
     @Autowired
     private ArticleRepository articleRepository;
-
-    @BeforeEach
-    void setUp() {
-        clearTable();
-    }
-
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
-    private void clearTable() {
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
-    }
 
     @DisplayName(value = "필수 입력값이 NotNull이면 Article 생성 성공")
     @Test
