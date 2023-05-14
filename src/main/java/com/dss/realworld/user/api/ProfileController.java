@@ -20,4 +20,9 @@ public class ProfileController {
     public ProfileResponseDto followUser(@PathVariable String username, @RequestParam Long followerId) {
        return profileService.followUser(username,followerId);
     }
+
+    @DeleteMapping(value = "/profiles/{username}/follow")
+    public ProfileResponseDto unFollowUser(@PathVariable String username,@RequestParam Long followerId) {
+        return profileService.unFollowUser(username,followerId);
+    }
 }
