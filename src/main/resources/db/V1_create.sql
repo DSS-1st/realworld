@@ -42,6 +42,5 @@ CREATE TABLE `follow_relation`
         `followee_id` bigint NOT NULL,
         `follower_id` bigint NOT NULL,
         `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-        `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (`followee_id`, `follower_id`)
+        `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 );
