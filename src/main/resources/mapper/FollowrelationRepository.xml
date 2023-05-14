@@ -8,6 +8,14 @@
         values (#{followeeId}, #{followerId})
     </insert>
 
+    <delete id="cancelFollow">
+        delete from follow_relation where followee_id = #{followeeId} and follower_id = #{followerId}
+    </delete>
+
+    <select id="followCheck" resultType="int">
+        select count(*) from follow_relation where followee_id and follower_id = #{followerId}
+    </select>
+
     <delete id="deleteAll">
         delete from follow_relation
     </delete>
