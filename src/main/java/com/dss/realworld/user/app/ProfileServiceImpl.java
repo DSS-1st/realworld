@@ -23,18 +23,37 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileResponseDto followUser(String username,Long followerId) {
+    public ProfileResponseDto followUser(String username, Long followerId) {
         User followUser = userRepository.findByUsername(username);
-        FollowRelation followRelation = new FollowRelation(followUser.getId(), followerId);
-        followRelationRepository.save(followRelation);
+        int followCheck = followRelationRepository.followCheck(followUser.getId(), followerId);
+        if (followCheck >= 1) {
+            return unFollowUser(username, followerId);
+        } else {
+            FollowRelation followRelation = new FollowRelation(followUser.getId(), followerId);
+            followRelationRepository.save(followRelation);
 
+            ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
+                    .username(followUser.getUsername())
+                    .bio(followUser.getBio())
+                    .image(followUser.getImage())
+                    .following(true)
+                    .build();
+
+            return profileResponseDto;
+        }
+    }
+
+    @Override
+    public ProfileResponseDto unFollowUser(String username, Long followerId) {
+        User followeeUser = userRepository.findByUsername(username);
         ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
-                .username(followUser.getUsername())
-                .bio(followUser.getBio())
-                .image(followUser.getImage())
-                .following(true)
+                .username(followeeUser.getUsername())
+                .bio(followeeUser.getBio())
+                .image(followeeUser.getImage())
+                .following(false)
                 .build();
 
+        followRelationRepository.cancelFollow(followeeUser.getId(), followerId);
         return profileResponseDto;
     }
 }
