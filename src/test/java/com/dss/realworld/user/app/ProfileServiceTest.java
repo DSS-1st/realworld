@@ -5,7 +5,6 @@ import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.UserFixtures;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
