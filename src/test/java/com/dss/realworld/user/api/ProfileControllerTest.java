@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,5 +101,25 @@ public class ProfileControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..username").value("Jacob000"))
                 .andExpect(jsonPath("$..following").value(true));
+    }
+
+    @DisplayName(value = "username과 followerId가 유효하면 팔로우 취소")
+    @Test
+    void t3() throws Exception {
+        String username = "Jacob000";
+
+        User follower = User.builder()
+                .username("test1")
+                .email("@google.com")
+                .password("1234")
+                .build();
+        userRepository.persist(follower);
+
+        Long followerId = follower.getId();
+
+        mockMvc.perform(delete("/api/profiles/{username}/follow", username)
+                .param("followerId", String.valueOf(followerId))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
