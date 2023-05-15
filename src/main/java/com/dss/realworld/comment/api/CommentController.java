@@ -20,7 +20,7 @@ public class CommentController {
     }
 
     @DeleteMapping("{slug}/comments/{id}")
-    public void deleteComment(@PathVariable String slug,
+    public void delete(@PathVariable String slug,
                               @PathVariable Long id) {
         commentService.deleteComment(slug,id,getLogonUserId());
     }

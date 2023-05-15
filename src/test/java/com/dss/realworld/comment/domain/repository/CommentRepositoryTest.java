@@ -86,7 +86,7 @@ class CommentRepositoryTest {
                 .userId(userId)
                 .build();
         commentRepository.add(comment);
-        final int result = commentRepository.deleteComment(comment.getId(),articleId,userId);
+        final int result = commentRepository.delete(comment.getId(),articleId,userId);
         assertThat(result).isEqualTo(1);
     }
 }

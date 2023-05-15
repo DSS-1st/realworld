@@ -48,6 +48,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public int deleteComment(final String slug, final Long commentId, Long userId) {
         Optional<Article> article = articleRepository.findBySlug(slug);
-        return commentRepository.deleteComment(commentId, article.get().getId(), userId);
+        return commentRepository.delete(commentId, article.get().getId(), userId);
     }
 }

@@ -81,9 +81,9 @@ class CommentServiceTest {
         Long articleId = 1L;
         Long userId = 1L;
 
-        final int deleteComment = commentRepository.deleteComment(commnetId,articleId,userId);
+        final int result = commentRepository.delete(commnetId,articleId,userId);
 
-        assertThat(deleteComment).isEqualTo(1);
+        assertThat(result).isEqualTo(1);
     }
 
 
