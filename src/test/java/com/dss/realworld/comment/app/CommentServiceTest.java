@@ -102,7 +102,7 @@ class CommentServiceTest {
         commentRepository.add(comment2);
 
         String slug = "How-to-train-your-dragon-1";
-        List<CommentAuthorDto> comments = commentService.getComments(slug);
+        List<CommentAuthorDto> comments = commentService.getAll(slug);
 
         assertThat(comments.size()).isEqualTo(2);
     }

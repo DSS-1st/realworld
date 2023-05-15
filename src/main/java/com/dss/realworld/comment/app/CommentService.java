@@ -14,5 +14,5 @@ public interface CommentService {
     int deleteComment(String slug,Long commentId,Long userId);
 
     AuthorDto getAuthor(Long userId);
-    List<CommentAuthorDto> getComments(String slug);
+    List<CommentAuthorDto> getAll(String slug);
 }

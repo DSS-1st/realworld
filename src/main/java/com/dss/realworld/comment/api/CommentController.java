@@ -20,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping(value = "/{slug}/comments")
-    public ResponseEntity<?> addComment(@RequestBody AddCommentRequestDto addCommentRequestDto,
+    public ResponseEntity<?> create(@RequestBody AddCommentRequestDto addCommentRequestDto,
                                             @PathVariable String slug) {
 
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, getLogonUserId(), slug);
@@ -34,8 +34,8 @@ public class CommentController {
     }
 
     @GetMapping("/{slug}/comments")
-    public ResponseEntity<?> getComments(@PathVariable String slug) {
-        final List<CommentAuthorDto> commentAuthorDtos = commentService.getComments(slug);
+    public ResponseEntity<?> get(@PathVariable String slug) {
+        final List<CommentAuthorDto> commentAuthorDtos = commentService.getAll(slug);
 
         GetCommentsResponseDto getCommentsResponseDto = new GetCommentsResponseDto(commentAuthorDtos);
         return new ResponseEntity(getCommentsResponseDto, HttpStatus.OK);

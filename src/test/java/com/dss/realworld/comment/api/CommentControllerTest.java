@@ -137,6 +137,7 @@ class CommentControllerTest {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments.comments.size()").value(2))
                 .andExpect(jsonPath("$.comments.comments[0].id").value(1))
                 .andExpect(jsonPath("$.comments.comments[1].id").isNumber())
                 .andExpect(jsonPath("$.comments.comments[0].createdAt").exists())
@@ -145,6 +146,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.comments.comments[0].author.username").exists())
                 .andExpect(jsonPath("$.comments.comments[0].author.following").value(false))
                 .andExpect(jsonPath("$.comments.comments[1].author.following").value(false));
+
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

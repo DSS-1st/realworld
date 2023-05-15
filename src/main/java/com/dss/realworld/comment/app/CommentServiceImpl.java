@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentAuthorDto> getComments(final String slug) {
+    public List<CommentAuthorDto> getAll(final String slug) {
 
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
