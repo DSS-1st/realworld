@@ -12,4 +12,6 @@ public interface CommentRepository {
     void deleteAll();
 
     void resetAutoIncrement();
+
+    int delete(Long id,Long articleId,Long userId);
 }

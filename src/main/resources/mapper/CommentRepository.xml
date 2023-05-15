@@ -20,4 +20,8 @@
     <select id="resetAutoIncrement">
         alter table comments AUTO_INCREMENT = 1
     </select>
+
+    <delete id="delete" parameterType="Long">
+        delete from comments where comment_id=#{id} and article_id=#{articleId} and user_id=#{userId}
+    </delete>
 </mapper>

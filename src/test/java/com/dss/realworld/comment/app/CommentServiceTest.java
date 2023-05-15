@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class CommentServiceTest {
 
@@ -70,6 +72,21 @@ class CommentServiceTest {
 
         Assertions.assertThat(saveComment.getBody()).isEqualTo("His name was my name too.");
     }
+
+    @DisplayName(value = "commentId가 유효하면 댓글 삭제 성공")
+    @Test
+    void t2() {
+        t1();
+        Long commnetId = 1L;
+        Long articleId = 1L;
+        Long userId = 1L;
+
+        final int result = commentRepository.delete(commnetId,articleId,userId);
+
+        assertThat(result).isEqualTo(1);
+    }
+
+
 
     private AddCommentRequestDto createAddCommentRequestDto() {
         String body = "His name was my name too.";

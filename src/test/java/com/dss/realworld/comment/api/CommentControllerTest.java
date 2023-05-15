@@ -3,6 +3,7 @@ package com.dss.realworld.comment.api;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
+import com.dss.realworld.comment.app.CommentService;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -42,6 +43,9 @@ class CommentControllerTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentService commentService;
 
     @BeforeEach
     void setUp() {
@@ -91,6 +95,26 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$..createdAt").exists())
                 .andExpect(jsonPath("$..updatedAt").exists())
                 .andExpect(jsonPath("$..body").value("His name was my name too."));
+    }
+
+    @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 삭제 성공")
+    @Test
+    void t2() throws Exception {
+        //given
+        Long commentId = 1L;
+        Long logonUserId = 1L;
+        String slug = "How-to-train-your-dragon-1";
+        AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
+        commentService.add(addCommentRequestDto,logonUserId,slug);
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .delete("/api/articles/{slug}/comments/{id}", slug, commentId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk());
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
