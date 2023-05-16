@@ -5,13 +5,12 @@ import org.apache.ibatis.type.Alias;
 @Alias(value = "FollowRelation")
 public class FollowRelation {
 
-    private Long followeeId;
+    private Long fromUserId;
 
-    private Long followerId;
+    private Long toUserId;
 
-
-    public FollowRelation( Long followeeId, Long followerId) {
-        this.followeeId = followeeId;
-        this.followerId = followerId;
+    public FollowRelation( Long fromUserId, Long toUserId) {
+        this.fromUserId = fromUserId;
+        this.toUserId = toUserId;
     }
 }

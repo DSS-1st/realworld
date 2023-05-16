@@ -42,33 +42,36 @@ public class FollowRelationRepositoryTest {
     @DisplayName(value = "followRelation 유효하면 저장 성공")
     @Test
     void t1() {
-        Long followeeId = 1L;
-        Long followerId = 2L;
-        FollowRelation followRelation = new FollowRelation(followeeId, followerId);
+        Long fromUserId = 1L;
+        Long toUserId = 2L;
+        FollowRelation followRelation = new FollowRelation(fromUserId, toUserId);
 
         int save = followRelationRepository.save(followRelation);
 
         assertThat(save).isEqualTo(1);
     }
 
-    @DisplayName(value = "followeeId,followerId 유효하면 팔로우 취소 성공")
+    @DisplayName(value = "fromUserId,toUserId 유효하면 팔로우 취소 성공")
     @Test
     void t2() {
 
-        User user1 = UserFixtures.create();
-        User user2 = User.builder()
+        User fromUser = UserFixtures.create();
+        User toUser = User.builder()
                 .username("username")
                 .password("1234")
                 .email("@google.com")
                 .build();
 
-        userRepository.persist(user1);
-        userRepository.persist(user2);
+        userRepository.persist(fromUser);
+        userRepository.persist(toUser);
 
-        FollowRelation followRelation = new FollowRelation(user1.getId(), user2.getId());
+        Long fromUserId = fromUser.getId();
+        Long toUserId = toUser.getId();
+
+        FollowRelation followRelation = new FollowRelation(fromUserId, toUserId);
         followRelationRepository.save(followRelation);
 
-        int cancelFollow = followRelationRepository.cancelFollow(user1.getId(), user2.getId());
+        int cancelFollow = followRelationRepository.cancelFollow(fromUserId, toUserId);
 
         assertThat(cancelFollow).isEqualTo(1);
     }

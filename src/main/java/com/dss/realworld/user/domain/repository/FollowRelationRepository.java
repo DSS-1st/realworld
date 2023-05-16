@@ -5,11 +5,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface FollowRelationRepository {
+
     int save(FollowRelation followRelation);
 
-    int cancelFollow (Long followeeId, Long followerId);
+    int cancelFollow (Long fromUserId, Long toUserId);
 
-    int followCheck(Long followeeId, Long followerId);
+    int checkFollowing(Long fromUserId, Long toUserId);
 
     void deleteAll();
 

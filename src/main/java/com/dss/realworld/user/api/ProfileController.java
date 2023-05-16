@@ -17,12 +17,12 @@ public class ProfileController {
     }
 
     @PostMapping(value = "/profiles/{username}/follow")
-    public ProfileResponseDto followUser(@PathVariable String username, @RequestParam Long followerId) {
-       return profileService.followUser(username,followerId);
+    public ProfileResponseDto followUser(@PathVariable String username, @RequestParam Long toUserId) {
+       return profileService.followUser(username,toUserId);
     }
 
     @DeleteMapping(value = "/profiles/{username}/follow")
-    public ProfileResponseDto unFollowUser(@PathVariable String username,@RequestParam Long followerId) {
-        return profileService.unFollowUser(username,followerId);
+    public ProfileResponseDto unFollowUser(@PathVariable String username,@RequestParam Long toUserId) {
+        return profileService.unFollowUser(username,toUserId);
     }
 }

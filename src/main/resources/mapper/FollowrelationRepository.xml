@@ -4,16 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.user.domain.repository.FollowRelationRepository">
     <insert id="save" parameterType="FollowRelation">
-        insert into follow_relation(followee_id, follower_id)
-        values (#{followeeId}, #{followerId})
+        insert into follow_relation(from_user_id, to_user_id)
+        values (#{fromUserId}, #{toUserId})
     </insert>
 
     <delete id="cancelFollow">
-        delete from follow_relation where followee_id = #{followeeId} and follower_id = #{followerId}
+        delete from follow_relation where from_user_id = #{fromUserId} and to_user_id = #{toUserId}
     </delete>
 
-    <select id="followCheck" resultType="int">
-        select count(*) from follow_relation where followee_id and follower_id = #{followerId}
+    <select id="checkFollowing" resultType="int">
+        select count(*) from follow_relation where from_user_id and to_user_id = #{toUserId}
     </select>
 
     <delete id="deleteAll">

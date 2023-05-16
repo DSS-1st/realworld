@@ -7,9 +7,10 @@ import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
@@ -23,19 +24,19 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileResponseDto followUser(String username, Long followerId) {
-        User followUser = userRepository.findByUsername(username);
-        int followCheck = followRelationRepository.followCheck(followUser.getId(), followerId);
+    public ProfileResponseDto followUser(String username, Long toUserId) {
+        User fromUser = userRepository.findByUsername(username);
+        int followCheck = followRelationRepository.checkFollowing(fromUser.getId(), toUserId);
         if (followCheck >= 1) {
-            return unFollowUser(username, followerId);
+            return unFollowUser(username, toUserId);
         } else {
-            FollowRelation followRelation = new FollowRelation(followUser.getId(), followerId);
+            FollowRelation followRelation = new FollowRelation(fromUser.getId(), toUserId);
             followRelationRepository.save(followRelation);
 
             ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
-                    .username(followUser.getUsername())
-                    .bio(followUser.getBio())
-                    .image(followUser.getImage())
+                    .username(fromUser.getUsername())
+                    .bio(fromUser.getBio())
+                    .image(fromUser.getImage())
                     .following(true)
                     .build();
 
@@ -44,16 +45,16 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileResponseDto unFollowUser(String username, Long followerId) {
-        User followeeUser = userRepository.findByUsername(username);
+    public ProfileResponseDto unFollowUser(String username, Long toUserId) {
+        User fromUser = userRepository.findByUsername(username);
         ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
-                .username(followeeUser.getUsername())
-                .bio(followeeUser.getBio())
-                .image(followeeUser.getImage())
+                .username(fromUser.getUsername())
+                .bio(fromUser.getBio())
+                .image(fromUser.getImage())
                 .following(false)
                 .build();
 
-        followRelationRepository.cancelFollow(followeeUser.getId(), followerId);
+        followRelationRepository.cancelFollow(fromUser.getId(), toUserId);
         return profileResponseDto;
     }
 }

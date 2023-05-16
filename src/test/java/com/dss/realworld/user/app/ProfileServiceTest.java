@@ -46,6 +46,7 @@ public class ProfileServiceTest {
         followRelationRepository.deleteAll();
         followRelationRepository.resetAutoIncrement();
     }
+
     @DisplayName("username이 유효하면 GetProfileDto 가져오기 성공")
     @Test
     void t1() {
@@ -54,47 +55,47 @@ public class ProfileServiceTest {
         assertThat(profileDto.getUsername()).isEqualTo("Jacob000");
     }
 
-    @DisplayName("followeeUsername, followerId 유효하면 팔로우 성공 ")
+    @DisplayName("username, toUserId 유효하면 팔로우 성공 ")
     @Test
     void t2() {
         //given
-        String followeeUsername = "Jacob000";
-        User user2 = User.builder()
+        String username = "Jacob000";
+        User toUser = User.builder()
                 .username("son")
                 .email("@naver")
                 .password("1234")
                 .build();
-        userRepository.persist(user2);
-        Long followerId = user2.getId();
+        userRepository.persist(toUser);
+        Long toUserId = toUser.getId();
 
         //when
-        ProfileResponseDto profileResponseDto = profileService.followUser(followeeUsername, followerId);
+        ProfileResponseDto profileResponseDto = profileService.followUser(username, toUserId);
 
         //then
         assertThat(profileResponseDto.getUsername()).isEqualTo("Jacob000");
         assertThat(profileResponseDto.isFollowing()).isEqualTo(true);
     }
 
-    @DisplayName("followeeUsername, followerId 유효하면 팔로우 취소")
+    @DisplayName("username, toUserId 유효하면 팔로우 취소")
     @Test
     void t3() {
         //given
-        String followeeUsername = "Jacob000";
-        User user2 = User.builder()
+        String username = "Jacob000";
+        User toUser = User.builder()
                 .username("son")
                 .email("@naver")
                 .password("1234")
                 .build();
-        userRepository.persist(user2);
+        userRepository.persist(toUser);
 
-        Long followerId = user2.getId();
+        Long toUserId = toUser.getId();
 
         //when
-        profileService.followUser(followeeUsername, followerId);
-        ProfileResponseDto profileResponseDto = profileService.unFollowUser(followeeUsername, followerId);
+        profileService.followUser(username, toUserId);
+        ProfileResponseDto profileResponseDto = profileService.unFollowUser(username, toUserId);
 
         //then
-        assertThat(profileResponseDto.getUsername()).isEqualTo(followeeUsername);
+        assertThat(profileResponseDto.getUsername()).isEqualTo(username);
         assertThat(profileResponseDto.isFollowing()).isEqualTo(false);
     }
 }

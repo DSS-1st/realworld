@@ -6,7 +6,7 @@ public interface ProfileService {
 
     ProfileResponseDto getProfileDto(String username);
 
-    ProfileResponseDto followUser(String username,Long followerId);
+    ProfileResponseDto followUser(String username, Long toUserId);
 
-    ProfileResponseDto unFollowUser(String username,Long followerId);
+    ProfileResponseDto unFollowUser(String username, Long toUserId);
 }
