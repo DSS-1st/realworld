@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8:///?TC_INITSCRIPT=db/V1_create.sql
+
+mybatis:
+  mapperLocations: classpath:mapper/**/**.xml
+  typeAliasesPackage: com.dss.realworld
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: info
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: trace
+      sqlonly: OFF
+      sqltiming: INFO
+      connection : OFF
