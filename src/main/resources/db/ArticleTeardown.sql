@@ -1,0 +1,2 @@
+TRUNCATE TABLE article;
+ALTER TABLE article AUTO_INCREMENT = 1;

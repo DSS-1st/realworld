@@ -2,14 +2,13 @@ package com.dss.realworld.user.api;
 
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Sql(value = "classpath:db/UserTeardown.sql")
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,24 +28,6 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @BeforeEach
-    void setUp() {
-        clearTable();
-    }
-
-    @AfterEach
-    void tearDown() {
-        clearTable();
-    }
-
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-    }
 
     @DisplayName(value = "AddUserRequestDto가 NotNull이면 User 생성 성공")
     @Test

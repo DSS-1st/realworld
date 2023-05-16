@@ -3,35 +3,20 @@ package com.dss.realworld.user.domain.repository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+@Sql(value = "classpath:db/UserTeardown.sql")
 @SpringBootTest
 @Transactional
 public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @BeforeEach
-    void setUp() {
-        clearTable();
-    }
-
-    @AfterEach
-    void tearDown() {
-        clearTable();
-    }
-
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-    }
 
     @DisplayName(value = "User 생성 후 username으로 조회 성공")
     @Test
