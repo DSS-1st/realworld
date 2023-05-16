@@ -2,7 +2,6 @@ package com.dss.realworld.comment.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;

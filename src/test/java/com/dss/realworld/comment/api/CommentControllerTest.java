@@ -137,15 +137,15 @@ class CommentControllerTest {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.comments.comments.size()").value(2))
-                .andExpect(jsonPath("$.comments.comments[0].id").value(1))
-                .andExpect(jsonPath("$.comments.comments[1].id").isNumber())
-                .andExpect(jsonPath("$.comments.comments[0].createdAt").exists())
-                .andExpect(jsonPath("$.comments.comments[0].updatedAt").exists())
-                .andExpect(jsonPath("$.comments.comments[0].body").exists())
-                .andExpect(jsonPath("$.comments.comments[0].author.username").exists())
-                .andExpect(jsonPath("$.comments.comments[0].author.following").value(false))
-                .andExpect(jsonPath("$.comments.comments[1].author.following").value(false));
+                .andExpect(jsonPath("$.ArrayList.size()").value(2))
+                .andExpect(jsonPath("$.ArrayList[0].id").value(1))
+                .andExpect(jsonPath("$.ArrayList[1].id").isNumber())
+                .andExpect(jsonPath("$.ArrayList[0].createdAt").exists())
+                .andExpect(jsonPath("$.ArrayList[0].updatedAt").exists())
+                .andExpect(jsonPath("$.ArrayList[0].body").exists())
+                .andExpect(jsonPath("$.ArrayList[0].author.username").exists())
+                .andExpect(jsonPath("$.ArrayList[0].author.following").value(false))
+                .andExpect(jsonPath("$.ArrayList[1].author.following").value(false));
 
     }
 

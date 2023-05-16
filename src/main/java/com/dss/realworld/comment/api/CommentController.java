@@ -2,7 +2,6 @@ package com.dss.realworld.comment.api;
 
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
 import com.dss.realworld.comment.app.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +34,9 @@ public class CommentController {
 
     @GetMapping("/{slug}/comments")
     public ResponseEntity<?> get(@PathVariable String slug) {
-        final List<CommentAuthorDto> commentAuthorDtos = commentService.getAll(slug);
+        final List<GetCommentsResponseDto> getCommentsResponseDtoList = commentService.getAll(slug);
 
-        GetCommentsResponseDto getCommentsResponseDto = new GetCommentsResponseDto(commentAuthorDtos);
-        return new ResponseEntity(getCommentsResponseDto, HttpStatus.OK);
+        return new ResponseEntity(getCommentsResponseDtoList, HttpStatus.OK);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기

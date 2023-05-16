@@ -4,7 +4,6 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.CommentAuthorDto;
 import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
@@ -57,21 +56,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentAuthorDto> getAll(final String slug) {
+    public List<GetCommentsResponseDto> getAll(final String slug) {
 
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         List<Comment> comments = commentRepository.getComments(foundArticle.getId());
 
-        List<CommentAuthorDto> commentAuthorDtoList = new ArrayList<>();
-        List<GetCommentsResponseDto> getCommentAuthorDtoList = new ArrayList<>();
+        List<GetCommentsResponseDto> getCommentsResponseDtoList = new ArrayList<>();
 
         for (Comment comment : comments) {
             AuthorDto author = getAuthor(comment.getUserId());
-            CommentAuthorDto commentAuthorDto = CommentAuthorDto.of(comment.getId(), comment.getBody(), author, comment.getCreatedAt(), comment.getUpdatedAt());
-            commentAuthorDtoList.add(commentAuthorDto);
+            GetCommentsResponseDto getCommentsResponseDto = GetCommentsResponseDto.of(comment, author);
+
+            getCommentsResponseDtoList.add(getCommentsResponseDto);
         }
-        return commentAuthorDtoList;
+        return getCommentsResponseDtoList;
     }
 
     @Override

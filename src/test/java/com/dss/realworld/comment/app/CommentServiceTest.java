@@ -4,7 +4,7 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.CommentAuthorDto;
+import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
@@ -102,7 +102,7 @@ class CommentServiceTest {
         commentRepository.add(comment2);
 
         String slug = "How-to-train-your-dragon-1";
-        List<CommentAuthorDto> comments = commentService.getAll(slug);
+        List<GetCommentsResponseDto> comments = commentService.getAll(slug);
 
         assertThat(comments.size()).isEqualTo(2);
     }
