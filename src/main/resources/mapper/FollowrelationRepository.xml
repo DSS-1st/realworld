@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dss.realworld.user.domain.repository.FollowRelationRepository">
+    <insert id="save" parameterType="FollowRelation">
+        insert into follow_relation(followee_id, follower_id)
+        values (#{followeeId}, #{followerId})
+    </insert>
+
+    <delete id="deleteAll">
+        delete from follow_relation
+    </delete>
+
+    <select id="resetAutoIncrement">
+        alter table follow_relation auto_increment = 1
+    </select>
+</mapper>

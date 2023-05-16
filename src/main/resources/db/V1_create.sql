@@ -28,11 +28,20 @@ CREATE TABLE `article`
 
 CREATE TABLE 'comments'
 (
-    `comment_id`   bigint       NOT NULL AUTO_INCREMENT,
-    `article_id`   bigint,
-    `body`         varchar(255) NOT NULL,
-    `user_id`      bigint,
-    `created_at`   datetime DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   datetime DEFAULT CURRENT_TIMESTAMP,
+    `comment_id` bigint       NOT NULL AUTO_INCREMENT,
+    `article_id` bigint,
+    `body`       varchar(255) NOT NULL,
+    `user_id`    bigint,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id)
+);
+
+CREATE TABLE `follow_relation`
+(
+        `followee_id` bigint NOT NULL,
+        `follower_id` bigint NOT NULL,
+        `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+        `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`followee_id`, `follower_id`)
 );

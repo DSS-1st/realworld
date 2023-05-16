@@ -12,7 +12,12 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping(value = "/profiles/{username}")
-    public GetProfileDto getProfile(@PathVariable String username) {
+    public ProfileResponseDto getProfile(@PathVariable String username) {
        return profileService.getProfileDto(username);
+    }
+
+    @PostMapping(value = "/profiles/{username}/follow")
+    public ProfileResponseDto followUser(@PathVariable String username, @RequestParam Long followerId) {
+       return profileService.followUser(username,followerId);
     }
 }

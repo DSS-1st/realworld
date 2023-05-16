@@ -1,8 +1,10 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.GetProfileDto;
+import com.dss.realworld.user.api.ProfileResponseDto;
 
 public interface ProfileService {
 
-    GetProfileDto getProfileDto(String username);
+    ProfileResponseDto getProfileDto(String username);
+
+    ProfileResponseDto followUser(String username,Long followerId);
 }
