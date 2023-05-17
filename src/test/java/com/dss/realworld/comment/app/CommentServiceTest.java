@@ -4,7 +4,6 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
@@ -13,7 +12,6 @@ import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.CommentFixtures;
 import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,9 +92,8 @@ class CommentServiceTest {
         commentRepository.add(comment2);
 
         String slug = "How-to-train-your-dragon-1";
-        GetCommentsResponseDto getCommentsResponseDto = commentService.getAll(slug);
 
-        assertThat(getCommentsResponseDto.getComments().size()).isEqualTo(2);
+        assertThat(commentService.getAll(slug).size()).isEqualTo(2);
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

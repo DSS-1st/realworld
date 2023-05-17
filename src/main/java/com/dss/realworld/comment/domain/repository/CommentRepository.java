@@ -2,6 +2,7 @@ package com.dss.realworld.comment.domain.repository;
 
 import com.dss.realworld.comment.domain.Comment;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface CommentRepository {
 
     void resetAutoIncrement();
 
-    int delete(Long id,Long articleId,Long userId);
+    int delete(@Param(value = "id") Long id, @Param(value = "articleId") Long articleId, @Param(value = "userId") Long userId);
 
     List<Comment> getAll(Long articleId);
 }

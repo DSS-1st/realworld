@@ -8,7 +8,6 @@ import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.CommentFixtures;
 import com.dss.realworld.util.UserFixtures;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,7 +81,9 @@ class CommentRepositoryTest {
                 .userId(userId)
                 .build();
         commentRepository.add(comment);
-        final int result = commentRepository.delete(comment.getId(),articleId,userId);
+
+        final int result = commentRepository.delete(comment.getId(), articleId, userId);
+
         assertThat(result).isEqualTo(1);
     }
 
