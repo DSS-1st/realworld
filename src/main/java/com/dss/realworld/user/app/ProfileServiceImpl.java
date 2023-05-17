@@ -23,7 +23,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileResponseDto followUser(String username,Long followerId) {
+    public ProfileResponseDto follow(String username, Long followerId) {
         User followUser = userRepository.findByUsername(username);
         FollowRelation followRelation = new FollowRelation(followUser.getId(), followerId);
         followRelationRepository.save(followRelation);

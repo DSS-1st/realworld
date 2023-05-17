@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-@Sql(value = {"classpath:db/FollowRelationTeardown.sql"})
+@Sql(value = "classpath:db/FollowRelationTeardown.sql")
 public class ProfileControllerTest {
 
     @Autowired

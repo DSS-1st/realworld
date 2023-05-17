@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Sql(value = {"classpath:db/FollowRelationTeardown.sql"})
+@Sql(value = "classpath:db/FollowRelationTeardown.sql")
 public class FollowRelationRepositoryTest {
 
     @Autowired

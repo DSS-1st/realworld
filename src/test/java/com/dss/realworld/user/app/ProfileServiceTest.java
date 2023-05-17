@@ -5,7 +5,6 @@ import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.UserFixtures;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Sql(value = {"classpath:db/FollowRelationTeardown.sql"})
+@Sql(value = "classpath:db/FollowRelationTeardown.sql")
 public class ProfileServiceTest {
 
     @Autowired
@@ -62,7 +61,7 @@ public class ProfileServiceTest {
         userRepository.persist(user2);
         Long followerId = user2.getId();
 
-        ProfileResponseDto profileResponseDto = profileService.followUser(followeeUsername, followerId);
+        ProfileResponseDto profileResponseDto = profileService.follow(followeeUsername, followerId);
 
         assertThat(profileResponseDto.getUsername()).isEqualTo("Jacob000");
         assertThat(profileResponseDto.isFollowing()).isEqualTo(true);

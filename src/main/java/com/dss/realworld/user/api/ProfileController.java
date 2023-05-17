@@ -18,6 +18,6 @@ public class ProfileController {
 
     @PostMapping(value = "/profiles/{username}/follow")
     public ProfileResponseDto followUser(@PathVariable String username, @RequestParam Long followerId) {
-       return profileService.followUser(username,followerId);
+       return profileService.follow(username,followerId);
     }
 }

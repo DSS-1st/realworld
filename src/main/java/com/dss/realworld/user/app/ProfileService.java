@@ -6,5 +6,5 @@ public interface ProfileService {
 
     ProfileResponseDto get(String username);
 
-    ProfileResponseDto followUser(String username,Long followerId);
+    ProfileResponseDto follow(String username, Long followerId);
 }
