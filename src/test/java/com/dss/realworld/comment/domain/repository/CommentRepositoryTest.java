@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Sql(value = {"classpath:db/CommentTearDown.sql"})
 class CommentRepositoryTest {
 
     @Autowired
@@ -44,20 +46,12 @@ class CommentRepositoryTest {
         articleRepository.persist(newArticle);
     }
 
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
     private void clearTable() {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
 
         articleRepository.deleteAll();
         articleRepository.resetAutoIncrement();
-
-        commentRepository.deleteAll();
-        commentRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "articeId,body,userId가 NotNull이면 댓글 작성 성공")
