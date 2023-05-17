@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
+@Sql(value = {"classpath:db/FollowRelationTeardown.sql"})
 public class ProfileControllerTest {
 
     @Autowired
@@ -51,17 +53,9 @@ public class ProfileControllerTest {
         userRepository.persist(newUser);
     }
 
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
     private void clearTable() {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
-
-        followRelationRepository.deleteAll();
-        followRelationRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "username 유효하면 조회 성공")

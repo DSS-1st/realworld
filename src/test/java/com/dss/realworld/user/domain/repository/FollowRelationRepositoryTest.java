@@ -7,29 +7,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql(value = {"classpath:db/FollowRelationTeardown.sql"})
 public class FollowRelationRepositoryTest {
 
     @Autowired
     private FollowRelationRepository followRelationRepository;
-
-    @BeforeEach
-    void setUp() {
-        clearTable();
-    }
-
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
-    private void clearTable() {
-        followRelationRepository.deleteAll();
-        followRelationRepository.resetAutoIncrement();
-    }
 
     @DisplayName(value = "followRelation 유효하면 저장 성공")
     @Test

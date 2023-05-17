@@ -11,18 +11,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Sql(value = {"classpath:db/FollowRelationTeardown.sql"})
 public class ProfileServiceTest {
 
     @Autowired
     private ProfileService profileService;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private FollowRelationRepository followRelationRepository;
 
@@ -34,22 +38,14 @@ public class ProfileServiceTest {
         userRepository.persist(newUser);
     }
 
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
     private void clearTable() {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
-
-        followRelationRepository.deleteAll();
-        followRelationRepository.resetAutoIncrement();
     }
     @DisplayName("username이 유효하면 GetProfileDto 가져오기 성공")
     @Test
     void t1() {
-        ProfileResponseDto profileDto = profileService.getProfileDto("Jacob000");
+        ProfileResponseDto profileDto = profileService.get("Jacob000");
 
         assertThat(profileDto.getUsername()).isEqualTo("Jacob000");
     }
