@@ -53,12 +53,12 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public int deleteComment(final String slug, final Long commentId, Long userId) {
         Optional<Article> article = articleRepository.findBySlug(slug);
+
         return commentRepository.deleteComment(commentId, article.get().getId(), userId);
     }
 
     @Override
     public GetCommentsResponseDto getAll(final String slug) {
-
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         List<CommentDto> commentDtoList = commentRepository.getAll(foundArticle.getId())
@@ -73,6 +73,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public AuthorDto getAuthor(Long userId) {
         User foundAuthor = userRepository.findById(userId);
+
         return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
     }
 }

@@ -19,9 +19,9 @@ import java.util.List;
 @Getter
 public class GetCommentsResponseDto {
 
-    private List<CommentDto> comments;
+    private final List<CommentDto> comments;
 
-    public GetCommentsResponseDto(List<CommentDto> comments) {
+    public GetCommentsResponseDto(final List<CommentDto> comments) {
         this.comments = comments;
     }
 

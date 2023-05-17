@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Sql(value = {"classpath:db/CommentTearDown.sql"})
+@Sql(value = "classpath:db/CommentTearDown.sql")
 class CommentRepositoryTest {
 
     @Autowired

@@ -24,7 +24,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Sql(value = {"classpath:db/CommentTearDown.sql"})
+@Sql(value = "classpath:db/CommentTearDown.sql")
 class CommentServiceTest {
 
     @Autowired
