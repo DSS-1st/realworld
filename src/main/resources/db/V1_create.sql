@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`
 (
     `user_id`    bigint NOT NULL AUTO_INCREMENT,
@@ -13,6 +14,7 @@ CREATE TABLE `users`
     UNIQUE KEY `UK_username` (`username`)
 );
 
+DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`
 (
     `article_id`  bigint       NOT NULL AUTO_INCREMENT,
@@ -26,7 +28,8 @@ CREATE TABLE `article`
     PRIMARY KEY (`article_id`)
 );
 
-CREATE TABLE 'comments'
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE `comments`
 (
     `comment_id` bigint       NOT NULL AUTO_INCREMENT,
     `article_id` bigint,
