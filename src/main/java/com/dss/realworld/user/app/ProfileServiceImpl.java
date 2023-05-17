@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-//@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
@@ -17,8 +16,9 @@ public class ProfileServiceImpl implements ProfileService {
     private final FollowRelationRepository followRelationRepository;
 
     @Override
-    public ProfileResponseDto getProfileDto(String username) {
+    public ProfileResponseDto get(String username) {
         User user = userRepository.findByUsername(username);
+
         return ProfileResponseDto.of(user);
     }
 
