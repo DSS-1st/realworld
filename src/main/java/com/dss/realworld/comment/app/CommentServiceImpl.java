@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
 
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
-        List<CommentDto> commentDtoList = commentRepository.getComments(foundArticle.getId())
+        List<CommentDto> commentDtoList = commentRepository.getAll(foundArticle.getId())
                 .stream()
                 .map(comment -> CommentDto
                         .of(comment, getAuthor(comment.getUserId())))

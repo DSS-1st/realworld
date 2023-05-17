@@ -95,7 +95,7 @@ class CommentRepositoryTest {
         commentRepository.add(comment1);
         commentRepository.add(comment2);
 
-        List<Comment> comments = commentRepository.getComments(1L);
+        List<Comment> comments = commentRepository.getAll(1L);
 
         assertThat(comments.size()).isEqualTo(2);
     }

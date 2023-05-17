@@ -16,5 +16,5 @@ public interface CommentRepository {
     void resetAutoIncrement();
 
     int deleteComment(Long id,Long articleId,Long userId);
-    List<Comment> getComments(Long articleId);
+    List<Comment> getAll(Long articleId);
 }

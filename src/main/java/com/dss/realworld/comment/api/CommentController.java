@@ -34,6 +34,13 @@ public class CommentController {
     public ResponseEntity<?> get(@PathVariable String slug) {
         final GetCommentsResponseDto getCommentsResponseDto = commentService.getAll(slug);
 
+
+//        List<GetCommentsResponseDto.CommentDto> comments = objects;
+// comments 리스트에 CommentDto 객체들을 추가
+
+//        GetCommentsResponseDto responseDto = new GetCommentsResponseDto(comments);
+
+
         return new ResponseEntity(getCommentsResponseDto, HttpStatus.OK);
     }
 

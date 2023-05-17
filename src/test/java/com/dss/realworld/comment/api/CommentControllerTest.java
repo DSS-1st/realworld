@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(value = {"classpath:db/CommentTearDown.sql"})
+@Sql(value = "classpath:db/CommentTearDown.sql")
 class CommentControllerTest {
 
     @Autowired

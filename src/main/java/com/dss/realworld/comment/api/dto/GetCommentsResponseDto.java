@@ -2,10 +2,18 @@ package com.dss.realworld.comment.api.dto;
 
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.common.dto.AuthorDto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,13 +26,12 @@ public class GetCommentsResponseDto {
     }
 
     @Getter
-    @NoArgsConstructor
     public static class CommentDto {
-        private Long id;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private String body;
-        private AuthorDto author;
+        private final Long id;
+        private final LocalDateTime createdAt;
+        private final LocalDateTime updatedAt;
+        private final String body;
+        private final AuthorDto author;
 
         private CommentDto(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String body, AuthorDto author) {
             this.id = id;
@@ -39,3 +46,6 @@ public class GetCommentsResponseDto {
         }
     }
 }
+
+
+
