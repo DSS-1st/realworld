@@ -41,6 +41,7 @@ public class ProfileServiceTest {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
     }
+
     @DisplayName("username이 유효하면 GetProfileDto 가져오기 성공")
     @Test
     void t1() {

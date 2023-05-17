@@ -9,5 +9,4 @@ class RealworldApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
