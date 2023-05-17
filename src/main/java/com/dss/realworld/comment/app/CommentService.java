@@ -5,8 +5,6 @@ import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
 import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
 import com.dss.realworld.common.dto.AuthorDto;
 
-import java.util.List;
-
 public interface CommentService {
 
     AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug);
@@ -14,5 +12,5 @@ public interface CommentService {
     int deleteComment(String slug,Long commentId,Long userId);
 
     AuthorDto getAuthor(Long userId);
-    List<GetCommentsResponseDto> getAll(String slug);
+    GetCommentsResponseDto getAll(String slug);
 }

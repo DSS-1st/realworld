@@ -20,8 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -102,12 +100,10 @@ class CommentServiceTest {
         commentRepository.add(comment2);
 
         String slug = "How-to-train-your-dragon-1";
-        List<GetCommentsResponseDto> comments = commentService.getAll(slug);
+        GetCommentsResponseDto getCommentsResponseDto = commentService.getAll(slug);
 
-        assertThat(comments.size()).isEqualTo(2);
+        assertThat(getCommentsResponseDto.getComments().size()).isEqualTo(2);
     }
-
-
 
     private AddCommentRequestDto createAddCommentRequestDto() {
         String body = "His name was my name too.";

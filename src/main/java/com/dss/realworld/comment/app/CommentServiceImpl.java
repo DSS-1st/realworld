@@ -5,6 +5,7 @@ import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
 import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
+import com.dss.realworld.comment.api.dto.GetCommentsResponseDto.CommentDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.common.dto.AuthorDto;
@@ -15,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -56,21 +57,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<GetCommentsResponseDto> getAll(final String slug) {
+    public GetCommentsResponseDto getAll(final String slug) {
 
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
-        List<Comment> comments = commentRepository.getComments(foundArticle.getId());
+        List<CommentDto> commentDtoList = commentRepository.getComments(foundArticle.getId())
+                .stream()
+                .map(comment -> CommentDto
+                        .of(comment, getAuthor(comment.getUserId())))
+                .collect(Collectors.toList());
 
-        List<GetCommentsResponseDto> getCommentsResponseDtoList = new ArrayList<>();
-
-        for (Comment comment : comments) {
-            AuthorDto author = getAuthor(comment.getUserId());
-            GetCommentsResponseDto getCommentsResponseDto = GetCommentsResponseDto.of(comment, author);
-
-            getCommentsResponseDtoList.add(getCommentsResponseDto);
-        }
-        return getCommentsResponseDtoList;
+        return new GetCommentsResponseDto(commentDtoList);
     }
 
     @Override

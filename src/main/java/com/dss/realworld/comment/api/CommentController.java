@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequestMapping(value = "/api/articles")
 @RestController
 @RequiredArgsConstructor
@@ -34,9 +32,9 @@ public class CommentController {
 
     @GetMapping("/{slug}/comments")
     public ResponseEntity<?> get(@PathVariable String slug) {
-        final List<GetCommentsResponseDto> getCommentsResponseDtoList = commentService.getAll(slug);
+        final GetCommentsResponseDto getCommentsResponseDto = commentService.getAll(slug);
 
-        return new ResponseEntity(getCommentsResponseDtoList, HttpStatus.OK);
+        return new ResponseEntity(getCommentsResponseDto, HttpStatus.OK);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
