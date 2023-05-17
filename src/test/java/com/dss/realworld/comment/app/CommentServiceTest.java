@@ -19,10 +19,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql(value = {"classpath:db/CommentTearDown.sql"})
 class CommentServiceTest {
 
     @Autowired
@@ -59,9 +61,6 @@ class CommentServiceTest {
 
         articleRepository.deleteAll();
         articleRepository.resetAutoIncrement();
-
-        commentRepository.deleteAll();
-        commentRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "매개변수들이 유효하면 댓글 작성 성공")
