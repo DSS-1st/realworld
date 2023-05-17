@@ -2,12 +2,18 @@ package com.dss.realworld.comment.api;
 
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
-import com.dss.realworld.comment.api.dto.GetCommentsResponseDto;
+import com.dss.realworld.comment.api.dto.CommentDto;
 import com.dss.realworld.comment.app.CommentService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping(value = "/api/articles")
 @RestController
@@ -18,34 +24,35 @@ public class CommentController {
 
     @PostMapping(value = "/{slug}/comments")
     public ResponseEntity<?> create(@RequestBody AddCommentRequestDto addCommentRequestDto,
-                                            @PathVariable String slug) {
-
+                                    @PathVariable String slug) {
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, getLogonUserId(), slug);
+
         return new ResponseEntity<>(addCommentResponseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("{slug}/comments/{id}")
-    public void delete(@PathVariable String slug,
-                              @PathVariable Long id) {
-        commentService.deleteComment(slug,id,getLogonUserId());
+    @DeleteMapping(value = "{slug}/comments/{id}")
+    public void delete(@PathVariable String slug, @PathVariable Long id) {
+        commentService.delete(slug, id, getLogonUserId());
     }
 
-    @GetMapping("/{slug}/comments")
-    public ResponseEntity<?> get(@PathVariable String slug) {
-        final GetCommentsResponseDto getCommentsResponseDto = commentService.getAll(slug);
+    @GetMapping(value = "/{slug}/comments")
+    public ResponseEntity<?> get(@PathVariable String slug) throws JsonProcessingException {
+        final List<CommentDto> commentList = commentService.getAll(slug);
 
+        return new ResponseEntity<>(getResponseBody(commentList), HttpStatus.OK);
+    }
 
-//        List<GetCommentsResponseDto.CommentDto> comments = objects;
-// comments 리스트에 CommentDto 객체들을 추가
-
-//        GetCommentsResponseDto responseDto = new GetCommentsResponseDto(comments);
-
-
-        return new ResponseEntity(getCommentsResponseDto, HttpStatus.OK);
+    private String getResponseBody(final List<CommentDto> comments) throws JsonProcessingException {
+        return new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .writerWithDefaultPrettyPrinter()
+                .withRootName("comments")
+                .writeValueAsString(comments);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
-    private Long getLogonUserId(){
+    private Long getLogonUserId() {
         return 1L;
     }
 }
