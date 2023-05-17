@@ -1,6 +1,7 @@
 package com.dss.realworld.comment.api.dto;
 
 import com.dss.realworld.comment.domain.Comment;
+import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,13 @@ public class AddCommentResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final String body;
-    private final CommentAuthorDto author;
+    private final AuthorDto author;
 
-    public AddCommentResponseDto(Comment foundComment, User foundUser) {
+    public AddCommentResponseDto(Comment foundComment, AuthorDto author) {
         this.id = foundComment.getId();
         this.createdAt = foundComment.getCreatedAt();
         this.updatedAt = foundComment.getUpdatedAt();
         this.body = foundComment.getBody();
-        this.author = new CommentAuthorDto(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage());
+        this.author = author;
     }
 }

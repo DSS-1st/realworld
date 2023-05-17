@@ -4,10 +4,12 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.app.CommentService;
+import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.CommentFixtures;
 import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Sql(value = "classpath:db/CommentTearDown.sql")
 class CommentControllerTest {
 
     @Autowired
@@ -58,20 +62,12 @@ class CommentControllerTest {
         articleRepository.persist(newArticle);
     }
 
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
     private void clearTable() {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
 
         articleRepository.deleteAll();
         articleRepository.resetAutoIncrement();
-
-        commentRepository.deleteAll();
-        commentRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")
@@ -115,6 +111,36 @@ class CommentControllerTest {
         //then
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName(value = "Slug 값 유효하면 댓글 리스트 가져오기 성공")
+    @Test
+    void t3() throws Exception {
+        Comment comment1 = CommentFixtures.create();
+        Comment comment2 = CommentFixtures.create();
+
+        commentRepository.add(comment1);
+        commentRepository.add(comment2);
+
+        String slug = "How-to-train-your-dragon-1";
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles/{slug}/comments", slug)
+                .contentType(MediaType.APPLICATION_JSON);
+
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments.size()").value(2))
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].id").value(1))
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[1].id").isNumber())
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].createdAt").exists())
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].updatedAt").exists())
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].body").exists())
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].author.username").exists())
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].author.following").value(false))
+                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[1].author.following").value(false));
+
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
