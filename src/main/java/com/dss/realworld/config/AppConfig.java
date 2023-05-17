@@ -19,9 +19,4 @@ public class AppConfig {
                 .featuresToEnable(SerializationFeature.WRAP_ROOT_VALUE)
                 .featuresToEnable(DeserializationFeature.UNWRAP_ROOT_VALUE);
     }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
 }
