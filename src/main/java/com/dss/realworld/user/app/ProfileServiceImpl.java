@@ -16,43 +16,46 @@ public class ProfileServiceImpl implements ProfileService {
     private final FollowRelationRepository followRelationRepository;
 
     @Override
-    public ProfileResponseDto getProfileDto(String username) {
-        User user = userRepository.findByUsername(username);
-        return ProfileResponseDto.of(user);
+    public ProfileResponseDto getProfileDto(String username, Long toUserId) {
+        User fromUser = userRepository.findByUsername(username);
+        int result = followRelationRepository.checkFollowing(fromUser.getId(), toUserId);
+        if (result >= 1) {
+
+            return getProfileResponseDto(fromUser, true);
+        }
+
+        return getProfileResponseDto(fromUser,false);
     }
 
     @Override
     public ProfileResponseDto followUser(String username, Long toUserId) {
         User fromUser = userRepository.findByUsername(username);
         int followCheck = followRelationRepository.checkFollowing(fromUser.getId(), toUserId);
-        if (followCheck >= 1) {
-            return unFollowUser(username, toUserId);
-        } else {
-            FollowRelation followRelation = new FollowRelation(fromUser.getId(), toUserId);
-            followRelationRepository.save(followRelation);
 
-            ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
-                    .username(fromUser.getUsername())
-                    .bio(fromUser.getBio())
-                    .image(fromUser.getImage())
-                    .following(true)
-                    .build();
+        FollowRelation followRelation = new FollowRelation(fromUser.getId(), toUserId);
+        followRelationRepository.save(followRelation);
 
-            return profileResponseDto;
-        }
+       return getProfileResponseDto(fromUser, true);
     }
 
     @Override
-    public ProfileResponseDto unFollowUser(String username, Long toUserId) {
+    public ProfileResponseDto unFollow(String username, Long toUserId) {
         User fromUser = userRepository.findByUsername(username);
+        ProfileResponseDto profileResponseDto = getProfileResponseDto(fromUser, false);
+
+        followRelationRepository.delete(fromUser.getId(), toUserId);
+
+        return getProfileResponseDto(fromUser,false);
+    }
+
+    private static ProfileResponseDto getProfileResponseDto(User fromUser, boolean following) {
         ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
                 .username(fromUser.getUsername())
                 .bio(fromUser.getBio())
                 .image(fromUser.getImage())
-                .following(false)
+                .following(following)
                 .build();
 
-        followRelationRepository.cancelFollow(fromUser.getId(), toUserId);
         return profileResponseDto;
     }
 }

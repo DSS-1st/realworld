@@ -13,7 +13,7 @@ public class ProfileController {
 
     @GetMapping(value = "/profiles/{username}")
     public ProfileResponseDto getProfile(@PathVariable String username) {
-       return profileService.getProfileDto(username);
+       return profileService.getProfileDto(username,getLogonUserId());
     }
 
     @PostMapping(value = "/profiles/{username}/follow")
@@ -23,7 +23,7 @@ public class ProfileController {
 
     @DeleteMapping(value = "/profiles/{username}/follow")
     public ProfileResponseDto unFollowUser(@PathVariable String username) {
-        return profileService.unFollowUser(username,getLogonUserId());
+        return profileService.unFollow(username,getLogonUserId());
     }
 
     private Long getLogonUserId(){
