@@ -39,10 +39,9 @@ CREATE TABLE 'comments'
 
 CREATE TABLE `follow_relation`
 (
-    `following`    bigint NOT NULL AUTO_INCREMENT,
     `from_user_id` bigint NOT NULL,
     `to_user_id`   bigint NOT NULL,
     `created_at`   datetime DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`following`)
+    PRIMARY KEY (`from_user_id`,to_user_id)
 );
