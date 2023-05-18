@@ -8,7 +8,7 @@ public interface FollowRelationRepository {
 
     int save(FollowRelation followRelation);
 
-    int cancelFollow (Long fromUserId, Long toUserId);
+    int delete (Long fromUserId, Long toUserId);
 
     int checkFollowing(Long fromUserId, Long toUserId);
 

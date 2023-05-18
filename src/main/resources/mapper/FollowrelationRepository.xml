@@ -8,7 +8,7 @@
         values (#{fromUserId}, #{toUserId})
     </insert>
 
-    <delete id="cancelFollow">
+    <delete id="delete">
         delete from follow_relation where from_user_id = #{fromUserId} and to_user_id = #{toUserId}
     </delete>
 
