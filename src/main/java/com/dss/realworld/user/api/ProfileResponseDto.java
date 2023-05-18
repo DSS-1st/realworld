@@ -21,8 +21,4 @@ public class ProfileResponseDto {
         this.image = image;
         this.following = following;
     }
-
-    public static ProfileResponseDto of(User user) {
-        return new ProfileResponseDto(user.getUsername(), user.getBio(), user.getImage() ,false);
-    }
 }

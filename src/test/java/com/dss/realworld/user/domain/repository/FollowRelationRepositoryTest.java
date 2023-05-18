@@ -71,7 +71,7 @@ public class FollowRelationRepositoryTest {
         FollowRelation followRelation = new FollowRelation(fromUserId, toUserId);
         followRelationRepository.save(followRelation);
 
-        int cancelFollow = followRelationRepository.cancelFollow(fromUserId, toUserId);
+        int cancelFollow = followRelationRepository.delete(fromUserId, toUserId);
 
         assertThat(cancelFollow).isEqualTo(1);
     }
