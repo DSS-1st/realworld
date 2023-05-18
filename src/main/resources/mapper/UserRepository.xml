@@ -35,4 +35,14 @@
         <include refid="getUsers"/>
         where user_id = #{id}
     </select>
+
+    <update id="update" parameterType="java.util.Map" >
+        update users
+        set email=#{user.email},
+            password=#{user.password},
+            bio=#{user.bio},
+            image=#{user.image},
+            username=#{user.username}
+            where user_id = #{userId}
+    </update>
 </mapper>
