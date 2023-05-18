@@ -3,10 +3,7 @@ package com.dss.realworld.user.api;
 import com.dss.realworld.user.app.UserService;
 import com.dss.realworld.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = "/api")
 @RestController
@@ -20,5 +17,16 @@ public class UserController {
         User user = userService.save(addUserRequestDto);
 
         return new AddUserResponseDto(user);
+    }
+
+    @PutMapping(value = "/users")
+    public AddUserResponseDto update(@RequestBody UpdateUserRequestDto updateUserRequestDto) {
+        User user = userService.update(updateUserRequestDto,getLoginUserId());
+
+        return new AddUserResponseDto(user);
+    }
+
+    private Long getLoginUserId() {
+        return 1L;
     }
 }
