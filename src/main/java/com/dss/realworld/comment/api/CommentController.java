@@ -23,7 +23,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping(value = "/{slug}/comments")
-    public ResponseEntity<?> create(@RequestBody AddCommentRequestDto addCommentRequestDto,
+    public ResponseEntity<AddCommentResponseDto> create(@RequestBody AddCommentRequestDto addCommentRequestDto,
                                     @PathVariable String slug) {
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, getLogonUserId(), slug);
 
@@ -36,7 +36,7 @@ public class CommentController {
     }
 
     @GetMapping(value = "/{slug}/comments")
-    public ResponseEntity<?> get(@PathVariable String slug) throws JsonProcessingException {
+    public ResponseEntity<String> get(@PathVariable String slug) throws JsonProcessingException {
         final List<CommentDto> commentList = commentService.getAll(slug);
 
         return new ResponseEntity<>(getResponseBody(commentList), HttpStatus.OK);
