@@ -3,14 +3,12 @@ package com.dss.realworld.comment.api.dto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.common.dto.AuthorDto;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @JsonRootName(value = "comment")
 @Getter
-@AllArgsConstructor
 public class AddCommentResponseDto {
 
     private final Long id;
