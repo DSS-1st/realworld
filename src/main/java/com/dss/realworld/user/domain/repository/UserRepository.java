@@ -3,6 +3,8 @@ package com.dss.realworld.user.domain.repository;
 import com.dss.realworld.user.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Optional;
+
 @Mapper
 public interface UserRepository {
 
@@ -12,7 +14,7 @@ public interface UserRepository {
 
     void persist(User user);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     User findByEmail(String email);
 

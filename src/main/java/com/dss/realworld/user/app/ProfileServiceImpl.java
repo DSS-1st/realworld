@@ -30,8 +30,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileResponseDto followUser(String username, Long toUserId) {
-        User fromUser = userRepository.findByUsername(username);
-        int followCheck = followRelationRepository.checkFollowing(fromUser.getId(), toUserId);
+        User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         FollowRelation followRelation = new FollowRelation(fromUser.getId(), toUserId);
         followRelationRepository.save(followRelation);
