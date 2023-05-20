@@ -3,6 +3,7 @@ package com.dss.realworld.user.api;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.UserFixtures;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -79,5 +81,24 @@ class UserControllerTest {
                 .andExpect(jsonPath("$..username").value(updateUserRequestDto.getUsername()))
                 .andExpect(jsonPath("$..email").value(updateUserRequestDto.getEmail()))
                 .andExpect(jsonPath("$..image").value(updateUserRequestDto.getImage()));
+    }
+
+    @DisplayName(value = "loginUserRequestDto 유효하면 로그인 회원정보 반환 성공")
+    @Test
+    void t3() throws Exception {
+        User user = UserFixtures.create();
+        userRepository.persist(user);
+
+        LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
+                .email("jake000@jake.jake")
+                .password("jakejake")
+                .build();
+
+        String jsonDto = objectMapper.writeValueAsString(loginUserRequestDto);
+
+        mockMvc.perform(post("/api/users/login").contentType(MediaType.APPLICATION_JSON).content(jsonDto))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..username").value(user.getUsername()))
+                .andExpect(jsonPath("$..email").value(user.getEmail()));
     }
 }
