@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
                 .image(updateUserRequestDto.getImage()).build();
 
         userRepository.update(user,userId);
+
         return userRepository.findByEmail(user.getEmail());
     }
 }
