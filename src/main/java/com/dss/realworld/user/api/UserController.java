@@ -26,6 +26,13 @@ public class UserController {
         return new AddUserResponseDto(user);
     }
 
+    @PostMapping(value = "users/login")
+    public AddUserResponseDto login(@RequestBody LoginUserRequestDto loginUserRequestDto) {
+        User user = userService.login(loginUserRequestDto);
+
+        return new AddUserResponseDto(user);
+    }
+
     private Long getLoginUserId() {
         return 1L;
     }
