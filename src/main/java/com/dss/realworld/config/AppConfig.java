@@ -15,7 +15,7 @@ public class AppConfig {
         return new Jackson2ObjectMapperBuilder()
                 .modules(new JavaTimeModule())
                 .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .featuresToEnable(SerializationFeature.WRAP_ROOT_VALUE)
+//                .featuresToEnable(SerializationFeature.WRAP_ROOT_VALUE)
                 .featuresToEnable(DeserializationFeature.UNWRAP_ROOT_VALUE);
     }
 }
