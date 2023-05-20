@@ -13,7 +13,7 @@ public class ProfileController {
 
     @GetMapping(value = "/profiles/{username}")
     public ProfileResponseDto getProfile(@PathVariable String username) {
-       return profileService.getProfileDto(username,getLogonUserId());
+       return profileService.getProfile(username,getLogonUserId());
     }
 
     @PostMapping(value = "/profiles/{username}/follow")

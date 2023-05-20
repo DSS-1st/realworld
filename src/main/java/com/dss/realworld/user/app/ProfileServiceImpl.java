@@ -1,5 +1,6 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.ProfileResponseDto;
 import com.dss.realworld.user.domain.FollowRelation;
 import com.dss.realworld.user.domain.User;
@@ -16,8 +17,8 @@ public class ProfileServiceImpl implements ProfileService {
     private final FollowRelationRepository followRelationRepository;
 
     @Override
-    public ProfileResponseDto getProfileDto(String username, Long toUserId) {
-        User fromUser = userRepository.findByUsername(username);
+    public ProfileResponseDto getProfile(String username, Long toUserId) {
+        User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         int result = followRelationRepository.checkFollowing(fromUser.getId(), toUserId);
         if (result >= 1) {
 
@@ -40,7 +41,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileResponseDto unFollow(String username, Long toUserId) {
-        User fromUser = userRepository.findByUsername(username);
+        User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         ProfileResponseDto profileResponseDto = getProfileResponseDto(fromUser, false);
 
         followRelationRepository.delete(fromUser.getId(), toUserId);

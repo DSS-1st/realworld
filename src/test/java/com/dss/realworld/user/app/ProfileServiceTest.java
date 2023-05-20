@@ -50,7 +50,7 @@ public class ProfileServiceTest {
     @DisplayName("username이 유효하면 GetProfileDto 가져오기 성공")
     @Test
     void t1() {
-        ProfileResponseDto profileDto = profileService.getProfileDto("Jacob000",1L);
+        ProfileResponseDto profileDto = profileService.getProfile("Jacob000",1L);
 
         assertThat(profileDto.getUsername()).isEqualTo("Jacob000");
     }
