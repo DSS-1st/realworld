@@ -2,7 +2,12 @@ package com.dss.realworld.article.api.dto;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.dss.realworld.tag.domain.Tag;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,21 +15,28 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Getter
-@JsonRootName(value = "article")
+@JsonTypeName(value = "article")
+@JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 @NoArgsConstructor
 public class CreateArticleRequestDto {
 
+    @NotNull
     private String title;
+
+    @NotNull
     private String description;
+
+    @NotNull
     private String body;
-    private Set<String> tagList;
+
+    private Set<Tag> tags;
 
     @Builder
-    public CreateArticleRequestDto(final String title, final String description, final String body, final Set<String> tagList) {
+    public CreateArticleRequestDto(final String title, final String description, final String body, final Set<Tag> tags) {
         this.title = title;
         this.description = description;
         this.body = body;
-        this.tagList = tagList;
+        this.tags = tags;
     }
 
     public Article convert(Long logonUserId, Long maxArticleId) {
