@@ -1,6 +1,8 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.AddUserRequestDto;
+import com.dss.realworld.user.api.LoginUserRequestDto;
 import com.dss.realworld.user.api.UpdateUserRequestDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -24,7 +26,7 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.persist(user);
 
-        return userRepository.findByEmail(user.getEmail());
+        return userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -39,6 +41,12 @@ public class UserServiceImpl implements UserService {
 
         userRepository.update(user,userId);
 
-        return userRepository.findByEmail(user.getEmail());
+        return userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public User login(LoginUserRequestDto loginUserRequestDto) {
+
+        return userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
     }
 }
