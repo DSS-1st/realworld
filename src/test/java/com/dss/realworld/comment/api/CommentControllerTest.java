@@ -65,9 +65,6 @@ class CommentControllerTest {
     private void clearTable() {
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
-
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")

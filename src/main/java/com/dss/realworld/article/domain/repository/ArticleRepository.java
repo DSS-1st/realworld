@@ -8,10 +8,6 @@ import java.util.Optional;
 @Mapper
 public interface ArticleRepository {
 
-    void deleteAll();
-
-    void resetAutoIncrement();
-
     void persist(Article article);
 
     int update(Article article);

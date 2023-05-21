@@ -5,7 +5,7 @@ import com.dss.realworld.article.domain.Article;
 
 public class ArticleFixtures {
 
-    public static Article createDefault() {
+    public static Article create() {
         return Article.builder()
                 .title("How to train your dragon")
                 .description("Ever wonder how?")
