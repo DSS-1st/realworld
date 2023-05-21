@@ -10,8 +10,6 @@ public interface ArticleTagRepository {
 
     ArticleTag findById(Long articleTagId);
 
-    int update(ArticleTag articleTag);
-
     int delete(Long id);
 
     int deleteByArticle(Long articleId);

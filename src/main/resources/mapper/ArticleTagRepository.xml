@@ -14,13 +14,6 @@
         where article_tag_id = #{articleTagId}
     </select>
 
-    <update id="update" parameterType="ArticleTag" useGeneratedKeys="true" keyProperty="id" keyColumn="article_tag_id">
-        update article_tag
-        set article_id        = #{articleId},
-            tag_id       = #{tagId}
-        where article_tag_id = #{id}
-    </update>
-
     <delete id="delete" parameterType="Long">
         delete from article_tag where article_tag_id = #{id}
     </delete>
