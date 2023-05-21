@@ -1,5 +1,6 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.error.exception.PasswordNotMatchedException;
 import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.AddUserRequestDto;
 import com.dss.realworld.user.api.LoginUserRequestDto;
@@ -47,6 +48,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(LoginUserRequestDto loginUserRequestDto) {
 
-        return userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
+
+        if (loginUserRequestDto.getPassword() != user.getPassword()) {
+            throw new PasswordNotMatchedException();
+        }
+
+        return user;
     }
 }
