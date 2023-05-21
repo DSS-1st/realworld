@@ -12,10 +12,6 @@ public interface CommentRepository {
 
     Comment getById(Long id);
 
-    void deleteAll();
-
-    void resetAutoIncrement();
-
     int delete(@Param(value = "id") Long id, @Param(value = "articleId") Long articleId, @Param(value = "userId") Long userId);
 
     List<Comment> getAll(Long articleId);
