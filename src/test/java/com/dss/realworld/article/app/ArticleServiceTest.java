@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql", "classpath:db/UserSetup.sql"})
+@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql", "classpath:db/SampleDataSetup.sql"})
 @SpringBootTest
 public class ArticleServiceTest {
 
