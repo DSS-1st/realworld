@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Sql(value = "classpath:db/CommentTearDown.sql")
+@Sql(value = {"classpath:db/CommentTearDown.sql", "classpath:db/UserTearDown.sql", "classpath:db/ArticleTearDown.sql"})
 class CommentRepositoryTest {
 
     @Autowired
@@ -36,8 +36,6 @@ class CommentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        clearTable();
-
         User newUser = UserFixtures.create();
         userRepository.persist(newUser);
 
@@ -45,15 +43,7 @@ class CommentRepositoryTest {
         articleRepository.persist(newArticle);
     }
 
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
-    }
-
-    @DisplayName(value = "articeId,body,userId가 NotNull이면 댓글 작성 성공")
+    @DisplayName(value = "articeId, body, userId가 NotNull이면 댓글 작성 성공")
     @Test
     void t1() {
         Comment comment = CommentFixtures.create();

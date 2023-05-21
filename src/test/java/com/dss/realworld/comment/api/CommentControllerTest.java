@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(value = "classpath:db/CommentTearDown.sql")
+@Sql(value = {"classpath:db/CommentTearDown.sql", "classpath:db/UserTearDown.sql", "classpath:db/ArticleTearDown.sql"})
 class CommentControllerTest {
 
     @Autowired
@@ -53,21 +53,11 @@ class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        clearTable();
-
         User newUser = UserFixtures.create();
         userRepository.persist(newUser);
 
         Article newArticle = ArticleFixtures.of(newUser.getId());
         articleRepository.persist(newArticle);
-    }
-
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")
@@ -80,7 +70,7 @@ class CommentControllerTest {
         //when
         String jsonString = objectMapper.writeValueAsString(addCommentRequestDto);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/api/articles/{slug}/comments",slug)
+                .post("/api/articles/{slug}/comments", slug)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString);
 
@@ -101,7 +91,7 @@ class CommentControllerTest {
         Long logonUserId = 1L;
         String slug = "How-to-train-your-dragon-1";
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
-        commentService.add(addCommentRequestDto,logonUserId,slug);
+        commentService.add(addCommentRequestDto, logonUserId, slug);
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -136,16 +126,16 @@ class CommentControllerTest {
 
         //then
         resultActions
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.comments.size()").value(2))
-            .andExpect(jsonPath("$.comments[0].id").value(1))
-            .andExpect(jsonPath("$.comments[0].id").isNumber())
-            .andExpect(jsonPath("$.comments[0].createdAt").exists())
-            .andExpect(jsonPath("$.comments[0].updatedAt").exists())
-            .andExpect(jsonPath("$.comments[0].body").exists())
-            .andExpect(jsonPath("$.comments[0].author.username").exists())
-            .andExpect(jsonPath("$.comments[0].author.following").value(false))
-            .andExpect(jsonPath("$.comments[0].author.following").value(false));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments.size()").value(2))
+                .andExpect(jsonPath("$.comments[0].id").value(1))
+                .andExpect(jsonPath("$.comments[0].id").isNumber())
+                .andExpect(jsonPath("$.comments[0].createdAt").exists())
+                .andExpect(jsonPath("$.comments[0].updatedAt").exists())
+                .andExpect(jsonPath("$.comments[0].body").exists())
+                .andExpect(jsonPath("$.comments[0].author.username").exists())
+                .andExpect(jsonPath("$.comments[0].author.following").value(false))
+                .andExpect(jsonPath("$.comments[0].author.following").value(false));
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {
