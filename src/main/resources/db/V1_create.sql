@@ -71,10 +71,10 @@ CREATE TABLE `comments`
 DROP TABLE IF EXISTS `follow_relation`;
 CREATE TABLE `follow_relation`
 (
-    `follow_relation_id` bigint NOT NULL AUTO_INCREMENT,
-    `from_user_id`       bigint NOT NULL,
-    `to_user_id`         bigint NOT NULL,
-    PRIMARY KEY (`follow_relation_id`),
+    `from_user_id` bigint NOT NULL,
+    `to_user_id`   bigint NOT NULL,
+    `created_at`   datetime DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`from_user_id`, `to_user_id`),
     KEY `IX_from_user_id` (`from_user_id`),
     KEY `IX_to_user_id_idx` (`to_user_id`),
     CONSTRAINT `FK_follow_relation_users_from_user_id` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`user_id`),
