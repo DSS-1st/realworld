@@ -7,16 +7,19 @@ import com.dss.realworld.tag.domain.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
 
+    @Transactional
     @Override
     public void persist(Set<Tag> tagSet) {
         try {
@@ -42,6 +45,7 @@ public class TagServiceImpl implements TagService {
         return result;
     }
 
+    @Transactional
     @Override
     public int delete(String name) {
         return tagRepository.delete(name);
