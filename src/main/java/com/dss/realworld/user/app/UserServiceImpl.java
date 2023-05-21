@@ -47,13 +47,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(LoginUserRequestDto loginUserRequestDto) {
-
         User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
 
+        checkPassword(loginUserRequestDto, user);
+
+        return user;
+    }
+
+    private static void checkPassword(LoginUserRequestDto loginUserRequestDto, User user) {
         if (loginUserRequestDto.getPassword() != user.getPassword()) {
             throw new PasswordNotMatchedException();
         }
-
-        return user;
     }
 }
