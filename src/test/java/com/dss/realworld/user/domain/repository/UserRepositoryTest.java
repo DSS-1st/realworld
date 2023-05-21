@@ -1,5 +1,6 @@
 package com.dss.realworld.user.domain.repository;
 
+import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
@@ -31,7 +32,7 @@ public class UserRepositoryTest {
         userRepository.persist(newUser1);
         userRepository.persist(newUser2);
 
-        User addedUser = userRepository.findByUsername("Jacob000");
+        User addedUser = userRepository.findByUsername("Jacob000").orElseThrow(UserNotFoundException::new);
         Assertions.assertThat(addedUser.getUsername()).isEqualTo(newUser1.getUsername());
     }
 

@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,25 +75,45 @@ public class ProfileControllerTest {
                 .andExpect(jsonPath("$..username").value(username));
     }
 
-    @DisplayName(value = "username과 followerId가 유효하면 팔로우 성공")
+    @DisplayName(value = "username과 toUserId 유효하면 팔로우 성공")
     @Test
     void t2() throws Exception {
         String username = "Jacob000";
 
-        User follower = User.builder()
+        User toUser = User.builder()
                 .username("test1")
                 .email("@google.com")
                 .password("1234")
                 .build();
-        userRepository.persist(follower);
+        userRepository.persist(toUser);
 
-        Long followerId = follower.getId();
+        Long toUserId = toUser.getId();
 
         mockMvc.perform(post("/api/profiles/{username}/follow", username)
-                        .param("followerId", String.valueOf(followerId))
+                        .param("toUserId", String.valueOf(toUserId))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..username").value("Jacob000"))
                 .andExpect(jsonPath("$..following").value(true));
+    }
+
+    @DisplayName(value = "username과 followerId가 유효하면 팔로우 취소")
+    @Test
+    void t3() throws Exception {
+        String username = "Jacob000";
+
+        User toUser = User.builder()
+                .username("test1")
+                .email("@google.com")
+                .password("1234")
+                .build();
+        userRepository.persist(toUser);
+
+        Long toUserId = toUser.getId();
+
+        mockMvc.perform(delete("/api/profiles/{username}/follow", username)
+                        .param("toUserId", String.valueOf(toUserId))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

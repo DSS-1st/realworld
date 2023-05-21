@@ -13,12 +13,20 @@ public class ProfileController {
 
     @GetMapping(value = "/profiles/{username}")
     public ProfileResponseDto getProfile(@PathVariable String username) {
-       return profileService.get(username);
+       return profileService.getProfile(username,getLogonUserId());
     }
 
-    //14번 브랜치에서 수정했음
     @PostMapping(value = "/profiles/{username}/follow")
-    public ProfileResponseDto followUser(@PathVariable String username, @RequestParam Long followerId) {
-       return profileService.follow(username,followerId);
+    public ProfileResponseDto followUser(@PathVariable String username) {
+       return profileService.follow(username,getLogonUserId());
+    }
+
+    @DeleteMapping(value = "/profiles/{username}/follow")
+    public ProfileResponseDto unFollowUser(@PathVariable String username) {
+        return profileService.unFollow(username,getLogonUserId());
+    }
+
+    private Long getLogonUserId(){
+        return 1L;
     }
 }
