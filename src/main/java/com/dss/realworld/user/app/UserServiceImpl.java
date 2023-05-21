@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.persist(user);
 
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        return userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotFoundException());
     }
 
     @Override
@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService {
 
         userRepository.update(user,userId);
 
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        return userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotFoundException());
     }
 
     @Override
     public User login(LoginUserRequestDto loginUserRequestDto) {
 
-        return userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
+        return userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
     }
 }
