@@ -1,9 +1,11 @@
 package com.dss.realworld.article.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
 @Alias(value = "ArticleTag")
+@Getter
 @NoArgsConstructor
 public class ArticleTag {
 
