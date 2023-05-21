@@ -5,27 +5,37 @@
 <mapper namespace="com.dss.realworld.comment.domain.repository.CommentRepository">
 
     <insert id="add" parameterType="Comment" useGeneratedKeys="true" keyProperty="id" keyColumn="comment_id">
-        insert into comments(comment_id , article_id, body, user_id)
-        values (#{id}, #{articleId}, #{body},#{userId})
+        insert into comments(comment_id, article_id, body, user_id)
+        values (#{id}, #{articleId}, #{body}, #{userId})
     </insert>
 
     <select id="getById" parameterType="Long" resultType="Comment">
-        select comment_id as id, article_id, body, created_at, updated_at,user_id from comments where comment_id = #{id}
+        select comment_id as id, article_id, body, created_at, updated_at, user_id
+        from comments
+        where comment_id = #{id}
     </select>
 
     <delete id="deleteAll" parameterType="Long">
-        delete from comments
+        delete
+        from comments
     </delete>
 
     <select id="resetAutoIncrement">
-        alter table comments AUTO_INCREMENT = 1
+        alter table comments
+            AUTO_INCREMENT = 1
     </select>
 
-    <delete id="delete" parameterType="Long">
-        delete from comments where comment_id=#{id} and article_id=#{articleId} and user_id=#{userId}
+    <delete id="delete">
+        delete
+        from comments
+        where comment_id = #{id}
+          and article_id = #{articleId}
+          and user_id = #{userId}
     </delete>
 
     <select id="getAll" parameterType="Long" resultType="Comment">
-        select comment_id as id, article_id, body , created_at, updated_at, user_id from comments where article_id = #{articleId}
+        select comment_id as id, article_id, body, created_at, updated_at, user_id
+        from comments
+        where article_id = #{articleId}
     </select>
 </mapper>

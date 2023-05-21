@@ -12,7 +12,6 @@ import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.CommentFixtures;
 import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(value = "classpath:db/CommentTearDown.sql")
+@Sql(value = {"classpath:db/CommentTearDown.sql", "classpath:db/UserTearDown.sql", "classpath:db/ArticleTearDown.sql"})
 class CommentControllerTest {
 
     @Autowired
@@ -53,21 +53,11 @@ class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        clearTable();
-
         User newUser = UserFixtures.create();
         userRepository.persist(newUser);
 
         Article newArticle = ArticleFixtures.of(newUser.getId());
         articleRepository.persist(newArticle);
-    }
-
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-
-        articleRepository.deleteAll();
-        articleRepository.resetAutoIncrement();
     }
 
     @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")
@@ -80,7 +70,7 @@ class CommentControllerTest {
         //when
         String jsonString = objectMapper.writeValueAsString(addCommentRequestDto);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/api/articles/{slug}/comments",slug)
+                .post("/api/articles/{slug}/comments", slug)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString);
 
@@ -101,7 +91,7 @@ class CommentControllerTest {
         Long logonUserId = 1L;
         String slug = "How-to-train-your-dragon-1";
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
-        commentService.add(addCommentRequestDto,logonUserId,slug);
+        commentService.add(addCommentRequestDto, logonUserId, slug);
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -116,6 +106,7 @@ class CommentControllerTest {
     @DisplayName(value = "Slug 값 유효하면 댓글 리스트 가져오기 성공")
     @Test
     void t3() throws Exception {
+        //given
         Comment comment1 = CommentFixtures.create();
         Comment comment2 = CommentFixtures.create();
 
@@ -128,19 +119,23 @@ class CommentControllerTest {
                 .get("/api/articles/{slug}/comments", slug)
                 .contentType(MediaType.APPLICATION_JSON);
 
+        //when
+        ResultActions resultActions = mockMvc.perform(mockRequest);
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("responseBody = " + responseBody);
 
-        mockMvc.perform(mockRequest)
+        //then
+        resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments.size()").value(2))
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].id").value(1))
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[1].id").isNumber())
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].createdAt").exists())
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].updatedAt").exists())
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].body").exists())
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].author.username").exists())
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[0].author.following").value(false))
-                .andExpect(jsonPath("$.GetCommentsResponseDto.comments[1].author.following").value(false));
-
+                .andExpect(jsonPath("$.comments.size()").value(2))
+                .andExpect(jsonPath("$.comments[0].id").value(1))
+                .andExpect(jsonPath("$.comments[0].id").isNumber())
+                .andExpect(jsonPath("$.comments[0].createdAt").exists())
+                .andExpect(jsonPath("$.comments[0].updatedAt").exists())
+                .andExpect(jsonPath("$.comments[0].body").exists())
+                .andExpect(jsonPath("$.comments[0].author.username").exists())
+                .andExpect(jsonPath("$.comments[0].author.following").value(false))
+                .andExpect(jsonPath("$.comments[0].author.following").value(false));
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

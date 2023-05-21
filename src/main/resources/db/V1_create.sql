@@ -18,28 +18,57 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`
 (
     `article_id`  bigint       NOT NULL AUTO_INCREMENT,
+    `title`       varchar(255) NOT NULL,
+    `slug`        varchar(255) DEFAULT NULL,
     `body`        varchar(255) NOT NULL,
     `description` varchar(255) NOT NULL,
-    `slug`        varchar(255) DEFAULT NULL,
-    `title`       varchar(255) NOT NULL,
-    `user_id`     bigint       DEFAULT NULL,
+    `user_id`     bigint       NOT NULL,
     `created_at`  datetime     DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  datetime     DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`article_id`)
+    PRIMARY KEY (`article_id`),
+    KEY `IX_user_id` (`user_id`),
+    CONSTRAINT `FK_article_users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+);
+
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE `tag`
+(
+    `tag_id` bigint       NOT NULL AUTO_INCREMENT,
+    `name`   varchar(255) NOT NULL,
+    PRIMARY KEY (`tag_id`),
+    UNIQUE KEY `UK_name` (`name`)
+);
+
+DROP TABLE IF EXISTS `article_tag`;
+CREATE TABLE `article_tag`
+(
+    `article_tag_id` bigint NOT NULL AUTO_INCREMENT,
+    `article_id`     bigint NOT NULL,
+    `tag_id`         bigint NOT NULL,
+    PRIMARY KEY (`article_tag_id`),
+    KEY `IX_article_id` (`article_id`),
+    KEY `IX_tag_id` (`tag_id`),
+    CONSTRAINT `FK_article_tag_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`),
+    CONSTRAINT `FK_article_tag_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`)
 );
 
 DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments`
 (
     `comment_id` bigint       NOT NULL AUTO_INCREMENT,
-    `article_id` bigint,
-    `body`       varchar(255) NOT NULL,
-    `user_id`    bigint,
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (comment_id)
+    `body`       varchar(255) NOT NULL,
+    `article_id` bigint       NOT NULL,
+    `user_id`    bigint       NOT NULL,
+    PRIMARY KEY (`comment_id`),
+    KEY `IX_article_id` (`article_id`),
+    KEY `IX_user_id` (`user_id`),
+    CONSTRAINT `FK_comments_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`),
+    CONSTRAINT `FK_comments_users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 );
 
+DROP TABLE IF EXISTS `follow_relation`;
 CREATE TABLE `follow_relation`
 (
     `from_user_id` bigint NOT NULL,
