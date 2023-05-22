@@ -1,8 +1,6 @@
 package com.dss.realworld.article.domain.repository;
 
 import com.dss.realworld.article.domain.ArticleTag;
-import com.dss.realworld.tag.domain.repository.TagRepository;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,7 @@ public class ArticleTagRepositoryTest {
         Long articleId = 1L;
         Long tagId = 1L;
 
-        ArticleTag articleTag = new ArticleTag(1L, 1L);
+        ArticleTag articleTag = new ArticleTag(articleId, tagId);
 
         //when
         articleTagRepository.persist(articleTag);
@@ -45,7 +43,7 @@ public class ArticleTagRepositoryTest {
         Long articleId = 1L;
         Long tagId = 1L;
 
-        ArticleTag articleTag = new ArticleTag(1L, 1L);
+        ArticleTag articleTag = new ArticleTag(articleId, tagId);
         articleTagRepository.persist(articleTag);
 
         //when
@@ -62,7 +60,7 @@ public class ArticleTagRepositoryTest {
         Long articleId = 1L;
         Long tagId = 1L;
 
-        ArticleTag articleTag = new ArticleTag(1L, 1L);
+        ArticleTag articleTag = new ArticleTag(articleId, tagId);
         articleTagRepository.persist(articleTag);
 
         //when
@@ -79,7 +77,7 @@ public class ArticleTagRepositoryTest {
         Long articleId = 1L;
         Long tagId = 1L;
 
-        ArticleTag articleTag = new ArticleTag(1L, 1L);
+        ArticleTag articleTag = new ArticleTag(articleId, tagId);
         articleTagRepository.persist(articleTag);
 
         //when

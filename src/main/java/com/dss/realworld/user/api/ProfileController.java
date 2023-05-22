@@ -14,20 +14,20 @@ public class ProfileController {
 
     @GetMapping(value = "/profiles/{username}")
     public ProfileResponseDto get(@PathVariable String username) {
-        return profileService.get(username, getLoginUserId());
+        return profileService.get(username, getLoginId());
     }
 
     @PostMapping(value = "/profiles/{username}/follow")
     public ProfileResponseDto follow(@PathVariable String username) {
-        return profileService.follow(username, getLoginUserId());
+        return profileService.follow(username, getLoginId());
     }
 
     @DeleteMapping(value = "/profiles/{username}/follow")
     public ProfileResponseDto unfollow(@PathVariable String username) {
-        return profileService.unFollow(username, getLoginUserId());
+        return profileService.unFollow(username, getLoginId());
     }
 
-    private Long getLoginUserId() {
+    private Long getLoginId() {
         return 1L;
     }
 }
