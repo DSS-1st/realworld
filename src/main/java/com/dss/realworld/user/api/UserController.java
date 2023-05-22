@@ -1,5 +1,8 @@
 package com.dss.realworld.user.api;
 
+import com.dss.realworld.user.api.dto.AddUserRequestDto;
+import com.dss.realworld.user.api.dto.UserResponseDto;
+import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.app.UserService;
 import com.dss.realworld.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +16,17 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/users")
-    public AddUserResponseDto add(@RequestBody AddUserRequestDto addUserRequestDto) {
+    public UserResponseDto add(@RequestBody AddUserRequestDto addUserRequestDto) {
         User user = userService.save(addUserRequestDto);
 
-        return new AddUserResponseDto(user);
+        return new UserResponseDto(user);
     }
 
-    @PutMapping(value = "/users")
-    public AddUserResponseDto update(@RequestBody UpdateUserRequestDto updateUserRequestDto) {
-        User user = userService.update(updateUserRequestDto,getLoginUserId());
+    @PutMapping(value = "/user")
+    public UserResponseDto update(@RequestBody UpdateUserRequestDto updateUserRequestDto) {
+        User user = userService.update(updateUserRequestDto, getLoginUserId());
 
-        return new AddUserResponseDto(user);
+        return new UserResponseDto(user);
     }
 
     private Long getLoginUserId() {

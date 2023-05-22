@@ -1,6 +1,6 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.ProfileResponseDto;
+import com.dss.realworld.user.api.dto.ProfileResponseDto;
 import com.dss.realworld.user.domain.FollowRelation;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowRelationRepository;

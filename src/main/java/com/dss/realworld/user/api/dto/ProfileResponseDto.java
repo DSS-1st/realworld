@@ -1,4 +1,4 @@
-package com.dss.realworld.user.api;
+package com.dss.realworld.user.api.dto;
 
 import com.dss.realworld.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonRootName;

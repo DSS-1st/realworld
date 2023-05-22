@@ -1,6 +1,6 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.ProfileResponseDto;
+import com.dss.realworld.user.api.dto.ProfileResponseDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -42,7 +42,7 @@ public class ProfileServiceTest {
         userRepository.resetAutoIncrement();
     }
 
-    @DisplayName("username이 유효하면 GetProfileDto 가져오기 성공")
+    @DisplayName(value = "username이 유효하면 GetProfileDto 가져오기 성공")
     @Test
     void t1() {
         ProfileResponseDto profileDto = profileService.get("Jacob000");
@@ -50,7 +50,7 @@ public class ProfileServiceTest {
         assertThat(profileDto.getUsername()).isEqualTo("Jacob000");
     }
 
-    @DisplayName("followee 유저 네임, followerId 유효하면 팔로우 성공 ")
+    @DisplayName(value = "followee 유저 네임, followerId 유효하면 팔로우 성공 ")
     @Test
     void t2() {
         String followeeUsername = "Jacob000";

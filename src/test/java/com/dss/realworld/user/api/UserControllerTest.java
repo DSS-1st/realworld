@@ -1,5 +1,7 @@
 package com.dss.realworld.user.api;
 
+import com.dss.realworld.user.api.dto.AddUserRequestDto;
+import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.UserFixtures;

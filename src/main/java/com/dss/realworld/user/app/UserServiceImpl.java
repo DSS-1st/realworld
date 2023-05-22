@@ -1,7 +1,7 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.AddUserRequestDto;
-import com.dss.realworld.user.api.UpdateUserRequestDto;
+import com.dss.realworld.user.api.dto.AddUserRequestDto;
+import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +28,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User update(UpdateUserRequestDto updateUserRequestDto, Long userId) {
         User findUser = userRepository.findById(userId);
-       User user =  findUser.builder()
+        User user = findUser.builder()
                 .email(updateUserRequestDto.getEmail())
                 .username(updateUserRequestDto.getUsername())
                 .password(updateUserRequestDto.getPassword())
                 .bio(updateUserRequestDto.getBio())
                 .image(updateUserRequestDto.getImage()).build();
 
-        userRepository.update(user,userId);
+        userRepository.update(user, userId);
 
         return userRepository.findByEmail(user.getEmail());
     }
