@@ -5,10 +5,7 @@ import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
-import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,15 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/UserTeardown.sql","classpath:db/ArticleTeardown.sql"})
+@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql", "classpath:db/UserSetup.sql"})
 @SpringBootTest
 public class ArticleServiceTest {
 
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -38,10 +32,11 @@ public class ArticleServiceTest {
     @Test
     void t1() {
         //given
+        Long userId = 1L;
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getSampleUserId());
+        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, userId);
 
         //then
         assertThat(articleResponseDto.getTitle()).isEqualTo(createArticleRequestDto.getTitle());
@@ -51,8 +46,9 @@ public class ArticleServiceTest {
     @Test
     void t2() {
         //given
+        Long userId = 1L;
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
-        ArticleResponseDto savedArticle = articleService.save(createArticleRequestDto, getSampleUserId());
+        ArticleResponseDto savedArticle = articleService.save(createArticleRequestDto, userId);
         assertThat(savedArticle.getTitle()).isEqualTo(createArticleRequestDto.getTitle());
 
         //when
@@ -60,13 +56,6 @@ public class ArticleServiceTest {
 
         //then
         Assertions.assertThat(foundArticle.getSlug()).isEqualTo(savedArticle.getSlug());
-    }
-
-    private Long getSampleUserId() {
-        User user = UserFixtures.create();
-        userRepository.persist(user);
-
-        return user.getId();
     }
 
     @DisplayName(value = "게시글 작성자가 아닐 때 삭제 시도 시 예외 발생")

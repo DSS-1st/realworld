@@ -56,11 +56,11 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments`
 (
     `comment_id` bigint       NOT NULL AUTO_INCREMENT,
-    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
     `body`       varchar(255) NOT NULL,
     `article_id` bigint       NOT NULL,
     `user_id`    bigint       NOT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`comment_id`),
     KEY `IX_article_id` (`article_id`),
     KEY `IX_user_id` (`user_id`),
@@ -74,6 +74,9 @@ CREATE TABLE `follow_relation`
     `from_user_id` bigint NOT NULL,
     `to_user_id`   bigint NOT NULL,
     `created_at`   datetime DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`from_user_id`,to_user_id)
+    PRIMARY KEY (`from_user_id`, `to_user_id`),
+    KEY `IX_from_user_id` (`from_user_id`),
+    KEY `IX_to_user_id_idx` (`to_user_id`),
+    CONSTRAINT `FK_follow_relation_users_from_user_id` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`user_id`),
+    CONSTRAINT `FK_follow_relation_users_to_user_id` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`user_id`)
 );

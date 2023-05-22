@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles(value = "test")
-@Sql(value = "classpath:db/ArticleTeardown.sql")
+@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql", "classpath:db/UserSetup.sql"})
 @SpringBootTest
 @Transactional
 public class ArticleRepositoryTest {
@@ -30,7 +30,7 @@ public class ArticleRepositoryTest {
     @DisplayName(value = "필수 입력값이 NotNull이면 Article 생성 성공")
     @Test
     void t1() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.of(1L);
         articleRepository.persist(newArticle);
 
         assertThat(newArticle.getId()).isNotNull();
@@ -39,7 +39,7 @@ public class ArticleRepositoryTest {
     @DisplayName(value = "Article 생성 후 DB에 부여된 PK로 조회 시 성공")
     @Test
     void t2() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.of(1L);
         articleRepository.persist(newArticle);
 
         Article foundArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
@@ -52,8 +52,9 @@ public class ArticleRepositoryTest {
     void t3() {
         String title = "How to train your dragon";
         String slug = "How-to-train-your-dragon-1";
+        Long userId = 1L;
 
-        Article newArticle = ArticleFixtures.of(title, slug);
+        Article newArticle = ArticleFixtures.of(title, slug, userId);
         articleRepository.persist(newArticle);
 
         Optional<Article> foundArticle = articleRepository.findBySlug(newArticle.getSlug());
@@ -64,7 +65,7 @@ public class ArticleRepositoryTest {
     @DisplayName(value = "Article Id가 유효하면 삭제 성공")
     @Test
     void t4() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.of(1L);
         articleRepository.persist(newArticle);
 
         int deletedCount = articleRepository.delete(newArticle.getId());
@@ -75,10 +76,10 @@ public class ArticleRepositoryTest {
     @DisplayName(value = "유효하지 않은 Id로 삭제 요청 시 삭제된 Article 0개")
     @Test
     void t5() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.of(1L);
         articleRepository.persist(newArticle);
 
-        int deletedCount = articleRepository.delete(10L);
+        int deletedCount = articleRepository.delete(99L);
 
         Assertions.assertThat(deletedCount).isEqualTo(0);
     }
@@ -86,7 +87,7 @@ public class ArticleRepositoryTest {
     @DisplayName(value = "Article title 수정 시 slug도 변경 성공")
     @Test
     void t6() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.of(1L);
         articleRepository.persist(newArticle);
 
         String newTitle = "updated title";
