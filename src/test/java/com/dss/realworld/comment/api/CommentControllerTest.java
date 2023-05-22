@@ -1,18 +1,13 @@
 package com.dss.realworld.comment.api;
 
-import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.app.CommentService;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
-import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
-import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.CommentFixtures;
-import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(value = {"classpath:db/CommentTearDown.sql", "classpath:db/UserTearDown.sql", "classpath:db/ArticleTearDown.sql"})
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 class CommentControllerTest {
 
     @Autowired
@@ -51,20 +46,11 @@ class CommentControllerTest {
     @Autowired
     private CommentService commentService;
 
-    @BeforeEach
-    void setUp() {
-        User newUser = UserFixtures.create();
-        userRepository.persist(newUser);
-
-        Article newArticle = ArticleFixtures.of(newUser.getId());
-        articleRepository.persist(newArticle);
-    }
-
     @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")
     @Test
     void t1() throws Exception {
         //given
-        String slug = "How-to-train-your-dragon-1";
+        String slug = "new-title-1";
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
 
         //when
@@ -89,7 +75,7 @@ class CommentControllerTest {
         //given
         Long commentId = 1L;
         Long logonUserId = 1L;
-        String slug = "How-to-train-your-dragon-1";
+        String slug = "new-title-1";
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
         commentService.add(addCommentRequestDto, logonUserId, slug);
 
@@ -103,7 +89,7 @@ class CommentControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName(value = "Slug 값 유효하면 댓글 리스트 가져오기 성공")
+    @DisplayName(value = "Slug 값이 유효하면 댓글 리스트 가져오기 성공")
     @Test
     void t3() throws Exception {
         //given
@@ -113,7 +99,7 @@ class CommentControllerTest {
         commentRepository.add(comment1);
         commentRepository.add(comment2);
 
-        String slug = "How-to-train-your-dragon-1";
+        String slug = "new-title-1";
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .get("/api/articles/{slug}/comments", slug)

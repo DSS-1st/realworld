@@ -1,18 +1,13 @@
 package com.dss.realworld.comment.app;
 
-import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
-import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
-import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.CommentFixtures;
-import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Sql(value = {"classpath:db/CommentTearDown.sql", "classpath:db/UserTearDown.sql", "classpath:db/ArticleTearDown.sql"})
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 class CommentServiceTest {
 
     @Autowired
@@ -37,30 +32,25 @@ class CommentServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @BeforeEach
-    void setUp() {
-        User newUser = UserFixtures.create();
-        userRepository.persist(newUser);
-
-        Article newArticle = ArticleFixtures.of(newUser.getId());
-        articleRepository.persist(newArticle);
-    }
-
     @DisplayName(value = "매개변수들이 유효하면 댓글 작성 성공")
     @Test
     void t1() {
+        //given
         AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
         Long logonUserId = 1L;
-        String slug = "How-to-train-your-dragon-1";
+        String slug = "new-title-1";
 
+        //when
         AddCommentResponseDto saveComment = commentService.add(addCommentRequestDto, logonUserId, slug);
 
+        //then
         Assertions.assertThat(saveComment.getBody()).isEqualTo("His name was my name too.");
     }
 
     @DisplayName(value = "commentId가 유효하면 댓글 삭제 성공")
     @Test
     void t2() {
+        //given
         Comment comment1 = CommentFixtures.create();
         commentRepository.add(comment1);
 
@@ -68,8 +58,10 @@ class CommentServiceTest {
         Long articleId = 1L;
         Long userId = 1L;
 
+        //when
         final int result = commentRepository.delete(commnetId, articleId, userId);
 
+        //then
         assertThat(result).isEqualTo(1);
     }
 
@@ -81,7 +73,7 @@ class CommentServiceTest {
         commentRepository.add(comment1);
         commentRepository.add(comment2);
 
-        String slug = "How-to-train-your-dragon-1";
+        String slug = "new-title-1";
 
         assertThat(commentService.getAll(slug).size()).isEqualTo(2);
     }
