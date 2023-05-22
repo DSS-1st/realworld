@@ -1,15 +1,13 @@
 package com.dss.realworld.article.api;
 
-import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
+import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
-import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,19 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/UserTeardown.sql","classpath:db/ArticleTeardown.sql"})
+//@ActiveProfiles(value = "test")
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ArticleControllerTest {
@@ -53,12 +49,11 @@ public class ArticleControllerTest {
     @Test
     void t1() throws Exception {
         //given
-        userRepository.persist(UserFixtures.create());
-
         String title = "How to train your dragon";
         String description = "Ever wonder how?";
         String body = "You have to believe";
         CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body);
+        Long maxId = articleRepository.findMaxId().get();
 
         String jsonString = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -76,7 +71,7 @@ public class ArticleControllerTest {
         resultActions
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$..title").value(title))
-            .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L, true).getValue()))
+            .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
             .andExpect(jsonPath("$..favorited").value(false))
             .andExpect(jsonPath("$..following").value(false))
             .andExpect(jsonPath("$..username").value("Jacob000"))
@@ -89,23 +84,15 @@ public class ArticleControllerTest {
     @Test
     void t2() throws Exception {
         //given
-        userRepository.persist(UserFixtures.create());
-        CreateArticleRequestDto articleDto = createArticleDto();
-        ArticleResponseDto articleResponseDto = articleService.save(articleDto, 1L);
-        assertThat(articleResponseDto.getTitle()).isEqualTo(articleDto.getTitle());
+        Article foundArticle = articleRepository.findById(1L).get();
 
         //when
-        String slug = articleResponseDto.getSlug();
+        String slug = foundArticle.getSlug();
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/api/articles/" + slug)
-                .contentType(MediaType.TEXT_PLAIN);
+                .delete("/api/articles/" + slug);
 
         //then
         mockMvc.perform(mockRequest).andExpect(status().isOk());
-    }
-
-    private CreateArticleRequestDto createArticleDto() {
-        return ArticleFixtures.createRequestDto();
     }
 
     @DisplayName(value = "유효한 slug 사용 시 조회 성공")
@@ -113,7 +100,7 @@ public class ArticleControllerTest {
     void t3() throws Exception {
         //given
         String slug = "How-to-train-your-dragon-1";
-        articleRepository.persist(ArticleFixtures.of(slug, getSampleUserId()));
+        articleRepository.persist(ArticleFixtures.of(slug, 1L));
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -125,26 +112,19 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(slug));
     }
 
-    private Long getSampleUserId() {
-        User user = UserFixtures.create("kate", "katepwd", "kate@kate.kate");
-        userRepository.persist(user);
-
-        return user.getId();
-    }
-
     @DisplayName(value = "Article 수정 시 slug도 수정 성공")
     @Test
     void t4() throws Exception {
         //given
-        String title = "How to train your dragon";
-        String slug = Slug.of(title, 0L, true).getValue();
-        articleRepository.persist(ArticleFixtures.of(title, slug, getSampleUserId()));
+        String slug = "new-title-1";
+        Long maxId = articleRepository.findMaxId().get();
 
-        String newTitle = "new title";
-        String newDescription = "new description";
-        String newBody = "new body";
+        String newTitle = "brand new title";
+        String newDescription = "brand new description";
+        String newBody = "brand new body";
         UpdateArticleRequestDto updateDto = new UpdateArticleRequestDto(newTitle, newDescription, newBody);
         String requestBody = objectMapper.writeValueAsString(updateDto);
+
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -155,7 +135,7 @@ public class ArticleControllerTest {
         //then
         mockMvc.perform(mockRequest).andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(newTitle))
-                .andExpect(jsonPath("$..slug").value(Slug.of(newTitle, 1L, false).getValue()))
+                .andExpect(jsonPath("$..slug").value(Slug.of(newTitle, maxId).getValue()))
                 .andExpect(jsonPath("$..description").value(newDescription))
                 .andExpect(jsonPath("$..body").value(newBody));
     }

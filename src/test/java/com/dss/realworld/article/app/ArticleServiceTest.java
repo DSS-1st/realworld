@@ -2,7 +2,6 @@ package com.dss.realworld.article.app;
 
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
-import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
@@ -11,14 +10,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql", "classpath:db/SampleDataSetup.sql"})
+//@ActiveProfiles(value = "test")
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 public class ArticleServiceTest {
 
@@ -62,13 +60,9 @@ public class ArticleServiceTest {
     @Test
     void t3() {
         //given
-        Long validUserId = 1L;
-        Article newArticle = saveArticle(validUserId);
-        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
-        assertThat(savedArticle.getId()).isEqualTo(validUserId);
+        String savedSlug = "new-title-1";
 
         //when
-        String savedSlug = savedArticle.getSlug();
         Long wrongAuthorId = 10L;
 
         //then
@@ -76,21 +70,11 @@ public class ArticleServiceTest {
                 .hasMessageContaining("작성자가 일치하지 않습니다.");
     }
 
-    private Article saveArticle(Long userId) {
-        Article newArticle = ArticleFixtures.of(userId);
-        articleRepository.persist(newArticle);
-
-        return newArticle;
-    }
-
     @DisplayName(value = "존재하지 않는 게시글을 삭제 시도 시 예외 발생")
     @Test
     void t4() {
         //given
         Long validUserId = 1L;
-        Article newArticle = saveArticle(validUserId);
-        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
-        assertThat(savedArticle.getId()).isEqualTo(validUserId);
 
         //when
         String wrongArticleSlug = "wrongArticleSlug";
@@ -109,15 +93,13 @@ public class ArticleServiceTest {
     void t5() {
         //given
         Long validUserId = 1L;
-        Article newArticle = saveArticle(validUserId);
-        Article savedArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
-        assertThat(savedArticle.getUserId()).isEqualTo(validUserId);
+        String savedSlug = "new-title-1";
 
         //when
-        articleService.delete(savedArticle.getSlug(), validUserId);
+        articleService.delete(savedSlug, validUserId);
 
         //then
-        Assertions.assertThatThrownBy(()->articleRepository.findBySlug(savedArticle.getSlug()).orElseThrow(ArticleNotFoundException::new)).isInstanceOf(ArticleNotFoundException.class);
+        Assertions.assertThatThrownBy(() -> articleRepository.findBySlug(savedSlug).orElseThrow(ArticleNotFoundException::new)).isInstanceOf(ArticleNotFoundException.class);
     }
 
     // Article Service Test는 Article Controller Test(t4)를 통해 수정 전후 DTO 검증

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +17,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql", "classpath:db/SampleDataSetup.sql"})
+//@ActiveProfiles(value = "test")
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @Transactional
 public class ArticleRepositoryTest {
@@ -93,7 +92,7 @@ public class ArticleRepositoryTest {
         String newTitle = "updated title";
         String newDescription = "";
         String newBody = "";
-        String newSlug = Slug.of(newTitle, newArticle.getId(), false).getValue();
+        String newSlug = Slug.of(newTitle, newArticle.getId()).getValue();
 
         UpdateArticleRequestDto updateArticleRequestDto = new UpdateArticleRequestDto(newTitle, newDescription, newBody);
         articleRepository.update(newArticle.updateArticle(updateArticleRequestDto));

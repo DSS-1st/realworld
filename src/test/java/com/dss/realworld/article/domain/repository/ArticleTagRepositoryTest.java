@@ -1,25 +1,19 @@
 package com.dss.realworld.article.domain.repository;
 
-import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.ArticleTag;
-import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
-import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
-import com.dss.realworld.util.ArticleFixtures;
-import com.dss.realworld.util.UserFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/ArticleTeardown.sql","classpath:db/UserTeardown.sql","classpath:db/TagTeardown.sql","classpath:db/ArticleTagTeardown.sql"})
+//@ActiveProfiles(value = "test")
+@Sql(value = {"classpath:db/teardown.sql","classpath:db/dataSetup.sql"})
 @SpringBootTest
 @Transactional
 public class ArticleTagRepositoryTest {
@@ -40,16 +34,10 @@ public class ArticleTagRepositoryTest {
     @Test
     void t1() {
         //given
-        User user = UserFixtures.create();
-        userRepository.persist(user);
+        Long articleId = 1L;
+        Long tagId = 1L;
 
-        Article article = ArticleFixtures.of(user.getId());
-        articleRepository.persist(article);
-
-        Tag tag = new Tag("qwerty");
-        tagRepository.persist(tag);
-
-        ArticleTag articleTag = new ArticleTag(article.getId(), tag.getId());
+        ArticleTag articleTag = new ArticleTag(1L, 1L);
 
         //when
         articleTagRepository.persist(articleTag);
@@ -62,16 +50,10 @@ public class ArticleTagRepositoryTest {
     @Test
     void t2() {
         //given
-        User user = UserFixtures.create();
-        userRepository.persist(user);
+        Long articleId = 1L;
+        Long tagId = 1L;
 
-        Article article = ArticleFixtures.of(user.getId());
-        articleRepository.persist(article);
-
-        Tag tag = new Tag("qwerty");
-        tagRepository.persist(tag);
-
-        ArticleTag articleTag = new ArticleTag(article.getId(), tag.getId());
+        ArticleTag articleTag = new ArticleTag(1L, 1L);
         articleTagRepository.persist(articleTag);
 
         //when
@@ -81,47 +63,35 @@ public class ArticleTagRepositoryTest {
         assertThat(foundArticleTag.getId()).isEqualTo(articleTag.getId());
     }
 
-    @DisplayName(value = "articleTagId로 delete 성공")
+    @DisplayName(value = "articleTag_Id로 delete 성공")
     @Test
     void t3() {
         //given
-        User user = UserFixtures.create();
-        userRepository.persist(user);
+        Long articleId = 1L;
+        Long tagId = 1L;
 
-        Article article = ArticleFixtures.of(user.getId());
-        articleRepository.persist(article);
-
-        Tag tag = new Tag("qwerty");
-        tagRepository.persist(tag);
-
-        ArticleTag articleTag = new ArticleTag(article.getId(), tag.getId());
+        ArticleTag articleTag = new ArticleTag(1L, 1L);
         articleTagRepository.persist(articleTag);
 
         //when
-        int result = articleTagRepository.delete(tag.getId());
+        int result = articleTagRepository.delete(articleTag.getId());
 
         //then
         assertThat(result).isEqualTo(1);
     }
 
-    @DisplayName(value = "articleId로 delete 성공")
+    @DisplayName(value = "article_Id로 delete 성공")
     @Test
     void t4() {
         //given
-        User user = UserFixtures.create();
-        userRepository.persist(user);
+        Long articleId = 1L;
+        Long tagId = 1L;
 
-        Article article = ArticleFixtures.of(user.getId());
-        articleRepository.persist(article);
-
-        Tag tag = new Tag("qwerty");
-        tagRepository.persist(tag);
-
-        ArticleTag articleTag = new ArticleTag(article.getId(), tag.getId());
+        ArticleTag articleTag = new ArticleTag(1L, 1L);
         articleTagRepository.persist(articleTag);
 
         //when
-        int result = articleTagRepository.deleteByArticle(article.getId());
+        int result = articleTagRepository.deleteByArticle(articleId);
 
         //then
         assertThat(result).isEqualTo(1);
