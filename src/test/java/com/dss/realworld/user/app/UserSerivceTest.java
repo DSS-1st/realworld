@@ -1,5 +1,7 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.user.api.LoginUserRequestDto;
+import com.dss.realworld.user.api.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -39,5 +41,21 @@ public class UserSerivceTest {
         User updatedUser = userService.update(updateUserRequestDto, user.getId());
 
         assertThat(updatedUser.getEmail()).isEqualTo(updateUserRequestDto.getEmail());
+    }
+
+    @DisplayName(value = "loginUserRequestDto 유효하면 로그인 회원정보 반환 성공")
+    @Test
+    void t2() {
+        User newUser1 = UserFixtures.create();
+        userRepository.persist(newUser1);
+
+        LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
+                .email("jake000@jake.jake")
+                .password("jakejake")
+                .build();
+
+        User loginUser = userService.login(loginUserRequestDto);
+
+        assertThat(loginUser.getUsername()).isEqualTo(newUser1.getUsername());
     }
 }

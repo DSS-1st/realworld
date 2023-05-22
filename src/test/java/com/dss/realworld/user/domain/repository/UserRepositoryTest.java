@@ -49,7 +49,7 @@ public class UserRepositoryTest {
         userRepository.persist(newUser1);
         userRepository.persist(newUser2);
 
-        User addedUser = userRepository.findByEmail("jake000@jake.jake");
+        User addedUser = userRepository.findByEmail("jake000@jake.jake").orElseThrow(UserNotFoundException::new);
         assertThat(addedUser.getEmail()).isEqualTo(newUser1.getEmail());
     }
 

@@ -6,13 +6,15 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
+import java.util.Optional;
+
 @Mapper
 public interface UserRepository {
     void persist(User user);
 
     Optional<User> findByUsername(String username);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     User findById(Long id);
 
