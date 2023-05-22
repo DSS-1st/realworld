@@ -1,10 +1,6 @@
 package com.dss.realworld.user.domain.repository;
 
 import com.dss.realworld.user.domain.FollowRelation;
-import com.dss.realworld.user.domain.User;
-import com.dss.realworld.util.UserFixtures;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,65 +9,39 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
-@Sql(value = "classpath:db/FollowRelationTeardown.sql")
 public class FollowRelationRepositoryTest {
 
     @Autowired
     private FollowRelationRepository followRelationRepository;
+
     @Autowired
     private UserRepository userRepository;
 
-
-    @BeforeEach
-    void setUp() {
-        clearTable();
-    }
-
-    @AfterEach
-    void teatDown() {
-        clearTable();
-    }
-
-    private void clearTable() {
-        userRepository.deleteAll();
-        userRepository.resetAutoIncrement();
-    }
-
-    @DisplayName(value = "followRelation 유효하면 저장 성공")
+    @DisplayName(value = "followRelation이 유효하면 저장 성공")
     @Test
     void t1() {
-        Long fromUserId = 1L;
-        Long toUserId = 2L;
-        FollowRelation followRelation = new FollowRelation(fromUserId, toUserId);
+        Long loginId = 1L;
+        Long targetId = 2L;
+        FollowRelation followRelation = new FollowRelation(loginId, targetId);
 
-        int save = followRelationRepository.save(followRelation);
+        int save = followRelationRepository.persist(followRelation);
 
         assertThat(save).isEqualTo(1);
     }
 
-    @DisplayName(value = "fromUserId,toUserId 유효하면 팔로우 취소 성공")
+    @DisplayName(value = "fromUserId, toUserId 유효하면 팔로우 취소 성공")
     @Test
     void t2() {
+        Long loginId = 1L;
+        Long targetId = 2L;
+        FollowRelation followRelation = new FollowRelation(targetId, loginId);
 
-        User fromUser = UserFixtures.create();
-        User toUser = User.builder()
-                .username("username")
-                .password("1234")
-                .email("@google.com")
-                .build();
+        int save = followRelationRepository.persist(followRelation);
 
-        userRepository.persist(fromUser);
-        userRepository.persist(toUser);
+        int result = followRelationRepository.delete(targetId, loginId);
 
-        Long fromUserId = fromUser.getId();
-        Long toUserId = toUser.getId();
-
-        FollowRelation followRelation = new FollowRelation(fromUserId, toUserId);
-        followRelationRepository.save(followRelation);
-
-        int cancelFollow = followRelationRepository.delete(fromUserId, toUserId);
-
-        assertThat(cancelFollow).isEqualTo(1);
+        assertThat(result).isEqualTo(1);
     }
 }
