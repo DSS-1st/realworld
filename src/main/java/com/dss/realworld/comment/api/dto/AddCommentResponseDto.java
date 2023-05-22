@@ -10,9 +10,9 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
 @JsonTypeName(value = "comments")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
+@Getter
 public class AddCommentResponseDto {
 
     private final Long id;
