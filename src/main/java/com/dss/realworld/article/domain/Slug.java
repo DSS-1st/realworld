@@ -7,11 +7,11 @@ public final class Slug {
 
     private final String value;
 
-    private Slug(final String title, final Long maxArticleId) {
-        this.value = title.trim().toLowerCase().replace(" ", "-") + '-' + maxArticleId;
+    private Slug(final String title, final Long articleId) {
+        this.value = title.trim().toLowerCase().replace(" ", "-") + '-' + articleId;
     }
 
-    public static Slug of(final String title, final Long maxArticleId) {
-        return new Slug(title, maxArticleId);
+    public static Slug of(final String title, final Long articleId) {
+        return new Slug(title, articleId);
     }
 }

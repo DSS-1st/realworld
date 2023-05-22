@@ -8,9 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @JsonTypeName(value = "article")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
+@Getter
 @NoArgsConstructor
 public class UpdateArticleRequestDto {
 

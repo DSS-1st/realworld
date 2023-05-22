@@ -39,9 +39,9 @@ public class CreateArticleRequestDto {
         this.tags = tags;
     }
 
-    public Article convert(Long logonUserId, Long maxArticleId) {
+    public Article convert(Long logonUserId, Long articleId) {
         return Article.builder()
-                .slug(Slug.of(this.title, maxArticleId).getValue())
+                .slug(Slug.of(this.title, articleId).getValue())
                 .title(this.title.trim())
                 .description(this.description)
                 .body(this.body)
