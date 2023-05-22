@@ -7,22 +7,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 public class ProfileServiceTest {
 
     @Autowired
     private ProfileService profileService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private FollowRelationRepository followRelationRepository;
 
     @DisplayName(value = "username이 유효하면 GetProfileDto 가져오기 성공")
     @Test

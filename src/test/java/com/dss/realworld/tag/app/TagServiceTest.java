@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ActiveProfiles(value = "test")
 @Sql(value = "classpath:db/teardown.sql")
 @SpringBootTest
 public class TagServiceTest {
@@ -61,7 +63,7 @@ public class TagServiceTest {
 
     @DisplayName(value = "tag name이 존재하면 삭제 성공")
     @Test
-    void t3() throws Exception {
+    void t3() {
         //given
         Set<Tag> tagSet = new HashSet<>();
         String name = "asdf";
@@ -79,7 +81,7 @@ public class TagServiceTest {
 
     @DisplayName(value = "tag 전체 조회 시 List 반환 성공")
     @Test
-    void t4() throws Exception {
+    void t4() {
         //given
         Set<Tag> tagSet = new HashSet<>();
         tagSet.add(new Tag("qwer"));
@@ -96,7 +98,7 @@ public class TagServiceTest {
 
     @DisplayName(value = "tag 1건 조회 시 List로 반환 성공")
     @Test
-    void t5() throws Exception {
+    void t5() {
         //given
         String name = "qwer";
         Set<Tag> tagSet = new HashSet<>();
@@ -115,7 +117,7 @@ public class TagServiceTest {
 
     @DisplayName(value = "존재하지 않는 tag name 조회 시 예외 발생")
     @Test
-    void t6() throws Exception {
+    void t6() {
         //given
         String name = "qwer";
         Set<Tag> tagSet = new HashSet<>();
