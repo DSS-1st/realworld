@@ -3,17 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.user.domain.repository.UserRepository">
-    <delete id="deleteAll">
-        delete from users
-    </delete>
-
-    <select id="resetAutoIncrement">
-        alter table users auto_increment = 1
-    </select>
-
     <insert id="persist" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="user_id">
         insert into users(username, email, password)
-        values (#{username},#{email},#{password})
+        values (#{username}, #{email}, #{password})
     </insert>
 
     <sql id="getUsers">
@@ -36,13 +28,13 @@
         where user_id = #{id}
     </select>
 
-    <update id="update" parameterType="java.util.Map" >
+    <update id="update" parameterType="java.util.Map">
         update users
-        set email=#{user.email},
-            password=#{user.password},
-            bio=#{user.bio},
-            image=#{user.image},
-            username=#{user.username}
-            where user_id = #{userId}
+        set email = #{user.email},
+            password = #{user.password},
+            bio = #{user.bio},
+            image = #{user.image},
+            username = #{user.username}
+        where user_id = #{userId}
     </update>
 </mapper>

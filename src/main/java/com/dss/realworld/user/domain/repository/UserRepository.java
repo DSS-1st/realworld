@@ -2,14 +2,10 @@ package com.dss.realworld.user.domain.repository;
 
 import com.dss.realworld.user.domain.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserRepository {
-
-    void deleteAll();
-
-    void resetAutoIncrement();
-
     void persist(User user);
 
     User findByUsername(String username);
@@ -18,5 +14,5 @@ public interface UserRepository {
 
     User findById(Long id);
 
-    void update(User user,Long userId);
+    void update(@Param(value = "user") User user, @Param(value = "userId") Long userId);
 }
