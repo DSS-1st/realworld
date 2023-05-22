@@ -2,17 +2,14 @@ package com.dss.realworld.user.domain.repository;
 
 import com.dss.realworld.user.domain.FollowRelation;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface FollowRelationRepository {
 
-    int save(FollowRelation followRelation);
+    int persist(FollowRelation followRelation);
 
-    int delete (Long fromUserId, Long toUserId);
+    int delete(@Param(value = "targetId") Long targetId, @Param(value = "loginId") Long loginId);
 
-    int checkFollowing(Long fromUserId, Long toUserId);
-
-    void deleteAll();
-
-    void resetAutoIncrement();
+    int isFollowing(@Param(value = "targetId") Long targetId, @Param(value = "loginId") Long loginId);
 }

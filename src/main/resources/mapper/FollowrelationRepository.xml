@@ -3,25 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.user.domain.repository.FollowRelationRepository">
-<!--    14번 브랜치에서 수정-->
-    <insert id="save" parameterType="FollowRelation">
+    <insert id="persist" parameterType="FollowRelation">
         insert into follow_relation(from_user_id, to_user_id)
-        values (#{fromUserId}, #{toUserId})
+        values (#{loginId}, #{targetId})
     </insert>
 
-    <delete id="delete">
-        delete from follow_relation where from_user_id = #{fromUserId} and to_user_id = #{toUserId}
+    <delete id="delete" parameterType="Long">
+        delete from follow_relation where to_user_id = #{targetId} and from_user_id = #{loginId}
     </delete>
 
-    <select id="checkFollowing" resultType="int">
-        select count(*) from follow_relation where from_user_id and to_user_id = #{toUserId}
-    </select>
-
-    <delete id="deleteAll">
-        delete from follow_relation
-    </delete>
-
-    <select id="resetAutoIncrement">
-        alter table follow_relation auto_increment = 1
+    <select id="isFollowing" parameterType="Long" resultType="int">
+        select count(*)
+        from follow_relation where to_user_id = #{targetId} and from_user_id = #{loginId}
     </select>
 </mapper>
