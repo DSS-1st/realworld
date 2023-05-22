@@ -17,28 +17,28 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping(value = "/{slug}")
-    public ResponseEntity<?> findBySlug(@PathVariable final String slug) {
+    public ResponseEntity<ArticleResponseDto> findBySlug(@PathVariable final String slug) {
         ArticleResponseDto articleResponseDto = articleService.findBySlug(slug);
 
         return new ResponseEntity<>(articleResponseDto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final CreateArticleRequestDto createArticleRequestDto) {
+    public ResponseEntity<ArticleResponseDto> create(@RequestBody final CreateArticleRequestDto createArticleRequestDto) {
         ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLoginUserId());
 
         return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{slug}")
-    public ResponseEntity<?> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto, @PathVariable final String slug) {
+    public ResponseEntity<ArticleResponseDto> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto, @PathVariable final String slug) {
         ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLoginUserId(), slug);
 
         return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{slug}")
-    public ResponseEntity<?> delete(@PathVariable final String slug) {
+    public ResponseEntity<ArticleResponseDto> delete(@PathVariable final String slug) {
         articleService.delete(slug, getLoginUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);

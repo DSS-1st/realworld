@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -59,7 +60,6 @@ public class ArticleControllerTest {
         String body = "You have to believe";
         CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body);
 
-        //when
         String jsonString = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/api/articles")
@@ -67,17 +67,22 @@ public class ArticleControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(jsonString);
 
+        //when
+        ResultActions resultActions = mockMvc.perform(mockRequest);
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("responseBody = " + responseBody);
+
         //then
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L, true).getValue()))
-                .andExpect(jsonPath("$..favorited").value(false))
-                .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
-                .andExpect(jsonPath("$..description").value(description))
-                .andExpect(jsonPath("$..body").value(body))
-                .andExpect(jsonPath("$..tagList.length()").value(0));
+        resultActions
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$..title").value(title))
+            .andExpect(jsonPath("$..slug").value(Slug.of(title, 0L, true).getValue()))
+            .andExpect(jsonPath("$..favorited").value(false))
+            .andExpect(jsonPath("$..following").value(false))
+            .andExpect(jsonPath("$..username").value("Jacob000"))
+            .andExpect(jsonPath("$..description").value(description))
+            .andExpect(jsonPath("$..body").value(body))
+            .andExpect(jsonPath("$..tagList.length()").value(0));
     }
 
     @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
