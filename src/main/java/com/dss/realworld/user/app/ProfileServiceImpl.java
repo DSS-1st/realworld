@@ -19,19 +19,19 @@ public class ProfileServiceImpl implements ProfileService {
     private final FollowRelationRepository followRelationRepository;
 
     @Override
-    public ProfileResponseDto get(String username, Long loginUserId) {
+    public ProfileResponseDto get(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        int result = followRelationRepository.isFollowing(targetUser.getId(), loginUserId);
+        int result = followRelationRepository.isFollowing(targetUser.getId(), loginId);
 
         return getProfileResponseDto(targetUser, result == 1);
     }
 
     @Transactional
     @Override
-    public ProfileResponseDto follow(String username, Long loginUserId) {
+    public ProfileResponseDto follow(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        FollowRelation followRelation = new FollowRelation(targetUser.getId(), loginUserId);
+        FollowRelation followRelation = new FollowRelation(targetUser.getId(), loginId);
         followRelationRepository.persist(followRelation);
 
         return getProfileResponseDto(targetUser, true);
@@ -39,22 +39,20 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Transactional
     @Override
-    public ProfileResponseDto unFollow(String username, Long loginUserId) {
+    public ProfileResponseDto unFollow(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        followRelationRepository.delete(targetUser.getId(), loginUserId);
+        followRelationRepository.delete(targetUser.getId(), loginId);
 
         return getProfileResponseDto(targetUser, false);
     }
 
     private ProfileResponseDto getProfileResponseDto(User targetUser, boolean isFollow) {
-        ProfileResponseDto profileResponseDto = ProfileResponseDto.builder()
+        return ProfileResponseDto.builder()
                 .username(targetUser.getUsername())
                 .bio(targetUser.getBio())
                 .image(targetUser.getImage())
                 .following(isFollow)
                 .build();
-
-        return profileResponseDto;
     }
 }

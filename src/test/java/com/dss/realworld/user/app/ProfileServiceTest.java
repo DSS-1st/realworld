@@ -1,8 +1,6 @@
 package com.dss.realworld.user.app;
 
 import com.dss.realworld.user.api.dto.ProfileResponseDto;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +30,13 @@ public class ProfileServiceTest {
     @Test
     void t2() {
         //given
-        String followTargetName = "kate";
+        String targetName = "kate";
 
         //when
-        ProfileResponseDto profileResponseDto = profileService.follow(followTargetName, 1L);
+        ProfileResponseDto profileResponseDto = profileService.follow(targetName, 1L);
 
         //then
-        assertThat(profileResponseDto.getUsername()).isEqualTo(followTargetName);
+        assertThat(profileResponseDto.getUsername()).isEqualTo(targetName);
         assertThat(profileResponseDto.isFollowing()).isEqualTo(true);
     }
 

@@ -33,15 +33,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User update(UpdateUserRequestDto updateUserRequestDto, Long loginUserId) {
-        User foundUser = userRepository.findById(loginUserId);
+    public User update(UpdateUserRequestDto updateUserRequestDto, Long loginId) {
+        User foundUser = userRepository.findById(loginId);
         User updateValue = foundUser.builder()
                 .email(updateUserRequestDto.getEmail())
                 .username(updateUserRequestDto.getUsername())
                 .password(updateUserRequestDto.getPassword())
                 .bio(updateUserRequestDto.getBio())
                 .image(updateUserRequestDto.getImage()).build();
-        userRepository.update(updateValue, loginUserId);
+        userRepository.update(updateValue, loginId);
 
         return userRepository.findByEmail(updateValue.getEmail()).orElseThrow(() -> new UserNotFoundException());
     }
