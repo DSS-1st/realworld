@@ -5,15 +5,21 @@ import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
+import com.dss.realworld.article.domain.ArticleTag;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.article.domain.repository.ArticleTagRepository;
 import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.tag.domain.Tag;
+import com.dss.realworld.tag.domain.repository.TagRepository;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +28,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
+    private final ArticleTagRepository articleTagRepository;
 
     @Override
     public ArticleResponseDto findBySlug(String slug) {
@@ -39,9 +47,20 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = createArticleRequestDto.convert(loginUserId, maxId);
         articleRepository.persist(article);
 
+        Set<Tag> tags = createArticleRequestDto.getTags();
+        if (tags.size() != 0) saveTags(article, tags);
+
         return getArticleResponseDto(article);
     }
 
+    private void saveTags(final Article article, final Set<Tag> tags) {
+        for (Tag tag : tags) {
+            tagRepository.persist(tag);
+            articleTagRepository.persist(new ArticleTag(article.getId(), tag.getId()));
+        }
+    }
+
+    // todo 저장된 tag 불러와서 dto만들기
     private ArticleResponseDto getArticleResponseDto(final Article newArticle) {
         Article foundArticle = articleRepository.findById(newArticle.getId()).orElseThrow(ArticleNotFoundException::new);
 
