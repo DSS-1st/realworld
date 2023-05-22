@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Sql(value = "classpath:db/UserTeardown.sql")
 @SpringBootTest
-@Transactional
 public class UserRepositoryTest {
 
     @Autowired
@@ -50,6 +50,29 @@ public class UserRepositoryTest {
         userRepository.persist(newUser2);
 
         User addedUser = userRepository.findByEmail("jake000@jake.jake");
-        Assertions.assertThat(addedUser.getEmail()).isEqualTo(newUser1.getEmail());
+        assertThat(addedUser.getEmail()).isEqualTo(newUser1.getEmail());
+    }
+
+    @DisplayName(value = "기존 유저 찾아서 업데이트 성공")
+    @Test
+    void t3() {
+        //given
+        User user = UserFixtures.create();
+        userRepository.persist(user);
+        User foundUser = userRepository.findByUsername(user.getUsername()).orElseThrow(UserNotFoundException::new);
+
+        User updateValue = User.builder()
+                .email("jj@naver.com")
+                .image("image")
+                .username("blabla")
+                .password("1234")
+                .build();
+
+        //when
+        userRepository.update(updateValue, foundUser.getId());
+
+        //then
+        User updatedUser = userRepository.findById(foundUser.getId());
+        assertThat(updatedUser.getEmail()).isEqualTo(updateValue.getEmail());
     }
 }

@@ -1,5 +1,6 @@
 package com.dss.realworld.user.api;
 
+import com.dss.realworld.user.api.dto.ProfileResponseDto;
 import com.dss.realworld.user.app.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

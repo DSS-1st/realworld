@@ -1,6 +1,6 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.ProfileResponseDto;
+import com.dss.realworld.user.api.dto.ProfileResponseDto;
 
 public interface ProfileService {
 

@@ -1,6 +1,7 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.AddUserRequestDto;
+import com.dss.realworld.user.api.dto.AddUserRequestDto;
+import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -23,6 +23,22 @@ public class UserServiceImpl implements UserService {
                 .password(addUserRequestDto.getPassword())
                 .build();
         userRepository.persist(user);
+
+        return userRepository.findByEmail(user.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public User update(UpdateUserRequestDto updateUserRequestDto, Long userId) {
+        User findUser = userRepository.findById(userId);
+        User user = findUser.builder()
+                .email(updateUserRequestDto.getEmail())
+                .username(updateUserRequestDto.getUsername())
+                .password(updateUserRequestDto.getPassword())
+                .bio(updateUserRequestDto.getBio())
+                .image(updateUserRequestDto.getImage()).build();
+
+        userRepository.update(user, userId);
 
         return userRepository.findByEmail(user.getEmail());
     }
