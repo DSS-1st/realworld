@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @JsonTypeName(value = "article")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
+@Getter
 public class ArticleResponseDto {
 
     private final String slug;

@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-@Getter
 @JsonTypeName(value = "article")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
+@Getter
 @NoArgsConstructor
 public class CreateArticleRequestDto {
 
@@ -41,7 +41,7 @@ public class CreateArticleRequestDto {
 
     public Article convert(Long logonUserId, Long maxArticleId) {
         return Article.builder()
-                .slug(Slug.of(this.title, maxArticleId, true).getValue())
+                .slug(Slug.of(this.title, maxArticleId).getValue())
                 .title(this.title.trim())
                 .description(this.description)
                 .body(this.body)

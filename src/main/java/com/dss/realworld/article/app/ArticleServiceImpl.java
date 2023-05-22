@@ -48,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.persist(article);
 
         Set<Tag> tags = createArticleRequestDto.getTags();
-        if (tags.size() != 0) saveTags(article, tags);
+        if (tags != null) saveTags(article, tags);
 
         return getArticleResponseDto(article);
     }
