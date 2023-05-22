@@ -126,16 +126,16 @@ class CommentControllerTest {
 
         //then
         resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.comments.size()").value(2))
-                .andExpect(jsonPath("$.comments[0].id").value(1))
-                .andExpect(jsonPath("$.comments[0].id").isNumber())
-                .andExpect(jsonPath("$.comments[0].createdAt").exists())
-                .andExpect(jsonPath("$.comments[0].updatedAt").exists())
-                .andExpect(jsonPath("$.comments[0].body").exists())
-                .andExpect(jsonPath("$.comments[0].author.username").exists())
-                .andExpect(jsonPath("$.comments[0].author.following").value(false))
-                .andExpect(jsonPath("$.comments[0].author.following").value(false));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.comments.size()").value(2))
+            .andExpect(jsonPath("$.comments[0].id").value(1))
+            .andExpect(jsonPath("$.comments[0].id").isNumber())
+            .andExpect(jsonPath("$.comments[0].createdAt").exists())
+            .andExpect(jsonPath("$.comments[0].updatedAt").exists())
+            .andExpect(jsonPath("$.comments[0].body").exists())
+            .andExpect(jsonPath("$.comments[0].author.username").exists())
+            .andExpect(jsonPath("$.comments[0].author.following").value(false))
+            .andExpect(jsonPath("$.comments[0].author.following").value(false));
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

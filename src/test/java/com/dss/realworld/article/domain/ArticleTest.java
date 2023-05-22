@@ -71,14 +71,14 @@ public class ArticleTest {
     @DisplayName(value = "loginId가 null이면 예외 발생")
     @Test
     void t6() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.create();
         assertThatThrownBy(() -> newArticle.isAuthorMatch(null)).isInstanceOf(UserNotFoundException.class);
     }
 
     @DisplayName(value = "Article의 userId가 null이면 예외 발생")
     @Test
     void t7() {
-        Article newArticle = ArticleFixtures.createDefault();
+        Article newArticle = ArticleFixtures.create();
         assertThatThrownBy(() -> newArticle.isAuthorMatch(1L)).isInstanceOf(UserNotFoundException.class);
     }
 }
