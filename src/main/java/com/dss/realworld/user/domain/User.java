@@ -1,5 +1,6 @@
 package com.dss.realworld.user.domain;
 
+import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.ibatis.type.Alias;
@@ -32,5 +33,9 @@ public class User {
         this.password = password;
         this.bio = bio;
         this.image = image;
+    }
+
+    public boolean isMatch(LoginUserRequestDto loginUserRequestDto) {
+        return this.password.equals(loginUserRequestDto.getPassword());
     }
 }

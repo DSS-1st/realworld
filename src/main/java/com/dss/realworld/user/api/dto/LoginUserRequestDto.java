@@ -12,20 +12,14 @@ import lombok.NoArgsConstructor;
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 @Getter
 @NoArgsConstructor
-public class UpdateUserRequestDto {
+public class LoginUserRequestDto {
 
     private String email;
-    private String username;
     private String password;
-    private String bio;
-    private String image;
 
     @Builder
-    public UpdateUserRequestDto(String email, String username, String password, String bio, String image) {
+    public LoginUserRequestDto(String email, String password) {
         this.email = email;
-        this.username = username;
         this.password = password;
-        this.bio = bio;
-        this.image = image;
     }
 }
