@@ -13,21 +13,21 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping(value = "/profiles/{username}")
-    public ProfileResponseDto getProfile(@PathVariable String username) {
-       return profileService.getProfile(username,getLogonUserId());
+    public ProfileResponseDto get(@PathVariable String username) {
+        return profileService.get(username, getLoginUserId());
     }
 
     @PostMapping(value = "/profiles/{username}/follow")
-    public ProfileResponseDto followUser(@PathVariable String username) {
-       return profileService.follow(username,getLogonUserId());
+    public ProfileResponseDto follow(@PathVariable String username) {
+        return profileService.follow(username, getLoginUserId());
     }
 
     @DeleteMapping(value = "/profiles/{username}/follow")
-    public ProfileResponseDto unFollowUser(@PathVariable String username) {
-        return profileService.unFollow(username,getLogonUserId());
+    public ProfileResponseDto unfollow(@PathVariable String username) {
+        return profileService.unFollow(username, getLoginUserId());
     }
 
-    private Long getLogonUserId(){
+    private Long getLoginUserId() {
         return 1L;
     }
 }

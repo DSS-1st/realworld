@@ -4,9 +4,9 @@ import com.dss.realworld.user.api.dto.ProfileResponseDto;
 
 public interface ProfileService {
 
-    ProfileResponseDto get(String username, Long toUserId);
+    ProfileResponseDto get(String username, Long loginUserId);
 
-    ProfileResponseDto follow(String username, Long toUserId);
+    ProfileResponseDto follow(String username, Long loginUserId);
 
-    ProfileResponseDto unFollow(String username, Long toUserId);
+    ProfileResponseDto unFollow(String username, Long loginUserId);
 }

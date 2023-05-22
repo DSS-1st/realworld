@@ -1,12 +1,15 @@
 package com.dss.realworld.user.api.dto;
 
-import com.dss.realworld.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Builder;
 import lombok.Getter;
 
+@JsonTypeName(value = "profile")
+@JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 @Getter
-@JsonRootName(value = "profile")
 public class ProfileResponseDto {
 
     private final String username;
