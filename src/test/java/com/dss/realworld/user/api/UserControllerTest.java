@@ -1,10 +1,9 @@
 package com.dss.realworld.user.api;
 
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
-import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
-import com.dss.realworld.util.UserFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,15 +15,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Sql(value = "classpath:db/UserTeardown.sql")
-@Transactional
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
@@ -63,43 +60,41 @@ class UserControllerTest {
                 .andExpect(jsonPath("$..token").isNotEmpty());
     }
 
-    @DisplayName(value = "updateUserResponseDto 유효하면 업데이트 성공")
+    @DisplayName(value = "updateUserResponseDto가 유효하면 업데이트 성공")
     @Test
     void t2() throws Exception {
-        User user = UserFixtures.create();
-        userRepository.persist(user);
-
-        UpdateUserRequestDto updateUserRequestDto = UpdateUserRequestDto.builder()
+        UpdateUserRequestDto updateRequestDto = UpdateUserRequestDto.builder()
                 .username("name")
                 .password("pw")
                 .email("email@naver.com")
                 .image("iamgae")
                 .build();
 
-        String jsonDto = objectMapper.writeValueAsString(updateUserRequestDto);
-        mockMvc.perform(put("/api/users").contentType(MediaType.APPLICATION_JSON).content(jsonDto))
+        String requestBody = objectMapper.writeValueAsString(updateRequestDto);
+        mockMvc.perform(put("/api/user").contentType(MediaType.APPLICATION_JSON).content(requestBody))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..username").value(updateUserRequestDto.getUsername()))
-                .andExpect(jsonPath("$..email").value(updateUserRequestDto.getEmail()))
-                .andExpect(jsonPath("$..image").value(updateUserRequestDto.getImage()));
+                .andExpect(jsonPath("$..username").value(updateRequestDto.getUsername()))
+                .andExpect(jsonPath("$..email").value(updateRequestDto.getEmail()))
+                .andExpect(jsonPath("$..image").value(updateRequestDto.getImage()));
     }
 
-    @DisplayName(value = "loginUserRequestDto 유효하면 로그인 회원정보 반환 성공")
+    @DisplayName(value = "loginUserRequestDto가 유효하면 로그인 회원정보 반환 성공")
     @Test
     void t3() throws Exception {
-        User user = UserFixtures.create();
-        userRepository.persist(user);
+        //given
+        String loginUsername = "Jacob000";
+        String loginUserEmail = "jake000@jake.jake";
 
         LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
-                .email("jake000@jake.jake")
+                .email(loginUserEmail)
                 .password("jakejake")
                 .build();
 
-        String jsonDto = objectMapper.writeValueAsString(loginUserRequestDto);
+        String requestBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(loginUserRequestDto);
 
-        mockMvc.perform(post("/api/users/login").contentType(MediaType.APPLICATION_JSON).content(jsonDto))
+        mockMvc.perform(post("/api/users/login").contentType(MediaType.APPLICATION_JSON).content(requestBody))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..username").value(user.getUsername()))
-                .andExpect(jsonPath("$..email").value(user.getEmail()));
+                .andExpect(jsonPath("$..username").value(loginUsername))
+                .andExpect(jsonPath("$..email").value(loginUserEmail));
     }
 }

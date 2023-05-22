@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Sql(value = "classpath:db/UserTeardown.sql")
+@Sql(value = "classpath:db/teardown.sql")
 @SpringBootTest
 public class UserRepositoryTest {
 
@@ -22,34 +22,48 @@ public class UserRepositoryTest {
     @DisplayName(value = "User 생성 후 username으로 조회 성공")
     @Test
     void t1() {
-        User newUser1 = UserFixtures.create();
+        //given
+        User newUser1 = User.builder()
+                .username("json")
+                .password("jsonjson")
+                .email("json@json.json")
+                .build();
         User newUser2 = User.builder()
-                .username("Kate")
-                .password("katekate")
-                .email("kate@kate.kate")
+                .username("kite")
+                .password("kitekite")
+                .email("kite@kite.kite")
                 .build();
 
+        //when
         userRepository.persist(newUser1);
         userRepository.persist(newUser2);
+        User addedUser = userRepository.findByUsername("json").orElseThrow(UserNotFoundException::new);
 
-        User addedUser = userRepository.findByUsername("Jacob000").orElseThrow(UserNotFoundException::new);
+        //then
         Assertions.assertThat(addedUser.getUsername()).isEqualTo(newUser1.getUsername());
     }
 
     @DisplayName(value = "User 생성 후 email로 조회 성공")
     @Test
     void t2() {
-        User newUser1 = UserFixtures.create();
+        //given
+        User newUser1 = User.builder()
+                .username("json")
+                .password("jsonjson")
+                .email("json@json.json")
+                .build();
         User newUser2 = User.builder()
-                .username("Kate")
-                .password("katekate")
-                .email("kate@kate.kate")
+                .username("kite")
+                .password("kitekite")
+                .email("kite@kite.kite")
                 .build();
 
+        //when
         userRepository.persist(newUser1);
         userRepository.persist(newUser2);
+        User addedUser = userRepository.findByEmail("json@json.json").orElseThrow(UserNotFoundException::new);
 
-        User addedUser = userRepository.findByEmail("jake000@jake.jake").orElseThrow(UserNotFoundException::new);
+        //then
         assertThat(addedUser.getEmail()).isEqualTo(newUser1.getEmail());
     }
 
@@ -70,9 +84,9 @@ public class UserRepositoryTest {
 
         //when
         userRepository.update(updateValue, foundUser.getId());
+        User updatedUser = userRepository.findById(foundUser.getId());
 
         //then
-        User updatedUser = userRepository.findById(foundUser.getId());
         assertThat(updatedUser.getEmail()).isEqualTo(updateValue.getEmail());
     }
 }

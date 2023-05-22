@@ -6,9 +6,9 @@ public class UserFixtures {
 
     public static User create() {
         return User.builder()
-                .username("Jacob000")
-                .password("jakejake")
-                .email("jake000@jake.jake")
+                .username("new_user")
+                .password("new_password")
+                .email("new_email@realworld.com")
                 .build();
     }
 
