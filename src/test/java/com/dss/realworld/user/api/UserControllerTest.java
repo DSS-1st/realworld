@@ -53,7 +53,7 @@ class UserControllerTest {
                 .content(jsonString);
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(username))
                 .andExpect(jsonPath("$..email").value(email))
                 .andExpect(jsonPath("$..token").isNotEmpty());
@@ -92,7 +92,7 @@ class UserControllerTest {
         String requestBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(loginUserRequestDto);
 
         mockMvc.perform(post("/api/users/login").contentType(MediaType.APPLICATION_JSON).content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(loginUsername))
                 .andExpect(jsonPath("$..email").value(loginUserEmail));
     }

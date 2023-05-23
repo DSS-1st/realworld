@@ -52,7 +52,7 @@ public class ProfileControllerTest {
         String targetName = "kate";
 
         mockMvc.perform(post("/api/profiles/{username}/follow", targetName))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(targetName))
                 .andExpect(jsonPath("$..following").value(true));
     }
