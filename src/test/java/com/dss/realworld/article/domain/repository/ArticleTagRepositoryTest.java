@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles(value = "test")
-@Sql(value = {"classpath:db/teardown.sql","classpath:db/dataSetup.sql"})
+@Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @Transactional
 public class ArticleTagRepositoryTest {
@@ -75,13 +75,9 @@ public class ArticleTagRepositoryTest {
     void t4() {
         //given
         Long articleId = 1L;
-        Long tagId = 1L;
-
-        ArticleTag articleTag = new ArticleTag(articleId, tagId);
-        articleTagRepository.persist(articleTag);
 
         //when
-        int result = articleTagRepository.deleteByArticle(articleId);
+        int result = articleTagRepository.deleteByArticleId(articleId);
 
         //then
         assertThat(result).isEqualTo(1);
