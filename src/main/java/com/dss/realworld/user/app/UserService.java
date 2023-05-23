@@ -13,4 +13,6 @@ public interface UserService {
     UserResponseDto update(UpdateUserRequestDto updateUserRequestDto, Long userId);
 
     UserResponseDto login(LoginUserRequestDto loginUserRequestDto);
+
+    UserResponseDto getCurrentUser(Long loginUserId);
 }
