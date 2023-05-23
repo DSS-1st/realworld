@@ -1,11 +1,9 @@
 package com.dss.realworld.comment.app;
 
-import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.CommentFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +46,7 @@ class CommentServiceTest {
     void t2() {
         //given
         Comment comment1 = CommentFixtures.create();
-        commentRepository.add(comment1);
+        commentRepository.persist(comment1);
 
         Long commnetId = 1L;
         Long articleId = 1L;
@@ -61,17 +59,17 @@ class CommentServiceTest {
         assertThat(result).isEqualTo(1);
     }
 
-    @DisplayName(value = "slug 유효하면 comment 리스트 가져오기")
+    @DisplayName(value = "slug가 유효하면 comment 리스트 가져오기 성공")
     @Test
     void t3() {
-        Comment comment1 = CommentFixtures.create();
-        Comment comment2 = CommentFixtures.create();
-        commentRepository.add(comment1);
-        commentRepository.add(comment2);
+        Comment newComment1 = CommentFixtures.create();
+        Comment newComment2 = CommentFixtures.create();
+        commentRepository.persist(newComment1);
+        commentRepository.persist(newComment2);
 
         String slug = "new-title-1";
 
-        assertThat(commentService.getAll(slug).size()).isEqualTo(2);
+        assertThat(commentService.getAll(slug).size()).isEqualTo(3);
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

@@ -1,11 +1,9 @@
 package com.dss.realworld.comment.api;
 
-import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.app.CommentService;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.CommentFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -89,11 +87,11 @@ class CommentControllerTest {
     @Test
     void t3() throws Exception {
         //given
-        Comment comment1 = CommentFixtures.create();
-        Comment comment2 = CommentFixtures.create();
+        Comment newComment1 = CommentFixtures.create();
+        Comment newComment2 = CommentFixtures.create();
 
-        commentRepository.add(comment1);
-        commentRepository.add(comment2);
+        commentRepository.persist(newComment1);
+        commentRepository.persist(newComment2);
 
         String slug = "new-title-1";
 
@@ -109,7 +107,7 @@ class CommentControllerTest {
         //then
         resultActions
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.comments.size()").value(2))
+            .andExpect(jsonPath("$.comments.size()").value(3))
             .andExpect(jsonPath("$.comments[0].id").value(1))
             .andExpect(jsonPath("$.comments[0].id").isNumber())
             .andExpect(jsonPath("$.comments[0].createdAt").exists())

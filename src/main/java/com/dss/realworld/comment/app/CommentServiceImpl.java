@@ -40,8 +40,8 @@ public class CommentServiceImpl implements CommentService {
                 .userId(logonUserId) // todo 로그인 안 했을 때 예외 추가
                 .build();
 
-        commentRepository.add(comment);
-        Comment foundComment = commentRepository.getById(comment.getId());
+        commentRepository.persist(comment);
+        Comment foundComment = commentRepository.findById(comment.getId());
         AuthorDto author = getAuthor(comment.getUserId());
 
         return new AddCommentResponseDto(foundComment, author);
@@ -59,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDto> getAll(final String slug) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
-        return commentRepository.getAll(foundArticle.getId())
+        return commentRepository.findAll(foundArticle.getId())
                 .stream()
                 .map(comment -> CommentDto.of(comment, getAuthor(comment.getUserId())))
                 .collect(Collectors.toList());
