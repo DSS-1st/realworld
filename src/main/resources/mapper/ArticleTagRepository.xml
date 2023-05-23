@@ -14,11 +14,17 @@
         where article_tag_id = #{articleTagId}
     </select>
 
+    <select id="findTagsByArticleId" parameterType="Long" resultType="java.lang.String">
+        select name from article_tag a
+        join tag b on a.tag_id = b.tag_id
+        where article_id = #{articleId};
+    </select>
+
     <delete id="delete" parameterType="Long">
         delete from article_tag where article_tag_id = #{id}
     </delete>
 
-    <delete id="deleteByArticle" parameterType="Long">
+    <delete id="deleteByArticleId" parameterType="Long">
         delete from article_tag where article_id = #{articleId}
     </delete>
 </mapper>

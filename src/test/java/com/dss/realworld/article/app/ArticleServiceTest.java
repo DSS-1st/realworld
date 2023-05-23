@@ -2,7 +2,12 @@ package com.dss.realworld.article.app;
 
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
+import com.dss.realworld.article.domain.Article;
+import com.dss.realworld.article.domain.ArticleTag;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.article.domain.repository.ArticleTagRepository;
+import com.dss.realworld.comment.domain.Comment;
+import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
@@ -23,6 +28,12 @@ public class ArticleServiceTest {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private ArticleTagRepository articleTagRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -103,5 +114,23 @@ public class ArticleServiceTest {
         Assertions.assertThatThrownBy(() -> articleRepository.findBySlug(savedSlug).orElseThrow(ArticleNotFoundException::new)).isInstanceOf(ArticleNotFoundException.class);
     }
 
-    // Article Service Test는 Article Controller Test(t4)를 통해 수정 전후 DTO 검증
+    @DisplayName(value = "Article 삭제 시 이를 참조하는 article_tag, comments 테이블 레코드도 삭제 성공")
+    @Test
+    void t6() {
+        //given
+        Comment comment = commentRepository.findById(1L);
+        ArticleTag articleTag = articleTagRepository.findById(1L);
+        Article article = articleRepository.findById(1L).get();
+
+        String slug = "new-title-1";
+        Long userId = 1L;
+
+        //when
+        articleService.delete(slug, 1L);
+
+        //then
+        assertThat(commentRepository.findById(1L)).isNull();
+        assertThat(articleTagRepository.findById(1L)).isNull();
+        assertThat(articleRepository.findById(1L).orElse(null)).isNull();
+    }
 }

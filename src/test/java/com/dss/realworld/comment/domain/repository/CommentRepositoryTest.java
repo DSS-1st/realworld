@@ -1,8 +1,6 @@
 package com.dss.realworld.comment.domain.repository;
 
-import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.comment.domain.Comment;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.CommentFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,7 @@ class CommentRepositoryTest {
         Comment comment = CommentFixtures.create();
 
         //when
-        commentRepository.add(comment);
+        commentRepository.persist(comment);
 
         //then
         assertThat(comment.getBody()).isEqualTo("His name was my name too.");
@@ -41,10 +39,10 @@ class CommentRepositoryTest {
     void t2() {
         //given
         Comment comment = CommentFixtures.create();
-        commentRepository.add(comment);
+        commentRepository.persist(comment);
 
         //when
-        Comment getCommentDto = commentRepository.getById(comment.getId());
+        Comment getCommentDto = commentRepository.findById(comment.getId());
 
         //then
         assertThat(getCommentDto.getBody()).isEqualTo("His name was my name too.");
@@ -61,7 +59,7 @@ class CommentRepositoryTest {
                 .body("His name was my name too.")
                 .userId(userId)
                 .build();
-        commentRepository.add(comment);
+        commentRepository.persist(comment);
 
         //when
         int result = commentRepository.delete(comment.getId(), articleId, userId);
@@ -74,15 +72,16 @@ class CommentRepositoryTest {
     @Test
     void t4() {
         //given
-        Comment comment1 = CommentFixtures.create();
-        Comment comment2 = CommentFixtures.create();
-        commentRepository.add(comment1);
-        commentRepository.add(comment2);
+        Comment oldComment = commentRepository.findById(1L);
+        Comment newComment1 = CommentFixtures.create();
+        Comment newComment2 = CommentFixtures.create();
+        commentRepository.persist(newComment1);
+        commentRepository.persist(newComment2);
 
         //when
-        List<Comment> comments = commentRepository.getAll(1L);
+        List<Comment> comments = commentRepository.findAll(1L);
 
         //then
-        assertThat(comments.size()).isEqualTo(2);
+        assertThat(comments.size()).isEqualTo(3);
     }
 }

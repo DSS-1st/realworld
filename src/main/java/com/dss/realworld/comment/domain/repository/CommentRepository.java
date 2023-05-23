@@ -8,11 +8,13 @@ import java.util.List;
 
 @Mapper
 public interface CommentRepository {
-    void add(Comment comment);
+    void persist(Comment comment);
 
-    Comment getById(Long id);
+    Comment findById(Long id);
 
     int delete(@Param(value = "id") Long id, @Param(value = "articleId") Long articleId, @Param(value = "userId") Long userId);
 
-    List<Comment> getAll(Long articleId);
+    int deleteByArticleId(Long articleId);
+
+    List<Comment> findAll(Long articleId);
 }

@@ -2,7 +2,6 @@ package com.dss.realworld.article.api.dto;
 
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
-import com.dss.realworld.tag.domain.Tag;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
@@ -12,6 +11,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @JsonTypeName(value = "article")
@@ -29,14 +31,14 @@ public class CreateArticleRequestDto {
     @NotNull
     private String body;
 
-    private Set<Tag> tags;
+    private Set<String> tagList;
 
     @Builder
-    public CreateArticleRequestDto(final String title, final String description, final String body, final Set<Tag> tags) {
+    public CreateArticleRequestDto(final String title, final String description, final String body, final List<String> tagList) {
         this.title = title;
         this.description = description;
         this.body = body;
-        this.tags = tags;
+        this.tagList = Optional.ofNullable(tagList).map(HashSet::new).orElseGet(HashSet::new);
     }
 
     public Article convert(Long logonUserId, Long articleId) {

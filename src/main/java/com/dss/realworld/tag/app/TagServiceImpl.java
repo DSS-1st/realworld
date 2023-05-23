@@ -38,9 +38,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<String> findByName(String name) {
-        List<String> result = tagRepository.findByName(name);
-        if (result.size() == 0) throw new CustomApiException("해당하는 Tag가 없습니다.");
+    public String findByName(String name) {
+        String result = tagRepository.findByName(name);
+        if (result == null) throw new CustomApiException("해당하는 Tag가 없습니다.");
 
         return result;
     }

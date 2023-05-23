@@ -14,5 +14,7 @@ public interface TagRepository {
 
     List<String> getAll();
 
-    List<String> findByName(String name);
+    String findByName(String name);
+
+    Long findIdByName(String name);
 }

@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +27,7 @@ public class TagServiceTest {
 
     @DisplayName(value = "중복이 제거된 tag 이름 저장 성공")
     @Test
-    void t1() throws Exception {
+    void t1() {
         //given
         Set<Tag> tagSet = new HashSet<>();
         tagSet.add(new Tag("qwer"));
@@ -45,7 +44,7 @@ public class TagServiceTest {
 
     @DisplayName(value = "중복된 tag name 추가 시 예외 발생")
     @Test
-    void t2() throws Exception {
+    void t2() {
         //given
         Set<Tag> tagSet = new HashSet<>();
         tagSet.add(new Tag("qwer"));
@@ -108,10 +107,10 @@ public class TagServiceTest {
         tagService.persist(tagSet);
 
         //when
-        List<String> result = tagService.findByName(name);
+        String result = tagService.findByName(name);
 
         //then
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result).isEqualTo(name);
         assertThat(result.contains(name)).isTrue();
     }
 

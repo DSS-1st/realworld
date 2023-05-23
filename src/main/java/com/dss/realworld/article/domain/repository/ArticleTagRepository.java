@@ -3,6 +3,8 @@ package com.dss.realworld.article.domain.repository;
 import com.dss.realworld.article.domain.ArticleTag;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface ArticleTagRepository {
 
@@ -10,7 +12,9 @@ public interface ArticleTagRepository {
 
     ArticleTag findById(Long articleTagId);
 
+    List<String> findTagsByArticleId(Long articleId);
+
     int delete(Long id);
 
-    int deleteByArticle(Long articleId);
+    int deleteByArticleId(Long articleId);
 }
