@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`
 (
@@ -71,12 +73,14 @@ CREATE TABLE `comments`
 DROP TABLE IF EXISTS `follow_relation`;
 CREATE TABLE `follow_relation`
 (
-    `from_user_id` bigint NOT NULL,
-    `to_user_id`   bigint NOT NULL,
-    `created_at`   datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`from_user_id`, `to_user_id`),
-    KEY `IX_from_user_id` (`from_user_id`),
-    KEY `IX_to_user_id_idx` (`to_user_id`),
-    CONSTRAINT `FK_follow_relation_users_from_user_id` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`user_id`),
-    CONSTRAINT `FK_follow_relation_users_to_user_id` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`user_id`)
+    `login_id`   BIGINT   NOT NULL,
+    `target_id`  BIGINT   NOT NULL,
+    `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`login_id`, `target_id`),
+    INDEX `IX_login_id_id` (`login_id` ASC) INVISIBLE,
+    INDEX `IX_target_id_idx` (`target_id` ASC) INVISIBLE,
+    CONSTRAINT `FK_follow_relation_users_login_id` FOREIGN KEY (`login_id`) REFERENCES `users` (`user_id`),
+    CONSTRAINT `FK_follow_relation_users_target_id` FOREIGN KEY (`target_id`) REFERENCES `users` (`user_id`)
 );
+
+SET FOREIGN_KEY_CHECKS = 1;
