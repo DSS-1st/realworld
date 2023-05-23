@@ -37,6 +37,13 @@ public class UserController {
         return ResponseEntity.ok(userResponseDto);
     }
 
+    @GetMapping(value = "/user")
+    public ResponseEntity<UserResponseDto> getCurrentUser() {
+        UserResponseDto userResponseDto = userService.get(getLoginUserId());
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+    }
+
     private Long getLoginUserId() {
         return 1L;
     }

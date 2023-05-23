@@ -4,7 +4,6 @@ import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
-import com.dss.realworld.user.domain.User;
 
 public interface UserService {
 
@@ -13,4 +12,6 @@ public interface UserService {
     UserResponseDto update(UpdateUserRequestDto updateUserRequestDto, Long userId);
 
     UserResponseDto login(LoginUserRequestDto loginUserRequestDto);
+
+    UserResponseDto get(Long loginUserId);
 }
