@@ -41,12 +41,10 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getCurrentUser() {
         UserResponseDto userResponseDto = userService.get(getLoginUserId());
 
-        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     private Long getLoginUserId() {
         return 1L;
     }
 }
-
-//todo ResponseEntity를 반환하도록 수정
