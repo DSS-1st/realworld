@@ -38,6 +38,13 @@ public class UserController {
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
 
+    @GetMapping(value = "/user")
+    public ResponseEntity getCurrentUser() {
+        UserResponseDto userResponseDto = userService.getCurrentUser(getLoginUserId());
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+    }
+
     private Long getLoginUserId() {
         return 1L;
     }
