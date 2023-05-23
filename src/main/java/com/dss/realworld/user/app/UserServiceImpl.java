@@ -60,13 +60,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getCurrentUser(Long loginUserId) {
+    public UserResponseDto get(Long loginUserId) {
         User user = userRepository.findById(loginUserId);
 
         return new UserResponseDto(user);
     }
-
-
 }
-
-//todo responseDto를 반환하도록 수정

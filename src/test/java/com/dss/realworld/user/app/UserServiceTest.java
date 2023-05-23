@@ -3,8 +3,6 @@ package com.dss.realworld.user.app;
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
-import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +61,7 @@ public class UserServiceTest {
     void t3() {
         Long loginUserId = 1L;
 
-        UserResponseDto currentUser = userService.getCurrentUser(loginUserId);
+        UserResponseDto currentUser = userService.get(loginUserId);
 
         assertThat(currentUser.getUsername()).isEqualTo("Jacob000");
         assertThat(currentUser.getEmail()).isEqualTo("jake000@jake.jake");
