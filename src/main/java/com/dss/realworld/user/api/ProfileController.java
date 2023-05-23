@@ -3,7 +3,6 @@ package com.dss.realworld.user.api;
 import com.dss.realworld.user.api.dto.ProfileResponseDto;
 import com.dss.realworld.user.app.ProfileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,21 +17,21 @@ public class ProfileController {
     public ResponseEntity<ProfileResponseDto> get(@PathVariable String username) {
         ProfileResponseDto profileResponseDto = profileService.get(username, getLoginId());
 
-        return new ResponseEntity<>(profileResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(profileResponseDto);
     }
 
     @PostMapping(value = "/profiles/{username}/follow")
     public ResponseEntity<ProfileResponseDto> follow(@PathVariable String username) {
         ProfileResponseDto profileResponseDto = profileService.follow(username, getLoginId());
 
-        return new ResponseEntity<>(profileResponseDto, HttpStatus.CREATED);
+        return ResponseEntity.ok(profileResponseDto);
     }
 
     @DeleteMapping(value = "/profiles/{username}/follow")
     public ResponseEntity<ProfileResponseDto> unfollow(@PathVariable String username) {
         ProfileResponseDto profileResponseDto = profileService.unFollow(username, getLoginId());
 
-        return new ResponseEntity<>(profileResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(profileResponseDto);
     }
 
     private Long getLoginId() {

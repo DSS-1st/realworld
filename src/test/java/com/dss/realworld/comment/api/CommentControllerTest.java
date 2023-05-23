@@ -58,7 +58,7 @@ class CommentControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$..id").exists())
                 .andExpect(jsonPath("$..createdAt").exists())
                 .andExpect(jsonPath("$..updatedAt").exists())

@@ -6,7 +6,6 @@ import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.app.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,21 +20,21 @@ public class UserController {
     public ResponseEntity<UserResponseDto> add(@RequestBody AddUserRequestDto addUserRequestDto) {
         UserResponseDto userResponseDto = userService.save(addUserRequestDto);
 
-        return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     @PutMapping(value = "/user")
     public ResponseEntity<UserResponseDto> update(@RequestBody UpdateUserRequestDto updateUserRequestDto) {
         UserResponseDto userResponseDto = userService.update(updateUserRequestDto, getLoginUserId());
 
-        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     @PostMapping(value = "/users/login")
     public ResponseEntity<UserResponseDto> login(@RequestBody LoginUserRequestDto loginUserRequestDto) {
         UserResponseDto userResponseDto = userService.login(loginUserRequestDto);
 
-        return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     private Long getLoginUserId() {
