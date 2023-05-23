@@ -2,6 +2,7 @@ package com.dss.realworld.user.app;
 
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
+import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -35,10 +36,10 @@ public class UserServiceTest {
                 .build();
 
         //when
-        User updatedUser = userService.update(updateUserRequestDto, loginUserId);
+        UserResponseDto userResponseDto = userService.update(updateUserRequestDto, loginUserId);
 
         //then
-        assertThat(updatedUser.getEmail()).isEqualTo(updateUserRequestDto.getEmail());
+        assertThat(userResponseDto.getEmail()).isEqualTo(updateUserRequestDto.getEmail());
     }
 
     @DisplayName(value = "로그인 정보가 일치하면 로그인된 회원정보 반환 성공")
@@ -52,8 +53,8 @@ public class UserServiceTest {
                 .password("jakejake")
                 .build();
 
-        User loginUser = userService.login(loginUserRequestDto);
+        UserResponseDto userResponseDto = userService.login(loginUserRequestDto);
 
-        assertThat(loginUser.getUsername()).isEqualTo(savedUsername);
+        assertThat(userResponseDto.getUsername()).isEqualTo(savedUsername);
     }
 }
