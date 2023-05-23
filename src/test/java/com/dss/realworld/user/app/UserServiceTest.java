@@ -24,7 +24,7 @@ public class UserServiceTest {
     @Test
     void t1() {
         //given
-        Long loginUserId = 1L;
+        Long loginId = 1L;
 
         UpdateUserRequestDto updateUserRequestDto = UpdateUserRequestDto.builder()
                 .username("name")
@@ -34,7 +34,7 @@ public class UserServiceTest {
                 .build();
 
         //when
-        UserResponseDto userResponseDto = userService.update(updateUserRequestDto, loginUserId);
+        UserResponseDto userResponseDto = userService.update(updateUserRequestDto, loginId);
 
         //then
         assertThat(userResponseDto.getEmail()).isEqualTo(updateUserRequestDto.getEmail());
