@@ -17,8 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,5 +94,17 @@ class UserControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(loginUsername))
                 .andExpect(jsonPath("$..email").value(loginUserEmail));
+    }
+
+    @DisplayName(value = "현재 계정 정보 반환하기")
+    @Test
+    void t4() throws Exception {
+        String username = "Jacob000";
+        String email = "jake000@jake.jake";
+
+        mockMvc.perform(get("/api/user").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..username").value(username))
+                .andExpect(jsonPath("$..email").value(email));
     }
 }

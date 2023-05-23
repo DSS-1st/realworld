@@ -57,4 +57,15 @@ public class UserServiceTest {
 
         assertThat(userResponseDto.getUsername()).isEqualTo(savedUsername);
     }
+
+    @DisplayName(value = "현재 회원 정보 가져오기")
+    @Test
+    void t3() {
+        Long loginUserId = 1L;
+
+        UserResponseDto currentUser = userService.getCurrentUser(loginUserId);
+
+        assertThat(currentUser.getUsername()).isEqualTo("Jacob000");
+        assertThat(currentUser.getEmail()).isEqualTo("jake000@jake.jake");
+    }
 }
