@@ -23,4 +23,10 @@
         from tag
         order by name
     </select>
+
+    <select id="findIdByName" resultType="Long">
+        select tag_id
+        from tag
+        where name = #{name}
+    </select>
 </mapper>

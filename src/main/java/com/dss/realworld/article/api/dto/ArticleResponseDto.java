@@ -8,8 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @JsonTypeName(value = "article")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
@@ -20,18 +19,19 @@ public class ArticleResponseDto {
     private final String title;
     private final String description;
     private final String body;
-    private final Set<String> tagList = new HashSet<>();
+    private final List<String> tagList;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final boolean favorited = false; // todo Following 도메인 추가 후 구현
     private final int favoritesCount = 0; // todo Following 도메인 추가 후 구현
     private final AuthorDto author;
 
-    public ArticleResponseDto(ArticleContentDto content, AuthorDto author) {
+    public ArticleResponseDto(ArticleContentDto content, AuthorDto author, List<String> tagList) {
         this.slug = content.getSlug();
         this.title = content.getTitle();
         this.description = content.getDescription();
         this.body = content.getBody();
+        this.tagList = tagList;
         this.createdAt = content.getCreatedAt();
         this.updatedAt = content.getUpdatedAt();
         this.author = author;
