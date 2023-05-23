@@ -5,6 +5,7 @@ import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
+import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User save(AddUserRequestDto addUserRequestDto) {
+    public UserResponseDto save(AddUserRequestDto addUserRequestDto) {
         User user = User.builder()
                 .username(addUserRequestDto.getUsername())
                 .email(addUserRequestDto.getEmail())
@@ -28,12 +29,14 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.persist(user);
 
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User user1 = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotFoundException());
+
+        return new UserResponseDto(user1);
     }
 
     @Transactional
     @Override
-    public User update(UpdateUserRequestDto updateUserRequestDto, Long loginId) {
+    public UserResponseDto update(UpdateUserRequestDto updateUserRequestDto, Long loginId) {
         User foundUser = userRepository.findById(loginId);
         User updateValue = foundUser.builder()
                 .email(updateUserRequestDto.getEmail())
@@ -43,15 +46,17 @@ public class UserServiceImpl implements UserService {
                 .image(updateUserRequestDto.getImage()).build();
         userRepository.update(updateValue, loginId);
 
-        return userRepository.findByEmail(updateValue.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(updateValue.getEmail()).orElseThrow(() -> new UserNotFoundException());
+
+        return new UserResponseDto(user);
     }
 
     @Override
-    public User login(LoginUserRequestDto loginUserRequestDto) {
+    public UserResponseDto login(LoginUserRequestDto loginUserRequestDto) {
         User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
         if(!user.isMatch(loginUserRequestDto)) throw new CustomApiException("비밀번호가 일치하지 않습니다.");
 
-        return user;
+        return new UserResponseDto(user);
     }
 }
 

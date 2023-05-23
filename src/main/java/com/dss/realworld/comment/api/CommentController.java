@@ -6,7 +6,6 @@ import com.dss.realworld.comment.api.dto.CommentListResponseDto;
 import com.dss.realworld.comment.app.CommentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ public class CommentController {
                                     @PathVariable String slug) {
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, getLogonUserId(), slug);
 
-        return new ResponseEntity<>(addCommentResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(addCommentResponseDto);
     }
 
     @DeleteMapping(value = "{slug}/comments/{id}")
