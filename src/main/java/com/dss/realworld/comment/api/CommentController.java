@@ -22,21 +22,21 @@ public class CommentController {
                                     @PathVariable String slug) {
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, getLogonUserId(), slug);
 
-        return new ResponseEntity<>(addCommentResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(addCommentResponseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "{slug}/comments/{id}")
     public ResponseEntity delete(@PathVariable String slug, @PathVariable Long id) {
         commentService.delete(slug, id, getLogonUserId());
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/{slug}/comments")
     public ResponseEntity<CommentListResponseDto> get(@PathVariable String slug) throws JsonProcessingException {
         final CommentListResponseDto commentList = new CommentListResponseDto(commentService.getAll(slug));
 
-        return ResponseEntity.ok(commentList);
+        return new ResponseEntity<>(commentList,HttpStatus.OK);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
