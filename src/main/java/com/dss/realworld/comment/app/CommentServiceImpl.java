@@ -9,6 +9,8 @@ import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.error.exception.CommentNotFoundException;
+import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         commentRepository.persist(comment);
-        Comment foundComment = commentRepository.findById(comment.getId());
+        Comment foundComment = commentRepository.findById(comment.getId()).orElseThrow(CommentNotFoundException::new);
         AuthorDto author = getAuthor(comment.getUserId());
 
         return new AddCommentResponseDto(foundComment, author);
@@ -67,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public AuthorDto getAuthor(Long userId) {
-        User foundAuthor = userRepository.findById(userId);
+        User foundAuthor = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
     }

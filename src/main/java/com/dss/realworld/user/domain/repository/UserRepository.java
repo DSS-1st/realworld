@@ -16,7 +16,7 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
     void update(@Param(value = "user") User user, @Param(value = "userId") Long userId);
 }
