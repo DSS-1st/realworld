@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AddUserRequestDto {
+
     @NotNull
     private String username;
     @NotNull

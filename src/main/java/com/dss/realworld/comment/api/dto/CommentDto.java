@@ -10,13 +10,10 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentDto {
 
-    @NotNull
     private final Long id;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
-    @NotNull
     private final String body;
-    @NotNull
     private final AuthorDto author;
 
     private CommentDto(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String body, AuthorDto author) {
