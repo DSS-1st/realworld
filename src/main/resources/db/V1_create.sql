@@ -37,6 +37,7 @@ CREATE TABLE `tag`
 (
     `tag_id` bigint       NOT NULL AUTO_INCREMENT,
     `name`   varchar(255) NOT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`tag_id`),
     UNIQUE KEY `UK_name` (`name`)
 );
@@ -47,6 +48,7 @@ CREATE TABLE `article_tag`
     `article_tag_id` bigint NOT NULL AUTO_INCREMENT,
     `article_id`     bigint NOT NULL,
     `tag_id`         bigint NOT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`article_tag_id`),
     KEY `IX_article_id` (`article_id`),
     KEY `IX_tag_id` (`tag_id`),
