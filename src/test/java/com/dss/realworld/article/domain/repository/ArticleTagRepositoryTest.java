@@ -47,7 +47,7 @@ public class ArticleTagRepositoryTest {
         articleTagRepository.persist(articleTag);
 
         //when
-        ArticleTag foundArticleTag = articleTagRepository.findById(articleTag.getId());
+        ArticleTag foundArticleTag = articleTagRepository.findById(articleTag.getId()).get();
 
         //then
         assertThat(foundArticleTag.getId()).isEqualTo(articleTag.getId());
