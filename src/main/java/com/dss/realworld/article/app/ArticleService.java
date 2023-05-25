@@ -7,7 +7,7 @@ import com.dss.realworld.common.dto.AuthorDto;
 
 public interface ArticleService {
 
-    ArticleResponseDto findBySlug(String slug);
+    ArticleResponseDto findBySlug(String slug, Long loginId);
 
     ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginUserId);
 
@@ -16,4 +16,8 @@ public interface ArticleService {
     void delete(String slug, Long userId);
 
     AuthorDto getAuthor(Long userId);
+
+    ArticleResponseDto favorite(String slug, Long loginId);
+
+    ArticleResponseDto unfavorite(String slug, Long loginId);
 }
