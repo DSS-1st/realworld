@@ -61,6 +61,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleResponseDto favorite(final String slug, Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
@@ -70,7 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             articleUsersRepository.persist(new ArticleUsers(foundArticle.getId(), loginId));
         } catch (DuplicateKeyException e) {
-            throw new CustomApiException("이미 좋아한 글입니다.");
+            throw new CustomApiException("이미 좋아요한 글입니다.");
         }
         boolean favorited = isFavorite(loginId, foundArticle);
         int favoritesCount = articleUsersRepository.findCountByArticleId(foundArticle.getId());
@@ -83,6 +84,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleResponseDto unfavorite(final String slug, Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
@@ -155,7 +157,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleTagRepository.deleteByArticleId(foundArticle.getId());
         commentRepository.deleteByArticleId(foundArticle.getId());
-        articleUsersRepository.delete(foundArticle.getId(), loginId);
+        articleUsersRepository.deleteArticleRelation(foundArticle.getId());
         articleRepository.delete(foundArticle.getId());
     }
 }
