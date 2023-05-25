@@ -38,7 +38,7 @@ public class ArticleController {
     }
 
     @DeleteMapping(value = "/{slug}")
-    public ResponseEntity<ArticleResponseDto> delete(@PathVariable final String slug) {
+    public ResponseEntity delete(@PathVariable final String slug) {
         articleService.delete(slug, getLoginUserId());
 
         return ResponseEntity.noContent().build();

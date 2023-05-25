@@ -28,7 +28,7 @@ public class CommentController {
     public ResponseEntity delete(@PathVariable String slug, @PathVariable Long id) {
         commentService.delete(slug, id, getLogonUserId());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{slug}/comments")
