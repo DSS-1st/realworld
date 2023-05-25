@@ -128,7 +128,7 @@ public class ArticleServiceTest {
         Long articleTagId = 1L;
 
         Comment comment = commentRepository.findById(commentId).get();
-        ArticleTag articleTag = articleTagRepository.findById(articleTagId);
+        ArticleTag articleTag = articleTagRepository.findById(articleTagId).get();
         Article article = articleRepository.findById(articleId).get();
 
         String slug = "new-title-1";
@@ -138,9 +138,9 @@ public class ArticleServiceTest {
         articleService.delete(slug, userId);
 
         //then
-        assertThat(commentRepository.findById(comment.getId()).orElse(null)).isNull();
-        assertThat(articleTagRepository.findById(articleTag.getId())).isNull();
-        assertThat(articleRepository.findById(article.getId()).orElse(null)).isNull();
+        assertThat(commentRepository.findById(comment.getId())).isEmpty();
+        assertThat(articleTagRepository.findById(articleTag.getId())).isEmpty();
+        assertThat(articleRepository.findById(article.getId())).isEmpty();
     }
 
     @DisplayName(value = "유효한 slug, loginId 존재 시 좋아요 성공")
@@ -199,7 +199,7 @@ public class ArticleServiceTest {
         Long articleTagId = 1L;
 
         Comment comment = commentRepository.findById(commentId).get();
-        ArticleTag articleTag = articleTagRepository.findById(articleTagId);
+        ArticleTag articleTag = articleTagRepository.findById(articleTagId).get();
         Article article = articleRepository.findById(articleId).get();
 
         String slug = "new-title-1";
@@ -210,9 +210,9 @@ public class ArticleServiceTest {
         articleService.delete(slug, userId);
 
         //then
-        assertThat(commentRepository.findById(comment.getId()).orElse(null)).isNull();
-        assertThat(articleTagRepository.findById(articleTag.getId())).isNull();
+        assertThat(commentRepository.findById(comment.getId())).isEmpty();
+        assertThat(articleTagRepository.findById(articleTag.getId())).isEmpty();
         assertThat(articleUsersRepository.findCountByArticleId(article.getId())).isEqualTo(0);
-        assertThat(articleRepository.findById(article.getId()).orElse(null)).isNull();
+        assertThat(articleRepository.findById(article.getId())).isEmpty();
     }
 }

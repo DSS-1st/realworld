@@ -116,7 +116,7 @@ public class ArticleServiceImpl implements ArticleService {
                 tagRepository.persist(tag);
                 articleTagRepository.persist(new ArticleTag(article.getId(), tag.getId()));
             } catch (DuplicateKeyException e) {
-                Long existentId = tagRepository.findIdByName(tag.getName());
+                Long existentId = tagRepository.findIdByName(tag.getName()).orElseThrow(() -> new CustomApiException("해당하는 Tag가 없습니다."));
                 articleTagRepository.persist(new ArticleTag(article.getId(), existentId));
             }
         }

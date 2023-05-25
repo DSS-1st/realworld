@@ -32,7 +32,7 @@ public class ArticleUsersRepositoryTest {
         articleUsersRepository.persist(articleUsers);
 
         //then
-        ArticleUsers foundArticleUsers = articleUsersRepository.findById(articleUsers.getId());
+        ArticleUsers foundArticleUsers = articleUsersRepository.findById(articleUsers.getId()).get();
         assertThat(foundArticleUsers.getId()).isEqualTo(1);
     }
 

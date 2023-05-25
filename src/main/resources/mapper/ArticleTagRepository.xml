@@ -14,7 +14,7 @@
         where article_tag_id = #{articleTagId}
     </select>
 
-    <select id="findTagsByArticleId" parameterType="Long" resultType="java.lang.String">
+    <select id="findTagsByArticleId" parameterType="Long" resultType="String">
         select name from article_tag a
         join tag b on a.tag_id = b.tag_id
         where article_id = #{articleId};

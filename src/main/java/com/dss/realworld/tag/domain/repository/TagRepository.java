@@ -4,6 +4,7 @@ import com.dss.realworld.tag.domain.Tag;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface TagRepository {
@@ -14,7 +15,7 @@ public interface TagRepository {
 
     List<String> getAll();
 
-    String findByName(String name);
+    Optional<String> findByName(String name);
 
-    Long findIdByName(String name);
+    Optional<Long> findIdByName(String name);
 }

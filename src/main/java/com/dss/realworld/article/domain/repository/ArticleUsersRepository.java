@@ -4,12 +4,14 @@ import com.dss.realworld.article.domain.ArticleUsers;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 @Mapper
 public interface ArticleUsersRepository {
 
     void persist(ArticleUsers articleUsers);
 
-    ArticleUsers findById(Long id);
+    Optional<ArticleUsers> findById(Long id);
 
     int deleteArticleRelation(Long articleId);
 
