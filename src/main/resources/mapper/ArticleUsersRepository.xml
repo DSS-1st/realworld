@@ -10,6 +10,9 @@
     <delete id="delete" parameterType="Long">
         delete from article_users where article_id = #{articleId} and login_id = #{loginId}
     </delete>
+    <delete id="deleteArticleRelation" parameterType="Long">
+        delete from article_users where article_id = #{articleId}
+    </delete>
     <select id="isFavorite" parameterType="Long" resultType="int">
         select count(*)
         from article_users where article_id = #{articleId} and login_id = #{loginId}
@@ -17,5 +20,9 @@
     <select id="findCountByArticleId" parameterType="Long" resultType="int">
         select count(*)
         from article_users where article_id = #{articleId}
+    </select>
+    <select id="findById" parameterType="Long" resultType="ArticleUsers">
+        select article_users_id as id, article_id, login_id
+        from article_users where article_users_id = #{id}
     </select>
 </mapper>
