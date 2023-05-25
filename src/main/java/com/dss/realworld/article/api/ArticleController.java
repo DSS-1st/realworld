@@ -18,30 +18,44 @@ public class ArticleController {
 
     @GetMapping(value = "/{slug}")
     public ResponseEntity<ArticleResponseDto> findBySlug(@PathVariable final String slug) {
-        ArticleResponseDto articleResponseDto = articleService.findBySlug(slug);
+        ArticleResponseDto articleResponseDto = articleService.findBySlug(slug, getLoginUserId());
 
-        return new ResponseEntity<>(articleResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(articleResponseDto);
     }
 
     @PostMapping
     public ResponseEntity<ArticleResponseDto> create(@RequestBody final CreateArticleRequestDto createArticleRequestDto) {
         ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLoginUserId());
 
-        return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @PutMapping(value = "/{slug}")
     public ResponseEntity<ArticleResponseDto> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto, @PathVariable final String slug) {
         ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLoginUserId(), slug);
 
-        return new ResponseEntity<>(articleResponseDto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @DeleteMapping(value = "/{slug}")
     public ResponseEntity<ArticleResponseDto> delete(@PathVariable final String slug) {
         articleService.delete(slug, getLoginUserId());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{slug}/favorite")
+    public ResponseEntity<ArticleResponseDto> favorite(@PathVariable final String slug) {
+        ArticleResponseDto articleResponseDto = articleService.favorite(slug, getLoginUserId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
+    }
+
+    @DeleteMapping(value = "/{slug}/favorite")
+    public ResponseEntity<ArticleResponseDto> unfavorite(@PathVariable final String slug) {
+        ArticleResponseDto articleResponseDto = articleService.unfavorite(slug, getLoginUserId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     // todo SecurityContextHolder에서 인증 정보 얻기
