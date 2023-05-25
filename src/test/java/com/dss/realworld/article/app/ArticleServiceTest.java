@@ -6,9 +6,11 @@ import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.ArticleTag;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
 import com.dss.realworld.article.domain.repository.ArticleTagRepository;
+import com.dss.realworld.article.domain.repository.ArticleUsersRepository;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.error.exception.CustomApiException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +36,9 @@ public class ArticleServiceTest {
 
     @Autowired
     private ArticleTagRepository articleTagRepository;
+
+    @Autowired
+    private ArticleUsersRepository articleUsersRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -62,7 +67,7 @@ public class ArticleServiceTest {
         assertThat(savedArticle.getTitle()).isEqualTo(createArticleRequestDto.getTitle());
 
         //when
-        ArticleResponseDto foundArticle = articleService.findBySlug(savedArticle.getSlug());
+        ArticleResponseDto foundArticle = articleService.findBySlug(savedArticle.getSlug(), userId);
 
         //then
         Assertions.assertThat(foundArticle.getSlug()).isEqualTo(savedArticle.getSlug());
@@ -118,19 +123,96 @@ public class ArticleServiceTest {
     @Test
     void t6() {
         //given
-        Comment comment = commentRepository.findById(1L);
-        ArticleTag articleTag = articleTagRepository.findById(1L);
-        Article article = articleRepository.findById(1L).get();
+        Long articleId = 1L;
+        Long commentId = 1L;
+        Long articleTagId = 1L;
+
+        Comment comment = commentRepository.findById(commentId);
+        ArticleTag articleTag = articleTagRepository.findById(articleTagId);
+        Article article = articleRepository.findById(articleId).get();
 
         String slug = "new-title-1";
         Long userId = 1L;
 
         //when
-        articleService.delete(slug, 1L);
+        articleService.delete(slug, userId);
 
         //then
-        assertThat(commentRepository.findById(1L)).isNull();
-        assertThat(articleTagRepository.findById(1L)).isNull();
-        assertThat(articleRepository.findById(1L).orElse(null)).isNull();
+        assertThat(commentRepository.findById(comment.getId())).isNull();
+        assertThat(articleTagRepository.findById(articleTag.getId())).isNull();
+        assertThat(articleRepository.findById(article.getId()).orElse(null)).isNull();
+    }
+
+    @DisplayName(value = "유효한 slug, loginId 존재 시 좋아요 성공")
+    @Test
+    void t7() {
+        //given
+        String slug = "new-title-1";
+        Long loginId = 1L;
+
+        //when
+        ArticleResponseDto articleResponseDto = articleService.favorite(slug, loginId);
+
+        //then
+        assertThat(articleResponseDto.getFavoritesCount()).isEqualTo(1);
+        assertThat(articleResponseDto.isFavorited()).isTrue();
+    }
+
+    @DisplayName(value = "중복으로 좋아요 시도 시 예외 발생")
+    @Test
+    void t8() {
+        //given
+        String slug = "new-title-1";
+        Long loginId = 1L;
+
+        //when
+        articleService.favorite(slug, loginId);
+
+        //then
+        assertThatThrownBy(() -> articleService.favorite(slug, loginId)).isInstanceOf(CustomApiException.class).hasMessageContaining("이미 좋아요한 글입니다.");
+    }
+
+    @DisplayName(value = "articleId, loginId가 유효하면 좋아요 취소 성공")
+    @Test
+    void t9() {
+        //given
+        String slug = "new-title-1";
+        Long loginId = 1L;
+        ArticleResponseDto favoriteArticle = articleService.favorite(slug, loginId);
+        assertThat(favoriteArticle.getFavoritesCount()).isEqualTo(1);
+        assertThat(favoriteArticle.isFavorited()).isTrue();
+
+        //when
+        ArticleResponseDto unfavoriteArticle = articleService.unfavorite(slug, loginId);
+
+        //then
+        assertThat(unfavoriteArticle.isFavorited()).isFalse();
+        assertThat(unfavoriteArticle.getFavoritesCount()).isEqualTo(0);
+    }
+
+    @DisplayName(value = "Article 삭제 시 이를 참조하는 article_users, article_tag, comments 테이블 레코드도 삭제 성공")
+    @Test
+    void t10() {
+        //given
+        Long articleId = 1L;
+        Long commentId = 1L;
+        Long articleTagId = 1L;
+
+        Comment comment = commentRepository.findById(commentId);
+        ArticleTag articleTag = articleTagRepository.findById(articleTagId);
+        Article article = articleRepository.findById(articleId).get();
+
+        String slug = "new-title-1";
+        Long userId = 1L;
+        articleService.favorite(slug, userId);
+
+        //when
+        articleService.delete(slug, userId);
+
+        //then
+        assertThat(commentRepository.findById(comment.getId())).isNull();
+        assertThat(articleTagRepository.findById(articleTag.getId())).isNull();
+        assertThat(articleUsersRepository.findCountByArticleId(article.getId())).isEqualTo(0);
+        assertThat(articleRepository.findById(article.getId()).orElse(null)).isNull();
     }
 }
