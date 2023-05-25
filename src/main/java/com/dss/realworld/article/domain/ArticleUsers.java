@@ -3,6 +3,7 @@ package com.dss.realworld.article.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
+import org.springframework.util.Assert;
 
 @Alias(value = "ArticleUsers")
 @Getter
@@ -13,13 +14,10 @@ public class ArticleUsers {
     private Long articleId;
     private Long loginId;
 
-    public ArticleUsers(final Long id, final Long articleId, final Long loginId) {
-        this.id = id;
-        this.articleId = articleId;
-        this.loginId = loginId;
-    }
-
     public ArticleUsers(final Long articleId, final Long loginId) {
+        Assert.notNull(articleId, "articleId can not be null");
+        Assert.notNull(loginId, "loginId can not be null");
+
         this.articleId = articleId;
         this.loginId = loginId;
     }
