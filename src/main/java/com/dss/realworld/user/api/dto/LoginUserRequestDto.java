@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginUserRequestDto {
 
-    @NotNull
+    @NotBlank(message = "can't empty or space only email")
+    @Email
     private String email;
 
-    @NotNull
+    @NotBlank(message = "can't empty or space only password")
     private String password;
 
     @Builder
