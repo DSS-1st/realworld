@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dss.realworld.article.domain.repository.ArticleUsersRepository">
+    <insert id="persist" parameterType="ArticleUsers" useGeneratedKeys="true" keyProperty="id" keyColumn="article_users_id">
+        insert into article_users(article_id, login_id)
+        values (#{articleId}, #{loginId})
+    </insert>
+    <delete id="delete" parameterType="Long">
+        delete from article_users where article_id = #{articleId} and login_id = #{loginId}
+    </delete>
+    <select id="isFavorite" parameterType="Long" resultType="int">
+        select count(*)
+        from article_users where article_id = #{articleId} and login_id = #{loginId}
+    </select>
+    <select id="findCountByArticleId" parameterType="Long" resultType="int">
+        select count(*)
+        from article_users where article_id = #{articleId}
+    </select>
+</mapper>
