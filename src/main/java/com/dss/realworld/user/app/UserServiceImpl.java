@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponseDto update(UpdateUserRequestDto updateUserRequestDto, Long loginId) {
-        User foundUser = userRepository.findById(loginId);
+        User foundUser = userRepository.findById(loginId).orElseThrow(UserNotFoundException::new);
         User updateValue = foundUser.builder()
                 .email(updateUserRequestDto.getEmail())
                 .username(updateUserRequestDto.getUsername())
@@ -46,23 +48,23 @@ public class UserServiceImpl implements UserService {
                 .image(updateUserRequestDto.getImage()).build();
         userRepository.update(updateValue, loginId);
 
-        User user = userRepository.findByEmail(updateValue.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User user = userRepository.findByEmail(updateValue.getEmail()).orElseThrow(UserNotFoundException::new);
 
         return new UserResponseDto(user);
     }
 
     @Override
     public UserResponseDto login(LoginUserRequestDto loginUserRequestDto) {
-        User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException());
-        if(!user.isMatch(loginUserRequestDto)) throw new CustomApiException("비밀번호가 일치하지 않습니다.");
+        User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
+        if (!user.isMatch(loginUserRequestDto)) throw new CustomApiException("비밀번호가 일치하지 않습니다.");
 
         return new UserResponseDto(user);
     }
 
     @Override
     public UserResponseDto get(Long loginUserId) {
-        User user = userRepository.findById(loginUserId);
+        User foundUser = userRepository.findById(loginUserId).orElseThrow(UserNotFoundException::new);
 
-        return new UserResponseDto(user);
+        return new UserResponseDto(foundUser);
     }
 }

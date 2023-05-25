@@ -1,6 +1,7 @@
 package com.dss.realworld.comment.domain.repository;
 
 import com.dss.realworld.comment.domain.Comment;
+import com.dss.realworld.error.exception.CommentNotFoundException;
 import com.dss.realworld.util.CommentFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,10 +44,10 @@ class CommentRepositoryTest {
         commentRepository.persist(comment);
 
         //when
-        Comment getCommentDto = commentRepository.findById(comment.getId());
+        Comment foundComment = commentRepository.findById(comment.getId()).orElseThrow(CommentNotFoundException::new);
 
         //then
-        assertThat(getCommentDto.getBody()).isEqualTo("His name was my name too.");
+        assertThat(foundComment.getBody()).isEqualTo("His name was my name too.");
     }
 
     @DisplayName(value = "commentId가 NotNull이면 댓글 삭제 성공")
@@ -72,7 +74,6 @@ class CommentRepositoryTest {
     @Test
     void t4() {
         //given
-        Comment oldComment = commentRepository.findById(1L);
         Comment newComment1 = CommentFixtures.create();
         Comment newComment2 = CommentFixtures.create();
         commentRepository.persist(newComment1);

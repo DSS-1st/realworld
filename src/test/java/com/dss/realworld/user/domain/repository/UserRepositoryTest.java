@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles(value = "test")
@@ -86,7 +88,7 @@ public class UserRepositoryTest {
 
         //when
         userRepository.update(updateValue, foundUser.getId());
-        User updatedUser = userRepository.findById(foundUser.getId());
+        User updatedUser = userRepository.findById(foundUser.getId()).orElseThrow(UserNotFoundException::new);
 
         //then
         assertThat(updatedUser.getEmail()).isEqualTo(updateValue.getEmail());

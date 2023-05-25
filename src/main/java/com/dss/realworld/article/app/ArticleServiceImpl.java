@@ -12,6 +12,7 @@ import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.common.dto.AuthorDto;
 import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
 import com.dss.realworld.user.domain.User;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -108,7 +110,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public AuthorDto getAuthor(Long userId) {
-        User foundUser = userRepository.findById(userId);
+        User foundUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage());
     }

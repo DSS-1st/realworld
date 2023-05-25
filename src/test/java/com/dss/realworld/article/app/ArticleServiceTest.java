@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -118,7 +120,7 @@ public class ArticleServiceTest {
     @Test
     void t6() {
         //given
-        Comment comment = commentRepository.findById(1L);
+        Optional<Comment> comment = commentRepository.findById(1L);
         ArticleTag articleTag = articleTagRepository.findById(1L);
         Article article = articleRepository.findById(1L).get();
 
@@ -129,7 +131,7 @@ public class ArticleServiceTest {
         articleService.delete(slug, 1L);
 
         //then
-        assertThat(commentRepository.findById(1L)).isNull();
+        assertThat(commentRepository.findById(1L)).isEmpty();
         assertThat(articleTagRepository.findById(1L)).isNull();
         assertThat(articleRepository.findById(1L).orElse(null)).isNull();
     }
