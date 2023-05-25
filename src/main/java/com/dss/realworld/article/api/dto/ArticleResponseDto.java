@@ -22,9 +22,22 @@ public class ArticleResponseDto {
     private final List<String> tagList;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
-    private final boolean favorited = false; // todo Following 도메인 추가 후 구현
-    private final int favoritesCount = 0; // todo Following 도메인 추가 후 구현
+    private final boolean favorited;
+    private final int favoritesCount;
     private final AuthorDto author;
+
+    public ArticleResponseDto(ArticleContentDto content, AuthorDto author, List<String> tagList, boolean favorited, int favoritesCount) {
+        this.slug = content.getSlug();
+        this.title = content.getTitle();
+        this.description = content.getDescription();
+        this.body = content.getBody();
+        this.tagList = tagList;
+        this.createdAt = content.getCreatedAt();
+        this.updatedAt = content.getUpdatedAt();
+        this.favorited = favorited;
+        this.favoritesCount = favoritesCount;
+        this.author = author;
+    }
 
     public ArticleResponseDto(ArticleContentDto content, AuthorDto author, List<String> tagList) {
         this.slug = content.getSlug();
@@ -34,6 +47,8 @@ public class ArticleResponseDto {
         this.tagList = tagList;
         this.createdAt = content.getCreatedAt();
         this.updatedAt = content.getUpdatedAt();
+        this.favorited = false;
+        this.favoritesCount = 0;
         this.author = author;
     }
 }

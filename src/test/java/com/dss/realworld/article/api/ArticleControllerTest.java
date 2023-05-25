@@ -64,15 +64,15 @@ public class ArticleControllerTest {
 
         //then
         resultActions
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$..title").value(title))
-            .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
-            .andExpect(jsonPath("$..favorited").value(false))
-            .andExpect(jsonPath("$..following").value(false))
-            .andExpect(jsonPath("$..username").value("Jacob000"))
-            .andExpect(jsonPath("$..description").value(description))
-            .andExpect(jsonPath("$..body").value(body))
-            .andExpect(jsonPath("$..tags.size()").value(0));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$..title").value(title))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
+                .andExpect(jsonPath("$..favorited").value(false))
+                .andExpect(jsonPath("$..following").value(false))
+                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..description").value(description))
+                .andExpect(jsonPath("$..body").value(body))
+                .andExpect(jsonPath("$..tags.size()").value(0));
     }
 
     @DisplayName(value = "slug, userId가 유효하면 Article 삭제 성공")
@@ -87,7 +87,7 @@ public class ArticleControllerTest {
                 .delete("/api/articles/" + slug);
 
         //then
-        mockMvc.perform(mockRequest).andExpect(status().isOk());
+        mockMvc.perform(mockRequest).andExpect(status().isNoContent());
     }
 
     @DisplayName(value = "유효한 slug 사용 시 조회 성공")
@@ -113,7 +113,6 @@ public class ArticleControllerTest {
         //given
         String slug = "new-title-1";
         int slugId = 1;
-        Long maxId = articleRepository.findMaxId().get();
 
         String newTitle = "brand new title";
         String newDescription = "brand new description";
@@ -180,7 +179,6 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..tagList[2]").value(tag4));
     }
 
-
     @DisplayName(value = "이미 존재하는 tag(dvorak)도 저장 성공")
     @Test
     void t6() throws Exception {
@@ -223,5 +221,46 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..tagList[0]").value(tag2))
                 .andExpect(jsonPath("$..tagList[1]").value(tag3))
                 .andExpect(jsonPath("$..tagList[2]").value(tag4));
+    }
+
+    @DisplayName(value = "article, loginId가 유효하면 좋아요 성공")
+    @Test
+    void t7() throws Exception {
+        //given
+        String slug = "new-title-1";
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/api/articles/{slug}/favorite", slug)
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions resultActions = mockMvc.perform(mockRequest);
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("responseBody = " + responseBody);
+
+        //then
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$..favorited").value(true))
+                .andExpect(jsonPath("$..favoritesCount").value(1));
+    }
+
+    @DisplayName(value = "article, loginId가 유효하면 좋아요 취소 성공")
+    @Test
+    void t8() throws Exception {
+        //given
+        String slug = "new-title-1";
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .delete("/api/articles/{slug}/favorite", slug);
+        ResultActions resultActions = mockMvc.perform(mockRequest);
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("responseBody = " + responseBody);
+
+        //then
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$..favorited").value(false))
+                .andExpect(jsonPath("$..favoritesCount").value(0));
     }
 }
