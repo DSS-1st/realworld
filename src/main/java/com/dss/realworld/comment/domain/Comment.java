@@ -19,7 +19,6 @@ public class Comment {
 
     @Builder
     public Comment(Long id, Long articleId, String body, LocalDateTime createdAt, LocalDateTime updatedAt, Long userId) {
-
         Assert.notNull(body, "body can not be null");
         Assert.notNull(userId, "userId can not be null");
         Assert.notNull(articleId, "articleId can not be null");

@@ -10,8 +10,8 @@ public class FollowRelation {
     private Long loginId;
 
     public FollowRelation(Long targetId, Long loginId) {
-        Assert.notNull(targetId,"targetId can not be null");
-        Assert.notNull(loginId,"loginId can not be null");
+        Assert.notNull(targetId, "targetId can not be null");
+        Assert.notNull(loginId, "loginId can not be null");
 
         this.targetId = targetId;
         this.loginId = loginId;
