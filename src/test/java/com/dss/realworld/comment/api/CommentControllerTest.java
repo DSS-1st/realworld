@@ -75,12 +75,11 @@ class CommentControllerTest {
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/api/articles/{slug}/comments/{id}", slug, commentId)
-                .contentType(MediaType.APPLICATION_JSON);
+                .delete("/api/articles/{slug}/comments/{id}", slug, commentId);
 
         //then
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @DisplayName(value = "Slug 값이 유효하면 댓글 리스트 가져오기 성공")
