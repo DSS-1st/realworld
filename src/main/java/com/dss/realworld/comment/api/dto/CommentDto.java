@@ -2,7 +2,6 @@ package com.dss.realworld.comment.api.dto;
 
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.common.dto.AuthorDto;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

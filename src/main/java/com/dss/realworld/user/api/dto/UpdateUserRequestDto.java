@@ -17,8 +17,10 @@ public class UpdateUserRequestDto {
 
     @NotNull
     private String email;
+
     @NotNull
     private String username;
+
     @NotNull
     private String password;
 
