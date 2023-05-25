@@ -20,8 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -129,7 +127,7 @@ public class ArticleServiceTest {
         Long commentId = 1L;
         Long articleTagId = 1L;
 
-        Comment comment = commentRepository.findById(commentId);
+        Comment comment = commentRepository.findById(commentId).get();
         ArticleTag articleTag = articleTagRepository.findById(articleTagId);
         Article article = articleRepository.findById(articleId).get();
 
@@ -140,7 +138,7 @@ public class ArticleServiceTest {
         articleService.delete(slug, userId);
 
         //then
-        assertThat(commentRepository.findById(comment.getId())).isNull();
+        assertThat(commentRepository.findById(comment.getId()).orElse(null)).isNull();
         assertThat(articleTagRepository.findById(articleTag.getId())).isNull();
         assertThat(articleRepository.findById(article.getId()).orElse(null)).isNull();
     }
@@ -212,7 +210,7 @@ public class ArticleServiceTest {
         articleService.delete(slug, userId);
 
         //then
-        assertThat(commentRepository.findById(comment.getId())).isNull();
+        assertThat(commentRepository.findById(comment.getId()).orElse(null)).isNull();
         assertThat(articleTagRepository.findById(articleTag.getId())).isNull();
         assertThat(articleUsersRepository.findCountByArticleId(article.getId())).isEqualTo(0);
         assertThat(articleRepository.findById(article.getId()).orElse(null)).isNull();
