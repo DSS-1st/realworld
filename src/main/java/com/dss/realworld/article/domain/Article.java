@@ -4,13 +4,17 @@ import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.error.exception.UserNotFoundException;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Alias(value = "Article")
+@ToString
+@Getter
+@NoArgsConstructor
 public class Article {
 
     private Long id;

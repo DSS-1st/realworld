@@ -88,16 +88,16 @@ CREATE TABLE `follow_relation`
 DROP TABLE IF EXISTS `article_users`;
 CREATE TABLE IF NOT EXISTS `article_users`
 (
-    `article_users_id` BIGINT NOT NULL AUTO_INCREMENT,
-    `article_id` BIGINT NOT NULL,
-    `login_id` BIGINT NOT NULL,
-    `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    `article_users_id` bigint NOT NULL AUTO_INCREMENT,
+    `article_id` bigint NOT NULL,
+    `favorited_id` bigint NOT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`article_users_id`),
-    INDEX `IX_article_id` (`article_id` ASC) INVISIBLE,
-    INDEX `IX_login_id` (`login_id` ASC) VISIBLE,
-    UNIQUE INDEX `UX_article_id_login_id` (`article_id` ASC, `login_id` ASC) VISIBLE,
+    UNIQUE KEY `UX_article_id_favorited_id` (`article_id`,`favorited_id`) INVISIBLE,
+    KEY `IX_article_id` (`article_id`) INVISIBLE,
+    KEY `IX_favorited_id` (`favorited_id`),
     CONSTRAINT `FK_article_users_users_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`),
-    CONSTRAINT `FK_article_users_users_user_id` FOREIGN KEY (`login_id`) REFERENCES `users` (`user_id`)
+    CONSTRAINT `FK_article_users_users_user_id` FOREIGN KEY (`favorited_id`) REFERENCES `users` (`user_id`)
 );
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -3,13 +3,15 @@ package com.dss.realworld.user.domain;
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Alias(value = "User")
+@Getter
+@NoArgsConstructor
 public class User {
 
     private Long id;

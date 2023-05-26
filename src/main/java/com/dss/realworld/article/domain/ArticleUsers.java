@@ -12,13 +12,13 @@ public class ArticleUsers {
 
     private Long id;
     private Long articleId;
-    private Long loginId;
+    private Long favoritedId;
 
-    public ArticleUsers(final Long articleId, final Long loginId) {
+    public ArticleUsers(final Long articleId, final Long favoritedId) {
         Assert.notNull(articleId, "articleId can not be null");
-        Assert.notNull(loginId, "loginId can not be null");
+        Assert.notNull(favoritedId, "favoritedId can not be null");
 
         this.articleId = articleId;
-        this.loginId = loginId;
+        this.favoritedId = favoritedId;
     }
 }

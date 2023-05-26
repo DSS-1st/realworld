@@ -1,9 +1,13 @@
 package com.dss.realworld.user.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 import org.springframework.util.Assert;
 
 @Alias(value = "FollowRelation")
+@Getter
+@NoArgsConstructor
 public class FollowRelation {
 
     private Long targetId;
