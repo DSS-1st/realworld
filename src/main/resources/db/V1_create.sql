@@ -21,7 +21,7 @@ CREATE TABLE `article`
 (
     `article_id` BIGINT NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
-    `slug` VARCHAR(255) NULL DEFAULT NULL,
+    `slug` VARCHAR(255) NOT NULL,
     `body` VARCHAR(255) NOT NULL,
     `description` VARCHAR(255) NOT NULL,
     `user_id` BIGINT NOT NULL,
