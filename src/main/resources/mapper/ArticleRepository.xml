@@ -40,4 +40,16 @@
         <include refid="findArticle"/>
         where slug = #{slug}
     </select>
+
+    <select id="findByFollower" resultType="Article">
+        select article_id as id, slug, title, description, body, user_id, a.created_at, updated_at
+        from article a join follow_relation b on user_id = target_id
+        where b.login_id = #{loginId}
+        order by created_at desc, article_id desc
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        select count(*) from article;
+    </select>
 </mapper>
