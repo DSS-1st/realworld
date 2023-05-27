@@ -1,5 +1,5 @@
 insert into users(email, password, username)
-values ('jake000@jake.jake', 'jakejake', 'Jacob000');
+values ('jake@jake.jake', 'jakejake', 'Jacob');
 
 insert into users(email, password, username)
 values ('kate@realworld.com', 'katekate', 'kate');

@@ -17,13 +17,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ActiveProfiles(value = "test")
+//@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 public class ArticleServiceTest {
@@ -143,15 +142,15 @@ public class ArticleServiceTest {
         assertThat(articleRepository.findById(article.getId())).isEmpty();
     }
 
-    @DisplayName(value = "유효한 slug, loginId 존재 시 좋아요 성공")
+    @DisplayName(value = "유효한 slug, favoritedId 존재 시 좋아요 성공")
     @Test
     void t7() {
         //given
         String slug = "new-title-1";
-        Long loginId = 1L;
+        Long favoritedId = 1L;
 
         //when
-        ArticleResponseDto articleResponseDto = articleService.favorite(slug, loginId);
+        ArticleResponseDto articleResponseDto = articleService.favorite(slug, favoritedId);
 
         //then
         assertThat(articleResponseDto.getFavoritesCount()).isEqualTo(1);
@@ -163,27 +162,27 @@ public class ArticleServiceTest {
     void t8() {
         //given
         String slug = "new-title-1";
-        Long loginId = 1L;
+        Long favoritedId = 1L;
 
         //when
-        articleService.favorite(slug, loginId);
+        articleService.favorite(slug, favoritedId);
 
         //then
-        assertThatThrownBy(() -> articleService.favorite(slug, loginId)).isInstanceOf(CustomApiException.class).hasMessageContaining("이미 좋아요한 글입니다.");
+        assertThatThrownBy(() -> articleService.favorite(slug, favoritedId)).isInstanceOf(CustomApiException.class).hasMessageContaining("이미 좋아요한 글입니다.");
     }
 
-    @DisplayName(value = "articleId, loginId가 유효하면 좋아요 취소 성공")
+    @DisplayName(value = "articleId, favoritedId가 유효하면 좋아요 취소 성공")
     @Test
     void t9() {
         //given
         String slug = "new-title-1";
-        Long loginId = 1L;
-        ArticleResponseDto favoriteArticle = articleService.favorite(slug, loginId);
+        Long favoritedId = 1L;
+        ArticleResponseDto favoriteArticle = articleService.favorite(slug, favoritedId);
         assertThat(favoriteArticle.getFavoritesCount()).isEqualTo(1);
         assertThat(favoriteArticle.isFavorited()).isTrue();
 
         //when
-        ArticleResponseDto unfavoriteArticle = articleService.unfavorite(slug, loginId);
+        ArticleResponseDto unfavoriteArticle = articleService.unfavorite(slug, favoritedId);
 
         //then
         assertThat(unfavoriteArticle.isFavorited()).isFalse();

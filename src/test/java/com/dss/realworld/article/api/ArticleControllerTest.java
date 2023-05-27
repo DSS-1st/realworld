@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -25,7 +24,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles(value = "test")
+//@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -69,7 +68,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..username").value("Jacob"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tags.size()").value(0));
@@ -170,7 +169,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..username").value("Jacob"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tagList.length()").value(3))
@@ -214,7 +213,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..username").value("Jacob"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tagList.length()").value(3))
@@ -223,7 +222,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..tagList[2]").value(tag4));
     }
 
-    @DisplayName(value = "article, loginId가 유효하면 좋아요 성공")
+    @DisplayName(value = "article, favoritedId가 유효하면 좋아요 성공")
     @Test
     void t7() throws Exception {
         //given

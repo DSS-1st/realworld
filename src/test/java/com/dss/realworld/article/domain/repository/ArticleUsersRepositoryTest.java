@@ -5,13 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles(value = "test")
+//@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @Transactional
@@ -25,8 +24,8 @@ public class ArticleUsersRepositoryTest {
     void t1() {
         //given
         Long articleId = 1L;
-        Long loginId = 1L;
-        ArticleUsers articleUsers = new ArticleUsers(articleId, loginId);
+        Long favoritedId = 1L;
+        ArticleUsers articleUsers = new ArticleUsers(articleId, favoritedId);
 
         //when
         articleUsersRepository.persist(articleUsers);
@@ -71,22 +70,22 @@ public class ArticleUsersRepositoryTest {
         assertThat(result).isEqualTo(2);
     }
 
-    @DisplayName(value = "articleId, loginId가 유효하면 조회 성공")
+    @DisplayName(value = "articleId, favoritedId가 유효하면 조회 성공")
     @Test
     void t4() {
         //given
         Long articleId = 1L;
-        Long loginId = 1L;
-        Long loginId2 = 2L;
-        ArticleUsers articleUsers = new ArticleUsers(articleId, loginId);
-        ArticleUsers articleUsers2 = new ArticleUsers(articleId, loginId2);
+        Long favoritedId = 1L;
+        Long favoritedId2 = 2L;
+        ArticleUsers articleUsers = new ArticleUsers(articleId, favoritedId);
+        ArticleUsers articleUsers2 = new ArticleUsers(articleId, favoritedId2);
 
         //when
         articleUsersRepository.persist(articleUsers);
         articleUsersRepository.persist(articleUsers2);
 
         //then
-        int result = articleUsersRepository.isFavorite(articleId, loginId2);
+        int result = articleUsersRepository.isFavorite(articleId, favoritedId2);
         assertThat(result).isEqualTo(1);
     }
 }

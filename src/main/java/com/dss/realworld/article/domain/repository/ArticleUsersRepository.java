@@ -15,9 +15,9 @@ public interface ArticleUsersRepository {
 
     int deleteArticleRelation(Long articleId);
 
-    int delete(@Param(value = "articleId") Long articleId, @Param(value = "loginId") Long loginId);
+    int delete(@Param(value = "articleId") Long articleId, @Param(value = "favoritedId") Long favoritedId);
 
-    int isFavorite(@Param(value = "articleId") Long articleId, @Param(value = "loginId") Long loginId);
+    int isFavorite(@Param(value = "articleId") Long articleId, @Param(value = "favoritedId") Long favoritedId);
 
     int findCountByArticleId(Long articleId);
 }

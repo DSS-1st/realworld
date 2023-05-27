@@ -3,7 +3,6 @@ package com.dss.realworld.user.api;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
-import com.dss.realworld.user.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -21,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles(value = "test")
+//@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,8 +34,8 @@ class UserControllerTest {
     @DisplayName(value = "AddUserRequestDto가 NotNull이면 User 생성 성공")
     @Test
     void t1() throws Exception {
-        String username = "Jacob";
-        String email = "jake@jake.jake";
+        String username = "Jacob100";
+        String email = "jake100@jake.jake";
         AddUserRequestDto user = AddUserRequestDto.builder()
                 .username(username)
                 .email(email)
@@ -80,8 +78,8 @@ class UserControllerTest {
     @Test
     void t3() throws Exception {
         //given
-        String loginUsername = "Jacob000";
-        String loginUserEmail = "jake000@jake.jake";
+        String loginUsername = "Jacob";
+        String loginUserEmail = "jake@jake.jake";
 
         LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
                 .email(loginUserEmail)
@@ -99,8 +97,8 @@ class UserControllerTest {
     @DisplayName(value = "현재 계정 정보 반환하기")
     @Test
     void t4() throws Exception {
-        String username = "Jacob000";
-        String email = "jake000@jake.jake";
+        String username = "Jacob";
+        String email = "jake@jake.jake";
 
         mockMvc.perform(get("/api/user").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
