@@ -28,7 +28,7 @@ CREATE TABLE `article`
     `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`article_id`),
-    INDEX `IX_user_id` (`user_id` ASC) INVISIBLE,
+    INDEX `IX_user_id` (`user_id` ASC) VISIBLE,
     CONSTRAINT `FK_article_users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 );
 
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `article_users`
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`article_users_id`),
     UNIQUE KEY `UX_article_id_favorited_id` (`article_id`,`favorited_id`) INVISIBLE,
-    KEY `IX_article_id` (`article_id`) INVISIBLE,
-    KEY `IX_favorited_id` (`favorited_id`),
+    KEY `IX_article_id` (`article_id`) VISIBLE,
+    KEY `IX_favorited_id` (`favorited_id`) VISIBLE,
     CONSTRAINT `FK_article_users_users_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`),
     CONSTRAINT `FK_article_users_users_user_id` FOREIGN KEY (`favorited_id`) REFERENCES `users` (`user_id`)
 );
