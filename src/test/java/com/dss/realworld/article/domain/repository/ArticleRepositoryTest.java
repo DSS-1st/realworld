@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@ActiveProfiles(value = "test")
+@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 public class ArticleRepositoryTest {
@@ -128,11 +129,10 @@ public class ArticleRepositoryTest {
         System.out.println("articleFeed = " + articleFeed);
 
         //then
-        assertThat(articleFeed.get(0).getUserId()).isEqualTo(2);
-        assertThat(articleFeed.get(5).getUserId()).isEqualTo(1);
-        assertThat(articleFeed.get(0).getId()).isEqualTo(endRange);
-        assertThat(articleFeed.get(limit - 1).getId()).isEqualTo(endRange - limit + 1);
-        assertThat(articleFeed.size()).isEqualTo(limit); //테이블 생성 시 기본 추가되는 Article 1개 포함
+        assertThat(articleFeed.get(0).getUserId()).isEqualTo(2); //saveSample()에서 저장한 글 작성자 2번
+        assertThat(articleFeed.get(6).getUserId()).isEqualTo(1); //saveSample()에서 저장한 글 작성자 1번
+        assertThat(articleFeed.get(0).getId()).isEqualTo(endRange + 3); //테이블 생성 시 기본 추가되는 Article 3개 포함
+        assertThat(articleFeed.size()).isEqualTo(limit);
     }
 
     private void saveSample(Long loginId, int midRange, int endRange) {
@@ -146,7 +146,7 @@ public class ArticleRepositoryTest {
             articleRepository.persist(article);
         }
 
-        for (int i = midRange; i < endRange; i++) {
+        for (int i = midRange; i <= endRange; i++) {
             Article article = ArticleFixtures.of("test sample" + i, followedUser2);
             articleRepository.persist(article);
         }

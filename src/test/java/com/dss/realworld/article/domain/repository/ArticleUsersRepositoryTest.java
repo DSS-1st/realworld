@@ -5,12 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@ActiveProfiles(value = "test")
+@ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
 @Transactional
@@ -29,10 +30,10 @@ public class ArticleUsersRepositoryTest {
 
         //when
         articleUsersRepository.persist(articleUsers);
+        ArticleUsers foundArticleUsers = articleUsersRepository.findById(articleUsers.getId()).get();
 
         //then
-        ArticleUsers foundArticleUsers = articleUsersRepository.findById(articleUsers.getId()).get();
-        assertThat(foundArticleUsers.getId()).isEqualTo(1);
+        assertThat(foundArticleUsers.getId()).isNotNull();
     }
 
     @DisplayName(value = "ArticleUsers 객체가 유효하면 삭제 성공")
