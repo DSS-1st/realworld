@@ -12,13 +12,13 @@ import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.error.exception.CommentNotFoundException;
 import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,20 +27,19 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-
     private final ArticleRepository articleRepository;
-
     private final UserRepository userRepository;
+    private final FollowRelationRepository followRelationRepository;
 
     @Override
     @Transactional
-    public AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long logonUserId, String slug) {
+    public AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long loginId, String slug) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         Comment comment = Comment.builder()
                 .body(addCommentRequestDto.getBody())
                 .articleId(foundArticle.getId())
-                .userId(logonUserId) // todo 로그인 안 했을 때 예외 추가
+                .userId(loginId)
                 .build();
 
         commentRepository.persist(comment);
@@ -71,7 +70,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public AuthorDto getAuthor(Long userId) {
         User foundAuthor = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        int result = followRelationRepository.isFollowing(foundAuthor.getId(), userId);
 
-        return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage());
+        return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage(), result == 1);
     }
 }

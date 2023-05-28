@@ -5,6 +5,7 @@ import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +41,9 @@ public class ArticleControllerTest {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private FollowRelationRepository followRelationRepository;
 
     @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공(tag 제외)")
     @Test
@@ -69,7 +74,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..username").value("Jacob"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tags.size()").value(0));
@@ -170,7 +175,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..username").value("Jacob"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tagList.length()").value(3))
@@ -214,7 +219,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
-                .andExpect(jsonPath("$..username").value("Jacob000"))
+                .andExpect(jsonPath("$..username").value("Jacob"))
                 .andExpect(jsonPath("$..description").value(description))
                 .andExpect(jsonPath("$..body").value(body))
                 .andExpect(jsonPath("$..tagList.length()").value(3))
@@ -223,7 +228,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..tagList[2]").value(tag4));
     }
 
-    @DisplayName(value = "article, loginId가 유효하면 좋아요 성공")
+    @DisplayName(value = "article, favoritedId가 유효하면 좋아요 성공")
     @Test
     void t7() throws Exception {
         //given
@@ -262,5 +267,44 @@ public class ArticleControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..favoritesCount").value(0));
+    }
+
+    @DisplayName(value = "팔로우한 유저가 있으면 팔로우한 유저가 작성한 article 불러오기 성공")
+    @Test
+    void t9() throws Exception {
+        //given
+        String username = "kate";
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles/feed");
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].author.username").value(username))
+                .andExpect(jsonPath("$.articles[0].author.following").value(true))
+                .andExpect(jsonPath("$.articles[1].author.username").value(username))
+                .andExpect(jsonPath("$.articles[1].author.following").value(true))
+                .andExpect(jsonPath("$.articlesCount").value(2));
+    }
+
+    @DisplayName(value = "팔로우한 유저가 없으면 빈 목록 반환 성공")
+    @Test
+    void t10() throws Exception {
+        //given
+        followRelationRepository.delete(2L, 1L);
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles/feed");
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles").isEmpty())
+                .andExpect(jsonPath("$.articlesCount").value(0));
     }
 }

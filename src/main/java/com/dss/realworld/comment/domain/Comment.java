@@ -2,13 +2,15 @@ package com.dss.realworld.comment.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Alias(value = "Comment")
+@Getter
+@NoArgsConstructor
 public class Comment {
     private Long id;
     private Long articleId;

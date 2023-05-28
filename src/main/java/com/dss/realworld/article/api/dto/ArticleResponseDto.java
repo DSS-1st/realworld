@@ -26,6 +26,19 @@ public class ArticleResponseDto {
     private final int favoritesCount;
     private final AuthorDto author;
 
+    public ArticleResponseDto(ArticleDtoBinder articleDtoBinder) {
+        this.slug = articleDtoBinder.getContent().getSlug();
+        this.title = articleDtoBinder.getContent().getTitle();
+        this.description = articleDtoBinder.getContent().getDescription();
+        this.body = articleDtoBinder.getContent().getBody();
+        this.tagList = articleDtoBinder.getTagList();
+        this.createdAt = articleDtoBinder.getContent().getCreatedAt();
+        this.updatedAt = articleDtoBinder.getContent().getUpdatedAt();
+        this.favorited = articleDtoBinder.isFavorited();
+        this.favoritesCount = articleDtoBinder.getFavoritesCount();
+        this.author = articleDtoBinder.getAuthor();
+    }
+
     public ArticleResponseDto(ArticleContentDto content, AuthorDto author, List<String> tagList, boolean favorited, int favoritesCount) {
         this.slug = content.getSlug();
         this.title = content.getTitle();

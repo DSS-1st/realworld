@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.user.domain.repository.FollowRelationRepository">
     <insert id="persist" parameterType="FollowRelation">
-        insert into follow_relation(login_id, target_id)
-        values (#{loginId}, #{targetId})
+        insert into follow_relation(target_id, login_id)
+        values (#{targetId}, #{loginId})
     </insert>
 
     <delete id="delete" parameterType="Long">

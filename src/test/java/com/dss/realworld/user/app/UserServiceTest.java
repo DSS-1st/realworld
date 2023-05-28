@@ -44,10 +44,10 @@ public class UserServiceTest {
     @Test
     void t2() {
         //given
-        String savedUsername = "Jacob000";
+        String savedUsername = "Jacob";
 
         LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
-                .email("jake000@jake.jake")
+                .email("jake@jake.jake")
                 .password("jakejake")
                 .build();
 
@@ -63,7 +63,7 @@ public class UserServiceTest {
 
         UserResponseDto currentUser = userService.get(loginId);
 
-        assertThat(currentUser.getUsername()).isEqualTo("Jacob000");
-        assertThat(currentUser.getEmail()).isEqualTo("jake000@jake.jake");
+        assertThat(currentUser.getUsername()).isEqualTo("Jacob");
+        assertThat(currentUser.getEmail()).isEqualTo("jake@jake.jake");
     }
 }

@@ -1,9 +1,6 @@
 package com.dss.realworld.article.app;
 
-import com.dss.realworld.article.api.dto.ArticleContentDto;
-import com.dss.realworld.article.api.dto.ArticleResponseDto;
-import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
-import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
+import com.dss.realworld.article.api.dto.*;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.ArticleTag;
 import com.dss.realworld.article.domain.ArticleUsers;
@@ -19,6 +16,7 @@ import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
 import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.FollowRelationRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -40,18 +38,13 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleTagRepository articleTagRepository;
     private final ArticleUsersRepository articleUsersRepository;
     private final CommentRepository commentRepository;
+    private final FollowRelationRepository followRelationRepository;
 
     @Override
     public ArticleResponseDto findBySlug(String slug, Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
-        List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
-        ArticleContentDto content = ArticleContentDto.of(foundArticle);
-        AuthorDto author = getAuthor(foundArticle.getUserId());
 
-        boolean favorited = isFavorite(loginId, foundArticle);
-        int favoritesCount = articleUsersRepository.findCountByArticleId(foundArticle.getId());
-
-        return new ArticleResponseDto(content, author, tagList, favorited, favoritesCount);
+        return getArticleResponseDto(loginId, foundArticle);
     }
 
     @Override
@@ -60,7 +53,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
         ArticleContentDto content = ArticleContentDto.of(foundArticle);
-        AuthorDto author = getAuthor(foundArticle.getUserId());
+        AuthorDto author = getAuthor(foundArticle.getUserId(), loginId);
 
         try {
             articleUsersRepository.persist(new ArticleUsers(foundArticle.getId(), loginId));
@@ -83,7 +76,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
         ArticleContentDto content = ArticleContentDto.of(foundArticle);
-        AuthorDto author = getAuthor(foundArticle.getUserId());
+        AuthorDto author = getAuthor(foundArticle.getUserId(), loginId);
 
         articleUsersRepository.delete(foundArticle.getId(), loginId);
         int favoritesCount = articleUsersRepository.findCountByArticleId(foundArticle.getId());
@@ -92,16 +85,47 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleListResponseDto feed(final Long loginId, int limit, int offset) {
+        List<Article> followedArticles = articleRepository.findArticleByFollower(loginId, limit, offset);
+        if(followedArticles.isEmpty()) return new ArticleListResponseDto(0);
+
+        List<ArticleListItemResponseDto> articles = followedArticles.stream()
+                .map(article -> getArticleListItemResponseDto(loginId, article))
+                .collect(Collectors.toList());
+
+        return new ArticleListResponseDto(articles);
+    }
+
+    private ArticleListItemResponseDto getArticleListItemResponseDto(final Long loginId, final Article article) {
+        return new ArticleListItemResponseDto(bindArticleDto(loginId, article));
+    }
+
+    private ArticleDtoBinder bindArticleDto(final Long loginId, final Article article) {
+        List<String> tagList = articleTagRepository.findTagsByArticleId(article.getId());
+        ArticleContentDto content = ArticleContentDto.of(article);
+        AuthorDto author = getAuthor(article.getUserId(), loginId);
+
+        boolean favorited = isFavorite(loginId, article);
+        int favoritesCount = articleUsersRepository.findCountByArticleId(article.getId());
+
+        return new ArticleDtoBinder(content, author, tagList, favorited, favoritesCount);
+    }
+
+    private ArticleResponseDto getArticleResponseDto(final Long loginId, final Article article) {
+        return new ArticleResponseDto(bindArticleDto(loginId, article));
+    }
+
+    @Override
     @Transactional
-    public ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginUserId) {
+    public ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginId) {
         Long maxId = articleRepository.findMaxId().orElse(0L);
-        Article article = createArticleRequestDto.convert(loginUserId, maxId);
+        Article article = createArticleRequestDto.convert(loginId, maxId);
         articleRepository.persist(article);
 
         Set<Tag> tags = getTagSet(createArticleRequestDto);
         if (!tags.isEmpty()) saveTags(article, tags);
 
-        return getArticleResponseDto(article);
+        return getArticleResponseDto(article, loginId);
     }
 
     private static Set<Tag> getTagSet(final CreateArticleRequestDto createArticleRequestDto) {
@@ -122,25 +146,25 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
-    private ArticleResponseDto getArticleResponseDto(final Article article) {
+    private ArticleResponseDto getArticleResponseDto(final Article article, final Long loginId) {
         Article foundArticle = articleRepository.findById(article.getId()).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
         ArticleContentDto content = ArticleContentDto.of(foundArticle);
-        AuthorDto author = getAuthor(foundArticle.getUserId());
+        AuthorDto author = getAuthor(foundArticle.getUserId(), loginId);
 
         return new ArticleResponseDto(content, author, tagList);
     }
 
     @Override
     @Transactional
-    public ArticleResponseDto update(final UpdateArticleRequestDto updateArticleRequestDto, final Long loginUserId, final String slug) {
+    public ArticleResponseDto update(final UpdateArticleRequestDto updateArticleRequestDto, final Long loginId, final String slug) {
         Article savedArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
-        if (savedArticle.isAuthorMatch(loginUserId)) throw new ArticleAuthorNotMatchException();
+        if (savedArticle.isAuthorMatch(loginId)) throw new ArticleAuthorNotMatchException();
 
         Article toBeUpdatedArticle = savedArticle.updateArticle(updateArticleRequestDto);
         articleRepository.update(toBeUpdatedArticle);
 
-        return getArticleResponseDto(toBeUpdatedArticle);
+        return getArticleResponseDto(toBeUpdatedArticle, loginId);
     }
 
     @Override
@@ -156,9 +180,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public AuthorDto getAuthor(Long userId) {
+    public AuthorDto getAuthor(Long userId, Long loginId) {
         User foundUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        int result = followRelationRepository.isFollowing(foundUser.getId(), loginId);
 
-        return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage());
+        return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage(), result == 1);
     }
 }

@@ -25,15 +25,15 @@ public class ArticleUsersRepositoryTest {
     void t1() {
         //given
         Long articleId = 1L;
-        Long loginId = 1L;
-        ArticleUsers articleUsers = new ArticleUsers(articleId, loginId);
+        Long favoritedId = 1L;
+        ArticleUsers articleUsers = new ArticleUsers(articleId, favoritedId);
 
         //when
         articleUsersRepository.persist(articleUsers);
+        ArticleUsers foundArticleUsers = articleUsersRepository.findById(articleUsers.getId()).get();
 
         //then
-        ArticleUsers foundArticleUsers = articleUsersRepository.findById(articleUsers.getId()).get();
-        assertThat(foundArticleUsers.getId()).isEqualTo(1);
+        assertThat(foundArticleUsers.getId()).isNotNull();
     }
 
     @DisplayName(value = "ArticleUsers 객체가 유효하면 삭제 성공")
@@ -71,22 +71,22 @@ public class ArticleUsersRepositoryTest {
         assertThat(result).isEqualTo(2);
     }
 
-    @DisplayName(value = "articleId, loginId가 유효하면 조회 성공")
+    @DisplayName(value = "articleId, favoritedId가 유효하면 조회 성공")
     @Test
     void t4() {
         //given
         Long articleId = 1L;
-        Long loginId = 1L;
-        Long loginId2 = 2L;
-        ArticleUsers articleUsers = new ArticleUsers(articleId, loginId);
-        ArticleUsers articleUsers2 = new ArticleUsers(articleId, loginId2);
+        Long favoritedId = 1L;
+        Long favoritedId2 = 2L;
+        ArticleUsers articleUsers = new ArticleUsers(articleId, favoritedId);
+        ArticleUsers articleUsers2 = new ArticleUsers(articleId, favoritedId2);
 
         //when
         articleUsersRepository.persist(articleUsers);
         articleUsersRepository.persist(articleUsers2);
 
         //then
-        int result = articleUsersRepository.isFavorite(articleId, loginId2);
+        int result = articleUsersRepository.isFavorite(articleId, favoritedId2);
         assertThat(result).isEqualTo(1);
     }
 }

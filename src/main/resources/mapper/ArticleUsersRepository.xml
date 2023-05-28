@@ -4,12 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.article.domain.repository.ArticleUsersRepository">
     <insert id="persist" parameterType="ArticleUsers" useGeneratedKeys="true" keyProperty="id" keyColumn="article_users_id">
-        insert into article_users(article_id, login_id)
-        values (#{articleId}, #{loginId})
+        insert into article_users(article_id, favorited_id)
+        values (#{articleId}, #{favoritedId})
     </insert>
 
     <delete id="delete" parameterType="Long">
-        delete from article_users where article_id = #{articleId} and login_id = #{loginId}
+        delete from article_users where article_id = #{articleId} and favorited_id = #{favoritedId}
     </delete>
 
     <delete id="deleteArticleRelation" parameterType="Long">
@@ -18,7 +18,7 @@
 
     <select id="isFavorite" parameterType="Long" resultType="int">
         select count(*)
-        from article_users where article_id = #{articleId} and login_id = #{loginId}
+        from article_users where article_id = #{articleId} and favorited_id = #{favoritedId}
     </select>
 
     <select id="findCountByArticleId" parameterType="Long" resultType="int">
@@ -27,7 +27,7 @@
     </select>
 
     <select id="findById" parameterType="Long" resultType="ArticleUsers">
-        select article_users_id as id, article_id, login_id
+        select article_users_id as id, article_id, favorited_Id
         from article_users where article_users_id = #{id}
     </select>
 </mapper>

@@ -33,8 +33,8 @@ public class FollowRelationRepositoryTest {
     @DisplayName(value = "fromUserId, toUserId 유효하면 팔로우 취소 성공")
     @Test
     void t2() {
-        Long loginId = 1L;
-        Long targetId = 2L;
+        Long loginId = 2L;
+        Long targetId = 1L;
         FollowRelation followRelation = new FollowRelation(targetId, loginId);
 
         followRelationRepository.persist(followRelation);

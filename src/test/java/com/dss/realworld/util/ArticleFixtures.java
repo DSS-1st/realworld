@@ -15,15 +15,6 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static Article of(Long id, String title) {
-        return Article.builder()
-                .id(id)
-                .title(title)
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .build();
-    }
-
     public static Article of(Long userId) {
         return Article.builder()
                 .title("How to train your dragon")
@@ -31,6 +22,15 @@ public class ArticleFixtures {
                 .description("Ever wonder how?")
                 .body("You have to believe")
                 .userId(userId)
+                .build();
+    }
+
+    public static Article of(Long articleId, String title) {
+        return Article.builder()
+                .id(articleId)
+                .title(title)
+                .description("Ever wonder how?")
+                .body("You have to believe")
                 .build();
     }
 

@@ -56,7 +56,7 @@ public class ArticleTest {
     @Test
     void t5() {
         //given
-        Article newArticle = ArticleFixtures.of(1L,"old title");
+        Article newArticle = ArticleFixtures.of(1L, "old title");
         String newTitle = "new title";
         UpdateArticleRequestDto updateDto = new UpdateArticleRequestDto(newTitle,"","");
 

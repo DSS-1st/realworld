@@ -1,9 +1,5 @@
 package com.dss.realworld.user.api;
 
-import com.dss.realworld.user.app.ProfileService;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
-import com.dss.realworld.user.domain.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +45,7 @@ public class ProfileControllerTest {
     @Test
     void t2() throws Exception {
         //given
-        String targetName = "kate";
+        String targetName = "Jacob";
 
         mockMvc.perform(post("/api/profiles/{username}/follow", targetName))
                 .andExpect(status().isOk())

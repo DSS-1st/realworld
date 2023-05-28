@@ -2,14 +2,16 @@ package com.dss.realworld.tag.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 import org.springframework.util.Assert;
 
 @Alias(value = "Tag")
-@Getter
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
 public class Tag {
 
     private Long id;

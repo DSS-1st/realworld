@@ -9,7 +9,7 @@
     </insert>
 
     <sql id="getUsers">
-        select user_id, email, username, password, bio, image, created_at, updated_at
+        select user_id as id, email, username, password, bio, image, created_at, updated_at
         from users
     </sql>
 

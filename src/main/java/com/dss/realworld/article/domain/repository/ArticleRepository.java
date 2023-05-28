@@ -2,7 +2,9 @@ package com.dss.realworld.article.domain.repository;
 
 import com.dss.realworld.article.domain.Article;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -19,4 +21,6 @@ public interface ArticleRepository {
     Optional<Article> findById(Long id);
 
     Optional<Article> findBySlug(String slug);
+
+    List<Article> findArticleByFollower(@Param(value = "loginId") Long loginId, @Param(value = "limit") int limit, @Param(value = "offset") int offset);
 }

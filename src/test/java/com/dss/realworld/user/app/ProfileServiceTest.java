@@ -21,19 +21,19 @@ public class ProfileServiceTest {
     @DisplayName(value = "username이 유효하면 GetProfileDto 가져오기 성공")
     @Test
     void t1() {
-        ProfileResponseDto profileDto = profileService.get("Jacob000", 1L);
+        ProfileResponseDto profileDto = profileService.get("Jacob", 1L);
 
-        assertThat(profileDto.getUsername()).isEqualTo("Jacob000");
+        assertThat(profileDto.getUsername()).isEqualTo("Jacob");
     }
 
     @DisplayName(value = "팔로우 대상이 유효하면 팔로우 성공 ")
     @Test
     void t2() {
         //given
-        String targetName = "kate";
+        String targetName = "Jacob";
 
         //when
-        ProfileResponseDto profileResponseDto = profileService.follow(targetName, 1L);
+        ProfileResponseDto profileResponseDto = profileService.follow(targetName, 2L);
 
         //then
         assertThat(profileResponseDto.getUsername()).isEqualTo(targetName);
@@ -44,11 +44,11 @@ public class ProfileServiceTest {
     @Test
     void t3() {
         //given
-        String targetName = "kate";
+        String targetName = "Jacob";
 
         //when
-        profileService.follow(targetName, 1L);
-        ProfileResponseDto profileResponseDto = profileService.unFollow(targetName, 1L);
+        profileService.follow(targetName, 2L);
+        ProfileResponseDto profileResponseDto = profileService.unFollow(targetName, 2L);
 
         //then
         assertThat(profileResponseDto.getUsername()).isEqualTo(targetName);
