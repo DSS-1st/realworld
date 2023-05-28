@@ -8,11 +8,11 @@ import java.util.List;
 @Getter
 public class ArticleListResponseDto {
 
-    private final List<ArticleResponseDto> articles;
+    private final List<ArticleListItemResponseDto> articles;
 
     private final int articlesCount;
 
-    public ArticleListResponseDto(final List<ArticleResponseDto> articles) {
+    public ArticleListResponseDto(final List<ArticleListItemResponseDto> articles) {
         this.articles = articles;
         this.articlesCount = articles.size();
     }
