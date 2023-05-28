@@ -1,5 +1,6 @@
 package com.dss.realworld.article.app;
 
+import com.dss.realworld.article.api.dto.ArticleListResponseDto;
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
@@ -11,7 +12,12 @@ import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.error.exception.CustomApiException;
+import com.dss.realworld.user.domain.FollowRelation;
+import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +44,12 @@ public class ArticleServiceTest {
 
     @Autowired
     private ArticleUsersRepository articleUsersRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private FollowRelationRepository followRelationRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -213,5 +225,41 @@ public class ArticleServiceTest {
         assertThat(articleTagRepository.findById(articleTag.getId())).isEmpty();
         assertThat(articleUsersRepository.findCountByArticleId(article.getId())).isEqualTo(0);
         assertThat(articleRepository.findById(article.getId())).isEmpty();
+    }
+
+    @DisplayName(value = "loginId와 페이징 조건이 유효하면 Article Feed 불러오기 성공")
+    @Test
+    void t11() {
+        //given
+        User user = UserFixtures.create("user100", "user100pwd", "user100@realworld.com");
+        userRepository.persist(user);
+
+        Long loginId = user.getId();
+        followRelationRepository.persist(new FollowRelation(1L, loginId));
+
+        //when
+        ArticleListResponseDto articles = articleService.feed(loginId, 20, 0);
+
+        //then
+        assertThat(articles.getArticles().get(0).getAuthor().isFollowing()).isTrue();
+        assertThat(articles.getArticlesCount()).isEqualTo(1);
+    }
+
+
+    @DisplayName(value = "팔로우한 사용자가 없으면 빈 dto 반환")
+    @Test
+    void t12() {
+        //given
+        User user = UserFixtures.create("user100", "user100pwd", "user100@realworld.com");
+        userRepository.persist(user);
+
+        Long loginId = user.getId();
+
+        //when
+        ArticleListResponseDto articles = articleService.feed(loginId, 20, 0);
+
+        //then
+        assertThat(articles.getArticles()).isEmpty();
+        assertThat(articles.getArticlesCount()).isEqualTo(0);
     }
 }
