@@ -124,7 +124,7 @@ public class ArticleRepositoryTest {
         //when
         int limit = 20;
         int offset = 0;
-        List<Article> articleFeed = articleRepository.findByFollower(loginUser.getId(), limit, offset);
+        List<Article> articleFeed = articleRepository.findArticleByFollower(loginUser.getId(), limit, offset);
         System.out.println("articleFeed = " + articleFeed);
 
         //then
@@ -150,21 +150,5 @@ public class ArticleRepositoryTest {
             Article article = ArticleFixtures.of("test sample" + i, followedUser2);
             articleRepository.persist(article);
         }
-    }
-
-    @DisplayName(value = "전체 게시글 수 조회 성공")
-    @Test
-    void t8() {
-        //given
-        for (int i = 1; i < 10; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, 1L);
-            articleRepository.persist(article);
-        }
-
-        //when
-        long totalCount = articleRepository.countAll();
-
-        //then
-        assertThat(totalCount).isEqualTo(10);
     }
 }

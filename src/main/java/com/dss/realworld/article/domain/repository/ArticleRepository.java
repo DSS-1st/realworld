@@ -22,7 +22,5 @@ public interface ArticleRepository {
 
     Optional<Article> findBySlug(String slug);
 
-    List<Article> findByFollower(@Param(value = "loginId") Long loginId, @Param(value = "limit") int limit, @Param(value = "offset") int offset);
-
-    long countAll();
+    List<Article> findArticleByFollower(@Param(value = "loginId") Long loginId, @Param(value = "limit") int limit, @Param(value = "offset") int offset);
 }
