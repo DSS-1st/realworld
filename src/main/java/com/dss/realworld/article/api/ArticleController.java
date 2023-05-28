@@ -1,5 +1,6 @@
 package com.dss.realworld.article.api;
 
+import com.dss.realworld.article.api.dto.ArticleListResponseDto;
 import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
@@ -21,6 +22,14 @@ public class ArticleController {
         ArticleResponseDto articleResponseDto = articleService.findBySlug(slug, getLoginUserId());
 
         return ResponseEntity.ok(articleResponseDto);
+    }
+
+    @GetMapping(value = "/feed")
+    public ResponseEntity<ArticleListResponseDto> findBySlug(@RequestParam(required = false, defaultValue = "0") final int offset,
+                                                         @RequestParam(required = false, defaultValue = "20") final int limit) {
+        ArticleListResponseDto articles = articleService.feed(getLoginUserId(), limit, offset);
+
+        return ResponseEntity.ok(articles);
     }
 
     @PostMapping
