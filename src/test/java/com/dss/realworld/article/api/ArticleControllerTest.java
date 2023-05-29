@@ -273,7 +273,7 @@ public class ArticleControllerTest {
     @Test
     void t9() throws Exception {
         //given
-        String username = "kate";
+        String username = "Kate";
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
