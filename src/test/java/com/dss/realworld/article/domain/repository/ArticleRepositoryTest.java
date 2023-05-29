@@ -4,9 +4,9 @@ import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.user.domain.FollowRelation;
+import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.UserFixtures;
@@ -34,7 +34,7 @@ public class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private FollowRelationRepository followRelationRepository;
+    private FollowingRepository followingRepository;
 
     @DisplayName(value = "필수 입력값이 NotNull이면 Article 생성 성공")
     @Test
@@ -138,8 +138,8 @@ public class ArticleRepositoryTest {
     private void saveSample(Long loginId, int midRange, int endRange) {
         Long followedUser1 = 1L;
         Long followedUser2 = 2L;
-        followRelationRepository.persist(new FollowRelation(1L, loginId));
-        followRelationRepository.persist(new FollowRelation(2L, loginId));
+        followingRepository.persist(new Following(1L, loginId));
+        followingRepository.persist(new Following(2L, loginId));
 
         for (int i = 1; i < midRange; i++) {
             Article article = ArticleFixtures.of("test sample" + i, followedUser1);

@@ -12,9 +12,9 @@ import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.error.exception.CustomApiException;
-import com.dss.realworld.user.domain.FollowRelation;
+import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.dss.realworld.util.UserFixtures;
@@ -50,7 +50,7 @@ public class ArticleServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private FollowRelationRepository followRelationRepository;
+    private FollowingRepository followingRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -236,7 +236,7 @@ public class ArticleServiceTest {
         userRepository.persist(user);
 
         Long loginId = user.getId();
-        followRelationRepository.persist(new FollowRelation(1L, loginId));
+        followingRepository.persist(new Following(1L, loginId));
 
         //when
         ArticleListResponseDto articles = articleService.feed(loginId, 20, 0);

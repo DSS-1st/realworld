@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain.repository;
 
-import com.dss.realworld.user.domain.FollowRelation;
+import com.dss.realworld.user.domain.Following;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +13,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
 @SpringBootTest
-public class FollowRelationRepositoryTest {
+public class FollowingRepositoryTest {
 
     @Autowired
-    private FollowRelationRepository followRelationRepository;
+    private FollowingRepository followingRepository;
 
     @DisplayName(value = "followRelation이 유효하면 저장 성공")
     @Test
     void t1() {
         Long loginId = 1L;
         Long targetId = 2L;
-        FollowRelation followRelation = new FollowRelation(loginId, targetId);
+        Following following = new Following(loginId, targetId);
 
-        int save = followRelationRepository.persist(followRelation);
+        int save = followingRepository.persist(following);
 
         assertThat(save).isEqualTo(1);
     }
@@ -35,11 +35,11 @@ public class FollowRelationRepositoryTest {
     void t2() {
         Long loginId = 2L;
         Long targetId = 1L;
-        FollowRelation followRelation = new FollowRelation(targetId, loginId);
+        Following following = new Following(targetId, loginId);
 
-        followRelationRepository.persist(followRelation);
+        followingRepository.persist(following);
 
-        int result = followRelationRepository.delete(targetId, loginId);
+        int result = followingRepository.delete(targetId, loginId);
 
         assertThat(result).isEqualTo(1);
     }

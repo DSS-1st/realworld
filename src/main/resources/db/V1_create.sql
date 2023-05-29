@@ -72,17 +72,19 @@ CREATE TABLE `comments`
     CONSTRAINT `FK_comments_users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 );
 
-DROP TABLE IF EXISTS `follow_relation`;
-CREATE TABLE `follow_relation`
+DROP TABLE IF EXISTS `following`;
+CREATE TABLE `following`
 (
-    `login_id` BIGINT NOT NULL,
+    `following_id` BIGINT NOT NULL AUTO_INCREMENT,
     `target_id` BIGINT NOT NULL,
+    `login_id` BIGINT NOT NULL,
     `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`login_id`, `target_id`),
-    INDEX `IX_login_id_id` (`login_id` ASC) INVISIBLE,
-    INDEX `IX_target_id_idx` (`target_id` ASC) INVISIBLE,
-    CONSTRAINT `FK_follow_relation_users_login_id` FOREIGN KEY (`login_id`) REFERENCES `users` (`user_id`),
-    CONSTRAINT `FK_follow_relation_users_target_id` FOREIGN KEY (`target_id`) REFERENCES `users` (`user_id`)
+    PRIMARY KEY (`following_id`),
+    INDEX `IX_target_id` (`target_id` ASC) INVISIBLE,
+    INDEX `IX_login_id` (`login_id` ASC) VISIBLE,
+    UNIQUE INDEX `UK_target_id_login_id` (`target_id` ASC, `login_id` ASC) VISIBLE,
+    CONSTRAINT `FK_following_users_target_id` FOREIGN KEY (`target_id`) REFERENCES `users` (`user_id`),
+    CONSTRAINT `FK_following_users_login_id` FOREIGN KEY (`login_id`) REFERENCES `users` (`user_id`)
 );
 
 DROP TABLE IF EXISTS `article_users`;
