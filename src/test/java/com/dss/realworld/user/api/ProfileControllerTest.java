@@ -1,5 +1,6 @@
 package com.dss.realworld.user.api;
 
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,14 @@ public class ProfileControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private FollowingRepository followingRepository;
+
     @DisplayName(value = "username이 유효하면 조회 성공")
     @Test
     void t1() throws Exception {
         //given
-        String username = "kate";
+        String username = "Kate";
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -45,8 +49,11 @@ public class ProfileControllerTest {
     @Test
     void t2() throws Exception {
         //given
-        String targetName = "Jacob";
+        followingRepository.delete(2L, 1L);
+        String targetName = "Kate";
 
+        //when
+        //then
         mockMvc.perform(post("/api/profiles/{username}/follow", targetName))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..username").value(targetName))
@@ -56,8 +63,11 @@ public class ProfileControllerTest {
     @DisplayName(value = "username이 유효하면 팔로우 취소")
     @Test
     void t3() throws Exception {
-        String targetName = "kate";
+        //given
+        String targetName = "Kate";
 
+        //when
+        //then
         mockMvc.perform(delete("/api/profiles/{username}/follow", targetName))
                 .andExpect(status().isOk());
     }
