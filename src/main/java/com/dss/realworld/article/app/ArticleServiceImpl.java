@@ -16,7 +16,7 @@ import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
 import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -38,7 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleTagRepository articleTagRepository;
     private final ArticleUsersRepository articleUsersRepository;
     private final CommentRepository commentRepository;
-    private final FollowRelationRepository followRelationRepository;
+    private final FollowingRepository followingRepository;
 
     @Override
     public ArticleResponseDto findBySlug(String slug, Long loginId) {
@@ -182,7 +182,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public AuthorDto getAuthor(Long userId, Long loginId) {
         User foundUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        int result = followRelationRepository.isFollowing(foundUser.getId(), loginId);
+        int result = followingRepository.isFollowing(foundUser.getId(), loginId);
 
         return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage(), result == 1);
     }

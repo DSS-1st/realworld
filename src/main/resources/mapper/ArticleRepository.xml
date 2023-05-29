@@ -43,7 +43,7 @@
 
     <select id="findArticleByFollower" resultType="Article">
         select article_id as id, slug, title, description, body, user_id, a.created_at, updated_at
-        from article a join follow_relation b on user_id = target_id
+        from article a join following b on user_id = target_id
         where b.login_id = #{loginId}
         order by created_at desc, article_id desc
         limit #{limit} offset #{offset}

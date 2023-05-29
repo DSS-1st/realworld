@@ -12,7 +12,7 @@ import com.dss.realworld.error.exception.ArticleNotFoundException;
 import com.dss.realworld.error.exception.CommentNotFoundException;
 import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
-    private final FollowRelationRepository followRelationRepository;
+    private final FollowingRepository followingRepository;
 
     @Override
     @Transactional
@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public AuthorDto getAuthor(Long userId) {
         User foundAuthor = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        int result = followRelationRepository.isFollowing(foundAuthor.getId(), userId);
+        int result = followingRepository.isFollowing(foundAuthor.getId(), userId);
 
         return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage(), result == 1);
     }

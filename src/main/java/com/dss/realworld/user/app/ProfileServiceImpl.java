@@ -2,9 +2,9 @@ package com.dss.realworld.user.app;
 
 import com.dss.realworld.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.ProfileResponseDto;
-import com.dss.realworld.user.domain.FollowRelation;
+import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileServiceImpl implements ProfileService {
 
     private final UserRepository userRepository;
-    private final FollowRelationRepository followRelationRepository;
+    private final FollowingRepository followingRepository;
 
     @Override
     public ProfileResponseDto get(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        int result = followRelationRepository.isFollowing(targetUser.getId(), loginId);
+        int result = followingRepository.isFollowing(targetUser.getId(), loginId);
 
         return getProfileResponseDto(targetUser, result == 1);
     }
@@ -31,8 +31,8 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponseDto follow(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        FollowRelation followRelation = new FollowRelation(targetUser.getId(), loginId);
-        followRelationRepository.persist(followRelation);
+        Following following = new Following(targetUser.getId(), loginId);
+        followingRepository.persist(following);
 
         return getProfileResponseDto(targetUser, true);
     }
@@ -42,7 +42,7 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponseDto unFollow(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        followRelationRepository.delete(targetUser.getId(), loginId);
+        followingRepository.delete(targetUser.getId(), loginId);
 
         return getProfileResponseDto(targetUser, false);
     }

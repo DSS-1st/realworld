@@ -19,8 +19,8 @@ values ('dvorak');
 insert into comments(body, article_id, user_id)
 values ('His name was my name too.', 1, 1);
 
-insert into follow_relation(login_id, target_id)
-values (1, 2);
+insert into following(target_id, login_id)
+values (2, 1);
 
 insert into article_tag(article_id, tag_id)
 values (1, 1);

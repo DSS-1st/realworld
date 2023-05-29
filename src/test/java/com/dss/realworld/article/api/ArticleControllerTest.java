@@ -5,7 +5,7 @@ import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
-import com.dss.realworld.user.domain.repository.FollowRelationRepository;
+import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +43,7 @@ public class ArticleControllerTest {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private FollowRelationRepository followRelationRepository;
+    private FollowingRepository followingRepository;
 
     @DisplayName(value = "필수 입력값이 NotNull일 때 Article 생성 성공(tag 제외)")
     @Test
@@ -294,7 +294,7 @@ public class ArticleControllerTest {
     @Test
     void t10() throws Exception {
         //given
-        followRelationRepository.delete(2L, 1L);
+        followingRepository.delete(2L, 1L);
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
