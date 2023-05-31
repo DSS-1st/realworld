@@ -22,5 +22,7 @@ public interface ArticleService {
 
     ArticleResponseDto unfavorite(String slug, Long loginId);
 
+    ArticleListResponseDto list(String tag, String author, String favorited, Long loginId, int limit, int offset);
+
     ArticleListResponseDto feed(Long loginId, int limit, int offset);
 }

@@ -47,6 +47,10 @@ public class ArticleServiceImpl implements ArticleService {
         return getArticleResponseDto(loginId, foundArticle);
     }
 
+    private ArticleResponseDto getArticleResponseDto(final Long loginId, final Article article) {
+        return new ArticleResponseDto(bindArticleDto(loginId, article));
+    }
+
     @Override
     @Transactional
     public ArticleResponseDto favorite(final String slug, final Long loginId) {
@@ -85,6 +89,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleListResponseDto list(final String tag, final String author, final String favorited, final Long loginId, int limit, int offset) {
+        List<Article> foundArticles = articleRepository.listArticles(tag, author, favorited, limit, offset);
+        if (foundArticles.isEmpty()) return new ArticleListResponseDto(0);
+
+        List<ArticleListItemResponseDto> articles = foundArticles.stream()
+                .map(article -> getArticleListItemResponseDto(loginId, article))
+                .collect(Collectors.toList());
+
+        return new ArticleListResponseDto(articles);
+    }
+
+    @Override
     public ArticleListResponseDto feed(final Long loginId, int limit, int offset) {
         List<Article> followedArticles = articleRepository.findArticleByFollower(loginId, limit, offset);
         if (followedArticles.isEmpty()) return new ArticleListResponseDto(0);
@@ -109,10 +125,6 @@ public class ArticleServiceImpl implements ArticleService {
         int favoritesCount = articleUsersRepository.findCountByArticleId(article.getId());
 
         return new ArticleDtoBinder(content, author, tagList, favorited, favoritesCount);
-    }
-
-    private ArticleResponseDto getArticleResponseDto(final Long loginId, final Article article) {
-        return new ArticleResponseDto(bindArticleDto(loginId, article));
     }
 
     @Override
