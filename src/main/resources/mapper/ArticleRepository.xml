@@ -69,6 +69,7 @@
                 u2.username = #{favorited}
             </if>
         </where>
+        group by a.article_id
         order by a.created_at desc, a.article_id desc
         limit #{limit} offset #{offset}
     </select>
