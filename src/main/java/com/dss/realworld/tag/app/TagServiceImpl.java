@@ -1,6 +1,6 @@
 package com.dss.realworld.tag.app;
 
-import com.dss.realworld.error.exception.CustomApiException;
+import com.dss.realworld.error.exception.TagNotFoundException;
 import com.dss.realworld.tag.api.dto.TagResponseDto;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
@@ -32,14 +32,14 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagResponseDto getAll() {
         List<String> result = tagRepository.getAll();
-        if (result.size() == 0) throw new CustomApiException("저장된 Tag가 없습니다.");
+        if (result.size() == 0) throw new TagNotFoundException();
 
         return new TagResponseDto(result);
     }
 
     @Override
     public String findByName(String name) {
-        String result = tagRepository.findByName(name).orElseThrow(() -> new CustomApiException("해당하는 Tag가 없습니다."));
+        String result = tagRepository.findByName(name).orElseThrow(TagNotFoundException::new);
 
         return result;
     }

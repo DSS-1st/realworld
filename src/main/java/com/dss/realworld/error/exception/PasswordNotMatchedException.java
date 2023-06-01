@@ -1,12 +1,19 @@
 package com.dss.realworld.error.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class PasswordNotMatchedException extends RuntimeException{
+public class PasswordNotMatchedException extends AbstractBaseException {
+
+    @Override
+    public HttpStatus getStatus() {
+        return HttpStatus.BAD_REQUEST;
+    }
 
     public PasswordNotMatchedException() {
-        super("비밀번호가 일치하지 않습니다");
+        this("비밀번호가 일치하지 않습니다.");
+    }
+
+    public PasswordNotMatchedException(final String message) {
+        super(message);
     }
 }

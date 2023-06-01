@@ -9,10 +9,7 @@ import com.dss.realworld.article.domain.repository.ArticleTagRepository;
 import com.dss.realworld.article.domain.repository.ArticleUsersRepository;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.common.dto.AuthorDto;
-import com.dss.realworld.error.exception.ArticleAuthorNotMatchException;
-import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.error.exception.CustomApiException;
-import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.error.exception.*;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
 import com.dss.realworld.user.domain.User;
@@ -62,7 +59,7 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             articleUsersRepository.persist(new ArticleUsers(foundArticle.getId(), loginId));
         } catch (DuplicateKeyException e) {
-            throw new CustomApiException("이미 좋아요한 글입니다.");
+            throw new DuplicateFavoriteException();
         }
         boolean favorited = isFavorite(loginId, foundArticle);
         int favoritesCount = articleUsersRepository.findCountByArticleId(foundArticle.getId());
@@ -152,7 +149,7 @@ public class ArticleServiceImpl implements ArticleService {
                 tagRepository.persist(tag);
                 articleTagRepository.persist(new ArticleTag(article.getId(), tag.getId()));
             } catch (DuplicateKeyException e) {
-                Long existentId = tagRepository.findIdByName(tag.getName()).orElseThrow(() -> new CustomApiException("해당하는 Tag가 없습니다."));
+                Long existentId = tagRepository.findIdByName(tag.getName()).orElseThrow(TagNotFoundException::new);
                 articleTagRepository.persist(new ArticleTag(article.getId(), existentId));
             }
         }

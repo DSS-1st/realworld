@@ -11,7 +11,7 @@ import com.dss.realworld.article.domain.repository.ArticleUsersRepository;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.error.exception.ArticleNotFoundException;
-import com.dss.realworld.error.exception.CustomApiException;
+import com.dss.realworld.error.exception.DuplicateFavoriteException;
 import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowingRepository;
@@ -181,7 +181,7 @@ public class ArticleServiceTest {
         articleService.favorite(slug, favoritedId);
 
         //then
-        assertThatThrownBy(() -> articleService.favorite(slug, favoritedId)).isInstanceOf(CustomApiException.class).hasMessageContaining("이미 좋아요한 글입니다.");
+        assertThatThrownBy(() -> articleService.favorite(slug, favoritedId)).isInstanceOf(DuplicateFavoriteException.class).hasMessageContaining("이미 좋아한 글입니다.");
     }
 
     @DisplayName(value = "articleId, favoritedId가 유효하면 좋아요 취소 성공")
