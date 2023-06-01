@@ -124,9 +124,13 @@ public class ArticleRepositoryTest {
         //given
         User loginUser = UserFixtures.create("newUser03", "user03pwd", "user03@realworld.com");
         userRepository.persist(loginUser);
+        Long midRangeAuthorId = 1L;
+        Long endRangeAuthorId = 2L;
+        SaveFollowingSample(midRangeAuthorId, endRangeAuthorId, loginUser);
+
         int midRange = 25;
         int endRange = 30;
-        saveSample(loginUser.getId(), midRange, endRange);
+        saveArticleSample(midRange, endRange, midRangeAuthorId, endRangeAuthorId);
 
         //when
         int limit = 20;
@@ -141,19 +145,18 @@ public class ArticleRepositoryTest {
         assertThat(articleFeed.size()).isEqualTo(limit);
     }
 
-    private void saveSample(Long loginId, int midRange, int endRange) {
-        Long followedUser1 = 1L;
-        Long followedUser2 = 2L;
-        followingRepository.persist(new Following(1L, loginId));
-        followingRepository.persist(new Following(2L, loginId));
+    private void SaveFollowingSample(final Long targetId1, final Long targetId2, final User loginUser) {
+        followingRepository.persist(new Following(targetId1, loginUser.getId()));
+        followingRepository.persist(new Following(targetId2, loginUser.getId()));
+    }
 
+    private void saveArticleSample(int midRange, int endRange, final Long midRangeAuthorId, final Long endRangeAuthorId) {
         for (int i = 1; i < midRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, followedUser1);
+            Article article = ArticleFixtures.of("test sample" + i, midRangeAuthorId);
             articleRepository.persist(article);
         }
-
         for (int i = midRange; i <= endRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, followedUser2);
+            Article article = ArticleFixtures.of("test sample" + i, endRangeAuthorId);
             articleRepository.persist(article);
         }
     }
