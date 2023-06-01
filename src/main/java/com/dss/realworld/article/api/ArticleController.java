@@ -17,7 +17,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @GetMapping(value = "/")
+    @GetMapping
     public ResponseEntity<ArticleListResponseDto> list(@RequestParam(value = "tag", required = false) String tag,
                                                        @RequestParam(value = "author", required = false) String author,
                                                        @RequestParam(value = "favorited", required = false) String favorited,
