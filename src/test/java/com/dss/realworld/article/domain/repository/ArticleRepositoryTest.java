@@ -36,6 +36,12 @@ public class ArticleRepositoryTest {
     @Autowired
     private FollowingRepository followingRepository;
 
+    @Autowired
+    private ArticleTagRepository articleTagRepository;
+
+    @Autowired
+    private ArticleUsersRepository articleUsersRepository;
+
     @DisplayName(value = "필수 입력값이 NotNull이면 Article 생성 성공")
     @Test
     void t1() {
@@ -150,5 +156,53 @@ public class ArticleRepositoryTest {
             Article article = ArticleFixtures.of("test sample" + i, followedUser2);
             articleRepository.persist(article);
         }
+    }
+
+    @DisplayName(value = "특정 tag가 등록된 게시글 조회 성공")
+    @Test
+    void t8() {
+        //given
+        String tag = "dvorak";
+        Long articldId = 1L;
+        List<String> tagsByArticleId = articleTagRepository.findTagsByArticleId(articldId);
+
+        //when
+        List<Article> articles = articleRepository.list(tag, null, null, 20, 0);
+
+        //then
+        assertThat(articles.size()).isEqualTo(1);
+        assertThat(articles.get(0).getId()).isEqualTo(1);
+        assertThat(tagsByArticleId.contains(tag)).isTrue();
+    }
+
+    @DisplayName(value = "특정 author가 등록한 게시글 조회 성공")
+    @Test
+    void t9() {
+        //given
+        String author = "Kate";
+        Long authorId = userRepository.findByUsername(author).get().getId();
+
+        //when
+        List<Article> articles = articleRepository.list(null, author, null, 20, 0);
+
+        //then
+        assertThat(articles.get(0).getUserId()).isEqualTo(authorId);
+    }
+
+    @DisplayName(value = "특정 user가 좋아한 게시글 조회 성공")
+    @Test
+    void t10() {
+        //given
+        String favoritedBy = "Jacob";
+        Long favoritedId = userRepository.findByUsername(favoritedBy).get().getId();
+        Long articleId = 3L;
+
+        //when
+        int isFavorite = articleUsersRepository.isFavorite(articleId, favoritedId);
+        assertThat(isFavorite).isEqualTo(1);
+        List<Article> articles = articleRepository.list(null, null, favoritedBy, 20, 0);
+
+        //then
+        assertThat(articles.get(0).getId()).isEqualTo(articleId);
     }
 }

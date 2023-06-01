@@ -50,7 +50,7 @@
         limit #{limit} offset #{offset}
     </select>
 
-    <select id="listArticles" resultType="Article">
+    <select id="list" resultType="Article">
         select a.article_id as id, slug, title, description, body, a.user_id, a.created_at, a.updated_at
         from article a
             left join article_tag at on a.article_id = at.article_id
@@ -63,10 +63,10 @@
                 t.name = #{tag}
             </if>
             <if test="author != null">
-                u1.username = #{author}
+                u.username = #{author}
             </if>
             <if test="favorited != null">
-                u2.username = #{favorited}
+                afu.username = #{favorited}
             </if>
         </where>
         group by a.article_id

@@ -16,6 +16,12 @@ values ('new title 101', 'new-title-101', 'body content', 'article description',
 insert into tag(name)
 values ('dvorak');
 
+insert into tag(name)
+values ('qwerty');
+
+insert into tag(name)
+values ('sebul');
+
 insert into comments(body, article_id, user_id)
 values ('His name was my name too.', 1, 1);
 
@@ -24,6 +30,12 @@ values (2, 1);
 
 insert into article_tag(article_id, tag_id)
 values (1, 1);
+
+insert into article_tag(article_id, tag_id)
+values (2, 2);
+
+insert into article_tag(article_id, tag_id)
+values (3, 3);
 
 insert into article_users(article_id, favorited_id)
 values (3, 1)
