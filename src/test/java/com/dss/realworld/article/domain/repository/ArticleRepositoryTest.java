@@ -36,6 +36,12 @@ public class ArticleRepositoryTest {
     @Autowired
     private FollowingRepository followingRepository;
 
+    @Autowired
+    private ArticleTagRepository articleTagRepository;
+
+    @Autowired
+    private ArticleUsersRepository articleUsersRepository;
+
     @DisplayName(value = "필수 입력값이 NotNull이면 Article 생성 성공")
     @Test
     void t1() {
@@ -118,9 +124,13 @@ public class ArticleRepositoryTest {
         //given
         User loginUser = UserFixtures.create("newUser03", "user03pwd", "user03@realworld.com");
         userRepository.persist(loginUser);
+        Long midRangeAuthorId = 1L;
+        Long endRangeAuthorId = 2L;
+        SaveFollowingSample(midRangeAuthorId, endRangeAuthorId, loginUser);
+
         int midRange = 25;
         int endRange = 30;
-        saveSample(loginUser.getId(), midRange, endRange);
+        saveArticleSample(midRange, endRange, midRangeAuthorId, endRangeAuthorId);
 
         //when
         int limit = 20;
@@ -135,20 +145,67 @@ public class ArticleRepositoryTest {
         assertThat(articleFeed.size()).isEqualTo(limit);
     }
 
-    private void saveSample(Long loginId, int midRange, int endRange) {
-        Long followedUser1 = 1L;
-        Long followedUser2 = 2L;
-        followingRepository.persist(new Following(1L, loginId));
-        followingRepository.persist(new Following(2L, loginId));
+    private void SaveFollowingSample(final Long targetId1, final Long targetId2, final User loginUser) {
+        followingRepository.persist(new Following(targetId1, loginUser.getId()));
+        followingRepository.persist(new Following(targetId2, loginUser.getId()));
+    }
 
+    private void saveArticleSample(int midRange, int endRange, final Long midRangeAuthorId, final Long endRangeAuthorId) {
         for (int i = 1; i < midRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, followedUser1);
+            Article article = ArticleFixtures.of("test sample" + i, midRangeAuthorId);
             articleRepository.persist(article);
         }
-
         for (int i = midRange; i <= endRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, followedUser2);
+            Article article = ArticleFixtures.of("test sample" + i, endRangeAuthorId);
             articleRepository.persist(article);
         }
+    }
+
+    @DisplayName(value = "특정 tag가 등록된 게시글 조회 성공")
+    @Test
+    void t8() {
+        //given
+        String tag = "dvorak";
+        Long articldId = 1L;
+        List<String> tagsByArticleId = articleTagRepository.findTagsByArticleId(articldId);
+
+        //when
+        List<Article> articles = articleRepository.list(tag, null, null, 20, 0);
+
+        //then
+        assertThat(articles.size()).isEqualTo(1);
+        assertThat(articles.get(0).getId()).isEqualTo(1);
+        assertThat(tagsByArticleId.contains(tag)).isTrue();
+    }
+
+    @DisplayName(value = "특정 author가 등록한 게시글 조회 성공")
+    @Test
+    void t9() {
+        //given
+        String author = "Kate";
+        Long authorId = userRepository.findByUsername(author).get().getId();
+
+        //when
+        List<Article> articles = articleRepository.list(null, author, null, 20, 0);
+
+        //then
+        assertThat(articles.get(0).getUserId()).isEqualTo(authorId);
+    }
+
+    @DisplayName(value = "특정 user가 좋아한 게시글 조회 성공")
+    @Test
+    void t10() {
+        //given
+        String favoritedBy = "Jacob";
+        Long favoritedId = userRepository.findByUsername(favoritedBy).get().getId();
+        Long articleId = 3L;
+
+        //when
+        int isFavorite = articleUsersRepository.isFavorite(articleId, favoritedId);
+        assertThat(isFavorite).isEqualTo(1);
+        List<Article> articles = articleRepository.list(null, null, favoritedBy, 20, 0);
+
+        //then
+        assertThat(articles.get(0).getId()).isEqualTo(articleId);
     }
 }

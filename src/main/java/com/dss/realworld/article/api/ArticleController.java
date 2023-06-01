@@ -17,6 +17,17 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    @GetMapping
+    public ResponseEntity<ArticleListResponseDto> list(@RequestParam(value = "tag", required = false) String tag,
+                                                       @RequestParam(value = "author", required = false) String author,
+                                                       @RequestParam(value = "favorited", required = false) String favorited,
+                                                       @RequestParam(required = false, defaultValue = "0") final int offset,
+                                                       @RequestParam(required = false, defaultValue = "20") final int limit) {
+        ArticleListResponseDto articles = articleService.list(tag, author, favorited, getLoginUserId(), limit, offset);
+
+        return ResponseEntity.ok(articles);
+    }
+
     @GetMapping(value = "/{slug}")
     public ResponseEntity<ArticleResponseDto> findBySlug(@PathVariable final String slug) {
         ArticleResponseDto articleResponseDto = articleService.findBySlug(slug, getLoginUserId());
@@ -25,8 +36,8 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/feed")
-    public ResponseEntity<ArticleListResponseDto> findBySlug(@RequestParam(required = false, defaultValue = "0") final int offset,
-                                                         @RequestParam(required = false, defaultValue = "20") final int limit) {
+    public ResponseEntity<ArticleListResponseDto> feed(@RequestParam(required = false, defaultValue = "0") final int offset,
+                                                       @RequestParam(required = false, defaultValue = "20") final int limit) {
         ArticleListResponseDto articles = articleService.feed(getLoginUserId(), limit, offset);
 
         return ResponseEntity.ok(articles);
@@ -40,7 +51,8 @@ public class ArticleController {
     }
 
     @PutMapping(value = "/{slug}")
-    public ResponseEntity<ArticleResponseDto> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto, @PathVariable final String slug) {
+    public ResponseEntity<ArticleResponseDto> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto,
+                                                     @PathVariable final String slug) {
         ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLoginUserId(), slug);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);

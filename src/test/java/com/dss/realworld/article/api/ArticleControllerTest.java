@@ -307,4 +307,41 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles").isEmpty())
                 .andExpect(jsonPath("$.articlesCount").value(0));
     }
+
+    @DisplayName(value = "Author를 팔로우하고 Author의 게시글을 좋아한 사용자 이름으로 검색 시 게시글 조회 성공")
+    @Test
+    void t11() throws Exception {
+        //given
+        String favoritedBy = "Jacob";
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.get("/api/articles")
+                .param("favorited", favoritedBy);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].favorited").value(true))
+                .andExpect(jsonPath("$.articles[0].author.following").value(true))
+                .andExpect(jsonPath("$.articlesCount").value(1));
+    }
+
+    @DisplayName(value = "검색조건에 해당하는 글이 없을 경우 빈 목록 반환")
+    @Test
+    void t12() throws Exception {
+        //given
+        String favoritedBy = "Kite";
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.get("/api/articles")
+                .param("favorited", favoritedBy);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles").isEmpty())
+                .andExpect(jsonPath("$.articlesCount").value(0));
+    }
 }

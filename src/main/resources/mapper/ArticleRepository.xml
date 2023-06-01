@@ -43,9 +43,34 @@
 
     <select id="findArticleByFollower" resultType="Article">
         select article_id as id, slug, title, description, body, user_id, a.created_at, updated_at
-        from article a join following b on user_id = target_id
+        from article a
+            join following b on a.user_id = b.target_id
         where b.login_id = #{loginId}
         order by created_at desc, article_id desc
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="list" resultType="Article">
+        select a.article_id as id, slug, title, description, body, a.user_id, a.created_at, a.updated_at
+        from article a
+            left join article_tag at on a.article_id = at.article_id
+            left join tag t on at.tag_id = t.tag_id
+            left join users u on a.user_id = u.user_id
+            left join article_users au on a.article_id = au.article_id
+            left join users afu on au.favorited_id = afu.user_id
+        <where>
+            <if test="tag != null">
+                t.name = #{tag}
+            </if>
+            <if test="author != null">
+                u.username = #{author}
+            </if>
+            <if test="favorited != null">
+                afu.username = #{favorited}
+            </if>
+        </where>
+        group by a.article_id
+        order by a.created_at desc, a.article_id desc
         limit #{limit} offset #{offset}
     </select>
 </mapper>

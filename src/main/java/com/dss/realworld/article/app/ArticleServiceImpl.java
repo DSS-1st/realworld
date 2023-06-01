@@ -41,15 +41,19 @@ public class ArticleServiceImpl implements ArticleService {
     private final FollowingRepository followingRepository;
 
     @Override
-    public ArticleResponseDto findBySlug(String slug, Long loginId) {
+    public ArticleResponseDto findBySlug(final String slug, final Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         return getArticleResponseDto(loginId, foundArticle);
     }
 
+    private ArticleResponseDto getArticleResponseDto(final Long loginId, final Article article) {
+        return new ArticleResponseDto(bindArticleDto(loginId, article));
+    }
+
     @Override
     @Transactional
-    public ArticleResponseDto favorite(final String slug, Long loginId) {
+    public ArticleResponseDto favorite(final String slug, final Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
         ArticleContentDto content = ArticleContentDto.of(foundArticle);
@@ -72,7 +76,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleResponseDto unfavorite(final String slug, Long loginId) {
+    public ArticleResponseDto unfavorite(final String slug, final Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         List<String> tagList = articleTagRepository.findTagsByArticleId(foundArticle.getId());
         ArticleContentDto content = ArticleContentDto.of(foundArticle);
@@ -85,9 +89,21 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleListResponseDto list(final String tag, final String author, final String favorited, final Long loginId, int limit, int offset) {
+        List<Article> foundArticles = articleRepository.list(tag, author, favorited, limit, offset);
+        if (foundArticles.isEmpty()) return new ArticleListResponseDto(0);
+
+        List<ArticleListItemResponseDto> articles = foundArticles.stream()
+                .map(article -> getArticleListItemResponseDto(loginId, article))
+                .collect(Collectors.toList());
+
+        return new ArticleListResponseDto(articles);
+    }
+
+    @Override
     public ArticleListResponseDto feed(final Long loginId, int limit, int offset) {
         List<Article> followedArticles = articleRepository.findArticleByFollower(loginId, limit, offset);
-        if(followedArticles.isEmpty()) return new ArticleListResponseDto(0);
+        if (followedArticles.isEmpty()) return new ArticleListResponseDto(0);
 
         List<ArticleListItemResponseDto> articles = followedArticles.stream()
                 .map(article -> getArticleListItemResponseDto(loginId, article))
@@ -111,13 +127,9 @@ public class ArticleServiceImpl implements ArticleService {
         return new ArticleDtoBinder(content, author, tagList, favorited, favoritesCount);
     }
 
-    private ArticleResponseDto getArticleResponseDto(final Long loginId, final Article article) {
-        return new ArticleResponseDto(bindArticleDto(loginId, article));
-    }
-
     @Override
     @Transactional
-    public ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginId) {
+    public ArticleResponseDto save(final CreateArticleRequestDto createArticleRequestDto, final Long loginId) {
         Long maxId = articleRepository.findMaxId().orElse(0L);
         Article article = createArticleRequestDto.convert(loginId, maxId);
         articleRepository.persist(article);
@@ -180,10 +192,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public AuthorDto getAuthor(Long userId, Long loginId) {
+    public AuthorDto getAuthor(final Long userId, final Long loginId) {
         User foundUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        int result = followingRepository.isFollowing(foundUser.getId(), loginId);
+        boolean followed = isFollowing(foundUser, loginId);
 
-        return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage(), result == 1);
+        return AuthorDto.of(foundUser.getUsername(), foundUser.getBio(), foundUser.getImage(), followed);
+    }
+
+    private boolean isFollowing(final User foundUser, final Long loginId) {
+        return (loginId != null) && (followingRepository.isFollowing(foundUser.getId(), loginId) == 1);
     }
 }
