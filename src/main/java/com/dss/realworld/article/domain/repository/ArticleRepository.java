@@ -24,5 +24,5 @@ public interface ArticleRepository {
 
     List<Article> findArticleByFollower(@Param(value = "loginId") Long loginId, @Param(value = "limit") int limit, @Param(value = "offset") int offset);
 
-    List<Article> listArticles(@Param(value = "tag") String tag, @Param(value = "author") String author, @Param(value = "favorited") String favorited, @Param(value = "limit") int limit, @Param(value = "offset") int offset);
+    List<Article> list(@Param(value = "tag") String tag, @Param(value = "author") String author, @Param(value = "favorited") String favorited, @Param(value = "limit") int limit, @Param(value = "offset") int offset);
 }

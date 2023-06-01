@@ -90,7 +90,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleListResponseDto list(final String tag, final String author, final String favorited, final Long loginId, int limit, int offset) {
-        List<Article> foundArticles = articleRepository.listArticles(tag, author, favorited, limit, offset);
+        List<Article> foundArticles = articleRepository.list(tag, author, favorited, limit, offset);
         if (foundArticles.isEmpty()) return new ArticleListResponseDto(0);
 
         List<ArticleListItemResponseDto> articles = foundArticles.stream()
