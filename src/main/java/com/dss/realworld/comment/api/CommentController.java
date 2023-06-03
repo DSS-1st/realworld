@@ -7,7 +7,10 @@ import com.dss.realworld.comment.app.CommentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequestMapping(value = "/api/articles")
 @RestController
@@ -17,8 +20,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping(value = "/{slug}/comments")
-    public ResponseEntity<AddCommentResponseDto> create(@RequestBody AddCommentRequestDto addCommentRequestDto,
-                                    @PathVariable String slug) {
+    public ResponseEntity<AddCommentResponseDto> create(@RequestBody @Valid AddCommentRequestDto addCommentRequestDto, BindingResult bindingResult,
+                                                        @PathVariable String slug) {
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, getLogonUserId(), slug);
 
         return ResponseEntity.ok(addCommentResponseDto);
