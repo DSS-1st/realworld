@@ -1,4 +1,4 @@
-package com.dss.realworld.error.exception;
+package com.dss.realworld.common.error.exception;
 
 import org.springframework.http.HttpStatus;
 
