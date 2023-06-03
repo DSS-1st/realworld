@@ -1,6 +1,6 @@
 package com.dss.realworld.tag.app;
 
-import com.dss.realworld.error.exception.CustomApiException;
+import com.dss.realworld.common.error.exception.TagNotFoundException;
 import com.dss.realworld.tag.api.dto.TagResponseDto;
 import com.dss.realworld.tag.domain.Tag;
 import org.junit.jupiter.api.DisplayName;
@@ -125,6 +125,6 @@ public class TagServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> tagService.findByName("zxcv")).isInstanceOf(CustomApiException.class).hasMessageContaining("해당하는 Tag가 없습니다.");
+        assertThatThrownBy(() -> tagService.findByName("zxcv")).isInstanceOf(TagNotFoundException.class).hasMessageContaining("해당되는 Tag가 없습니다.");
     }
 }

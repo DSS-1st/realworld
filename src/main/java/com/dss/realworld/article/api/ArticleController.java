@@ -8,7 +8,10 @@ import com.dss.realworld.article.app.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequestMapping(value = "/api/articles")
 @RestController
@@ -44,14 +47,14 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<ArticleResponseDto> create(@RequestBody final CreateArticleRequestDto createArticleRequestDto) {
+    public ResponseEntity<ArticleResponseDto> create(@RequestBody @Valid CreateArticleRequestDto createArticleRequestDto, BindingResult bindingResult) {
         ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLoginUserId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @PutMapping(value = "/{slug}")
-    public ResponseEntity<ArticleResponseDto> update(@RequestBody final UpdateArticleRequestDto updateArticleRequestDto,
+    public ResponseEntity<ArticleResponseDto> update(@RequestBody @Valid final UpdateArticleRequestDto updateArticleRequestDto, BindingResult bindingResult,
                                                      @PathVariable final String slug) {
         ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLoginUserId(), slug);
 

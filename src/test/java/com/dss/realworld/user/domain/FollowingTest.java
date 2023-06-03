@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain;
 
-import com.dss.realworld.error.exception.CustomApiException;
+import com.dss.realworld.common.error.exception.SelfFollowingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -56,6 +56,6 @@ public class FollowingTest {
 
         //when
         //then
-        assertThatThrownBy(() -> new Following(targetId, loginId)).isInstanceOf(CustomApiException.class).hasMessageContaining("자기 자신을 팔로우할 수 없습니다.");
+        assertThatThrownBy(() -> new Following(targetId, loginId)).isInstanceOf(SelfFollowingException.class).hasMessageContaining("자신을 팔로우할 수 없습니다.");
     }
 }

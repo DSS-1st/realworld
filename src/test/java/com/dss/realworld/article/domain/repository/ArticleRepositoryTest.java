@@ -3,7 +3,7 @@ package com.dss.realworld.article.domain.repository;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
-import com.dss.realworld.error.exception.ArticleNotFoundException;
+import com.dss.realworld.common.error.exception.ArticleNotFoundException;
 import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowingRepository;

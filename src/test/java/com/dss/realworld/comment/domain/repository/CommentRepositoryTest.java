@@ -1,7 +1,7 @@
 package com.dss.realworld.comment.domain.repository;
 
 import com.dss.realworld.comment.domain.Comment;
-import com.dss.realworld.error.exception.CommentNotFoundException;
+import com.dss.realworld.common.error.exception.CommentNotFoundException;
 import com.dss.realworld.util.CommentFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

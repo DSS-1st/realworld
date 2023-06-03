@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain;
 
-import com.dss.realworld.error.exception.CustomApiException;
+import com.dss.realworld.common.error.exception.SelfFollowingException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
@@ -26,7 +26,7 @@ public class Following {
     }
 
     private void isSelfFollowing(final Long targetId, final Long loginId) {
-        if(targetId.equals(loginId)) throw new CustomApiException("자기 자신을 팔로우할 수 없습니다.");
+        if(targetId.equals(loginId)) throw new SelfFollowingException();
     }
 
     public Following(Long targetId, Long loginId) {
