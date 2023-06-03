@@ -9,7 +9,7 @@ import com.dss.realworld.article.domain.repository.ArticleTagRepository;
 import com.dss.realworld.article.domain.repository.ArticleUsersRepository;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.common.dto.AuthorDto;
-import com.dss.realworld.error.exception.*;
+import com.dss.realworld.common.error.exception.*;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
 import com.dss.realworld.user.domain.User;

@@ -1,7 +1,7 @@
 package com.dss.realworld.article.domain;
 
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
-import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.common.error.exception.UserNotFoundException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain;
 
-import com.dss.realworld.error.exception.SelfFollowingException;
+import com.dss.realworld.common.error.exception.SelfFollowingException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;

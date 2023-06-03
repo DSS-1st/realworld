@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain.repository;
 
-import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.util.UserFixtures;
 import org.assertj.core.api.Assertions;
@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,7 +1,7 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.error.exception.PasswordNotMatchedException;
-import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.common.error.exception.PasswordNotMatchedException;
+import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginUserRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;

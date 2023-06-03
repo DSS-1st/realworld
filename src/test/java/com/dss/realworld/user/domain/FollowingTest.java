@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain;
 
-import com.dss.realworld.error.exception.SelfFollowingException;
+import com.dss.realworld.common.error.exception.SelfFollowingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

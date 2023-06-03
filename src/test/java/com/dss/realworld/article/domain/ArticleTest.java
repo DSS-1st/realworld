@@ -1,7 +1,7 @@
 package com.dss.realworld.article.domain;
 
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
-import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.util.ArticleFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,6 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.error.exception.UserNotFoundException;
+import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.ProfileResponseDto;
 import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;

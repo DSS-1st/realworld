@@ -1,4 +1,4 @@
-package com.dss.realworld.config;
+package com.dss.realworld.common.config;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

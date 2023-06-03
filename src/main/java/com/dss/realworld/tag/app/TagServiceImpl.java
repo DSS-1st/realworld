@@ -1,6 +1,6 @@
 package com.dss.realworld.tag.app;
 
-import com.dss.realworld.error.exception.TagNotFoundException;
+import com.dss.realworld.common.error.exception.TagNotFoundException;
 import com.dss.realworld.tag.api.dto.TagResponseDto;
 import com.dss.realworld.tag.domain.Tag;
 import com.dss.realworld.tag.domain.repository.TagRepository;
