@@ -1,4 +1,4 @@
-package com.dss.realworld.error.exception;
+package com.dss.realworld.common.error.exception;
 
 import org.springframework.http.HttpStatus;
 
@@ -6,7 +6,7 @@ public class DuplicateFavoriteException extends AbstractBaseException {
 
     @Override
     public HttpStatus getStatus() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.CONFLICT;
     }
 
     public DuplicateFavoriteException() {
