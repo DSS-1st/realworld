@@ -49,7 +49,7 @@ public class ProfileControllerTest {
     @Test
     void t2() throws Exception {
         //given
-        followingRepository.delete(2L, 1L);
+        followingRepository.delete(2L, 1L); //기존 데이터 삭제
         String targetName = "Kate";
 
         //when
@@ -70,5 +70,18 @@ public class ProfileControllerTest {
         //then
         mockMvc.perform(delete("/api/profiles/{username}/follow", targetName))
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName(value = "이미 팔로우한 상태이면 예외 메시지 반환")
+    @Test
+    void t4() throws Exception {
+        //given
+        String targetName = "Kate";
+
+        //when
+        //then
+        mockMvc.perform(post("/api/profiles/{username}/follow", targetName))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errors.body[0]").value("이미 팔로우한 사용자입니다."));
     }
 }
