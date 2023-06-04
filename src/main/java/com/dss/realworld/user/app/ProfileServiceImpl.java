@@ -1,5 +1,6 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.common.error.exception.DuplicateFollowingException;
 import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.ProfileResponseDto;
 import com.dss.realworld.user.domain.Following;
@@ -30,6 +31,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ProfileResponseDto follow(String username, Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        if (followingRepository.isFollowing(targetUser.getId(), loginId) != 0) throw new DuplicateFollowingException();
 
         Following following = new Following(targetUser.getId(), loginId);
         followingRepository.persist(following);
