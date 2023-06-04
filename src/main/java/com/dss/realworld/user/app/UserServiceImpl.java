@@ -1,5 +1,7 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.common.error.exception.DuplicateEmailException;
+import com.dss.realworld.common.error.exception.DuplicateUsernameException;
 import com.dss.realworld.common.error.exception.PasswordNotMatchedException;
 import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
@@ -12,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Transactional(readOnly = true)
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -27,11 +29,21 @@ public class UserServiceImpl implements UserService {
                 .email(addUserRequestDto.getEmail())
                 .password(addUserRequestDto.getPassword())
                 .build();
+        checkDuplicateUser(user);
         userRepository.persist(user);
 
-        User user1 = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotFoundException());
+        User foundUser = userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        return new UserResponseDto(user1);
+        return new UserResponseDto(foundUser);
+    }
+
+    private void checkDuplicateUser(final User user) {
+        userRepository.findByUsername(user.getUsername()).ifPresent(foundUser -> {
+            throw new DuplicateUsernameException();
+        });
+        userRepository.findByEmail(user.getEmail()).ifPresent(foundUser -> {
+            throw new DuplicateEmailException();
+        });
     }
 
     @Transactional
@@ -46,9 +58,9 @@ public class UserServiceImpl implements UserService {
                 .image(updateUserRequestDto.getImage()).build();
         userRepository.update(updateValue, loginId);
 
-        User user = userRepository.findByEmail(updateValue.getEmail()).orElseThrow(UserNotFoundException::new);
+        User updatedUser = userRepository.findByEmail(updateValue.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        return new UserResponseDto(user);
+        return new UserResponseDto(updatedUser);
     }
 
     @Override
