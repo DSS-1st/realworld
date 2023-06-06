@@ -18,10 +18,12 @@ import java.util.Collections;
 //토큰 검증 로직(모든 주소에서 동작)
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
+    private final JwtProcess jwtProcess;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, final JwtProcess jwtProcess) {
         super(authenticationManager);
+        this.jwtProcess = jwtProcess;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if (isHeaderVerified(request, response)) {
             String token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
-            LoginUser loginUser = JwtProcess.verify(token);
+            LoginUser loginUser = jwtProcess.verify(token);
 
             //임시 세션 생성 by UserDetails or username
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginUser, "", Collections.emptyList());

@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public class LoginUser implements UserDetails {
 
     private final User user;

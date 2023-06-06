@@ -3,6 +3,8 @@ package com.dss.realworld.common.config;
 import com.dss.realworld.common.dto.SecurityResponse;
 import com.dss.realworld.common.jwt.JwtAuthenticationFilter;
 import com.dss.realworld.common.jwt.JwtAuthorizationFilter;
+import com.dss.realworld.common.jwt.JwtProcess;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +24,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private final JwtProcess jwtProcess;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -34,13 +38,13 @@ public class WebSecurityConfig {
     }
 
     //JwtAuthenticationFilter 등록
-    public static class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
+    public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
 
         @Override
         public void configure(final HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-            builder.addFilter(new JwtAuthenticationFilter(authenticationManager));
-            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
+            builder.addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProcess));
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcess));
             super.configure(builder);
         }
     }
@@ -87,6 +91,7 @@ public class WebSecurityConfig {
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.addAllowedOriginPattern("*"); //모든 IP주소 허용
         configuration.setAllowCredentials(true); //클라이언트에서 쿠키 요청 허용
+        configuration.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

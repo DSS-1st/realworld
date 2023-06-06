@@ -24,11 +24,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AuthenticationManager authenticationManager;
+    private final JwtProcess jwtProcess;
 
-    public JwtAuthenticationFilter(final AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(final AuthenticationManager authenticationManager, final JwtProcess jwtProcess) {
         super(authenticationManager);
         setFilterProcessesUrl("/api/users/login");
+
         this.authenticationManager = authenticationManager;
+        this.jwtProcess = jwtProcess;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.debug("디버그: successfulAuthentication() 호출됨");
 
         LoginUser loginUser = (LoginUser) authResult.getPrincipal();
-        String jwtToken = JwtProcess.create(loginUser);
+        String jwtToken = jwtProcess.create(loginUser);
         response.addHeader(JwtVO.HEADER, jwtToken);
 
         UserResponseDto userResponseDto = new UserResponseDto(loginUser, jwtToken);
