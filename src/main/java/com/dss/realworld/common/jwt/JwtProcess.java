@@ -16,7 +16,7 @@ public class JwtProcess {
 
     public static String create(LoginUser loginUser) {
         String jwtToken = JWT.create()
-                .withSubject(loginUser.getUser().getEmail())
+                .withSubject(loginUser.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtVO.EXPIRATION_TIME))
                 .withClaim("id", loginUser.getUser().getId())
                 .sign(Algorithm.HMAC512(JwtVO.SECRET));
@@ -26,8 +26,10 @@ public class JwtProcess {
 
     public static LoginUser verify(String token) {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(JwtVO.SECRET)).build().verify(token);
+
         Long id = decodedJWT.getClaim("id").asLong();
-        User user = User.builder().id(id).build();
+        String email = decodedJWT.getSubject();
+        User user = User.builder().id(id).email(email).build();
 
         return new LoginUser(user);
     }
