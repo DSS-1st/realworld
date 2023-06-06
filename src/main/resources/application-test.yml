@@ -14,6 +14,8 @@ logging:
     com:
       zaxxer:
         hikari: info
+      dss:
+        realworld: debug
     javax:
       sql:
         DataSource: OFF
