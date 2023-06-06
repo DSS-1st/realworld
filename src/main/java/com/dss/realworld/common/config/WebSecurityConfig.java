@@ -2,11 +2,13 @@ package com.dss.realworld.common.config;
 
 import com.dss.realworld.common.dto.SecurityResponse;
 import com.dss.realworld.common.jwt.JwtAuthenticationFilter;
+import com.dss.realworld.common.jwt.JwtAuthorizationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -32,12 +34,13 @@ public class WebSecurityConfig {
     }
 
     //JwtAuthenticationFilter 등록
-    public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
+    public static class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
 
         @Override
         public void configure(final HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
             builder.addFilter(new JwtAuthenticationFilter(authenticationManager));
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
             super.configure(builder);
         }
     }
@@ -58,8 +61,14 @@ public class WebSecurityConfig {
         http.apply(new CustomSecurityFilterManager());
 
         //Exception 가로채기 -> 스프링 시큐리티 자체적으로 예외처리 하지 않도록 설정
+        //인증 실패
         http.exceptionHandling().authenticationEntryPoint((request, response, authenticationException) -> {
-            SecurityResponse.unAuthentication(response, "사용자 인증에 실패했습니다.");
+            SecurityResponse.fail(response, "로그인에 실패했습니다.", HttpStatus.UNAUTHORIZED);
+        });
+
+        //권한 실패
+        http.exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
+            SecurityResponse.fail(response, "권한이 없습니다.", HttpStatus.FORBIDDEN);
         });
 
         http.authorizeRequests()
