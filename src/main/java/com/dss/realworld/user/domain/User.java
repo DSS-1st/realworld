@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -24,20 +25,21 @@ public class User {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public User(Long id, String email, String username, String password, String bio, String image) {
+    public User(Long id, String email, String username, String password, BCryptPasswordEncoder passwordEncoder, String bio, String image) {
         Assert.notNull(username, "username can not be null");
         Assert.notNull(password, "password can not be null");
         Assert.notNull(email, "email can not be null");
+        Assert.notNull(passwordEncoder, "passwordEncoder can not be null");
 
         this.id = id;
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.password = passwordEncoder.encode(password);
         this.bio = bio;
         this.image = image;
     }
 
-    public boolean isMatch(LoginUserRequestDto loginUserRequestDto) {
-        return this.password.equals(loginUserRequestDto.getPassword());
+    public boolean isMatch(LoginUserRequestDto loginUserRequestDto, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginUserRequestDto.getPassword(), this.password);
     }
 }
