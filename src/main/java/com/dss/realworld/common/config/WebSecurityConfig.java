@@ -1,12 +1,15 @@
 package com.dss.realworld.common.config;
 
-import com.dss.realworld.common.dto.SecurityErrorResponse;
+import com.dss.realworld.common.dto.SecurityResponse;
+import com.dss.realworld.common.jwt.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,6 +31,17 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    //JwtAuthenticationFilter 등록
+    public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
+
+        @Override
+        public void configure(final HttpSecurity builder) throws Exception {
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+            builder.addFilter(new JwtAuthenticationFilter(authenticationManager));
+            super.configure(builder);
+        }
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.debug("디버그: SecurityFilterChain 빈 등록완료");
@@ -40,9 +54,12 @@ public class WebSecurityConfig {
         http.cors().configurationSource(configurationSource()); //cors 설정 등록
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //JSessionId 서버에서 미관리
 
+        //JwtAuthenticationFilter 적용
+        http.apply(new CustomSecurityFilterManager());
+
         //Exception 가로채기 -> 스프링 시큐리티 자체적으로 예외처리 하지 않도록 설정
         http.exceptionHandling().authenticationEntryPoint((request, response, authenticationException) -> {
-            SecurityErrorResponse.unAuthentication(request, response, "사용자 인증이 필요합니다.");
+            SecurityResponse.unAuthentication(response, "사용자 인증에 실패했습니다.");
         });
 
         http.authorizeRequests()
