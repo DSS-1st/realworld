@@ -11,6 +11,7 @@ import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .username(addUserRequestDto.getUsername())
                 .email(addUserRequestDto.getEmail())
+                .passwordEncoder(passwordEncoder)
                 .password(addUserRequestDto.getPassword())
                 .build();
         checkDuplicateUser(user);
@@ -53,6 +56,7 @@ public class UserServiceImpl implements UserService {
         User updateValue = foundUser.builder()
                 .email(updateUserRequestDto.getEmail())
                 .username(updateUserRequestDto.getUsername())
+                .passwordEncoder(passwordEncoder)
                 .password(updateUserRequestDto.getPassword())
                 .bio(updateUserRequestDto.getBio())
                 .image(updateUserRequestDto.getImage()).build();
@@ -66,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto login(LoginUserRequestDto loginUserRequestDto) {
         User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
-        if (!user.isMatch(loginUserRequestDto)) throw new PasswordNotMatchedException();
+        if (!user.isMatch(loginUserRequestDto, passwordEncoder)) throw new PasswordNotMatchedException();
 
         return new UserResponseDto(user);
     }
