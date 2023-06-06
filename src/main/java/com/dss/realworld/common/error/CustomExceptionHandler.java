@@ -2,7 +2,7 @@ package com.dss.realworld.common.error;
 
 import com.dss.realworld.common.error.exception.AbstractBaseException;
 import com.dss.realworld.common.error.exception.CustomValidationException;
-import com.dss.realworld.common.error.exception.ErrorResponse;
+import com.dss.realworld.common.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

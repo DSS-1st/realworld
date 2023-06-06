@@ -1,4 +1,4 @@
-package com.dss.realworld.common.error.exception;
+package com.dss.realworld.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;
