@@ -12,20 +12,24 @@ public class SecurityResponse {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityResponse.class);
 
-    public static void unAuthentication(HttpServletResponse response, String message) throws IOException {
+    public static void fail(HttpServletResponse response, String message, HttpStatus httpStatus) throws IOException {
+        String reasonPhrase = HttpStatus.UNAUTHORIZED.getReasonPhrase();
+        if (httpStatus.value() == 403) reasonPhrase = HttpStatus.FORBIDDEN.getReasonPhrase();
+        ErrorResponse errorResponse = new ErrorResponse(httpStatus.value(), reasonPhrase, message);
+
         ObjectMapper objectMapper = new ObjectMapper();
-        ErrorResponse errorResponse = new ErrorResponse(401, HttpStatus.UNAUTHORIZED.getReasonPhrase(), message);
         String responseBody = objectMapper.writeValueAsString(errorResponse);
 
         response.setContentType("application/json; charset=utf-8");
-        response.setStatus(403);
+        response.setStatus(httpStatus.value());
         response.getWriter().println(responseBody);
     }
 
     public static void success(HttpServletResponse response, Object dto) {
         try {
-            ObjectMapper om = new ObjectMapper();
-            String responseBody = om.writeValueAsString(dto);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String responseBody = objectMapper.writeValueAsString(dto);
+
             response.setContentType("application/json; charset=utf-8");
             response.setStatus(201);
             response.getWriter().println(responseBody);
