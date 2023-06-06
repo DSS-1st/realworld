@@ -67,7 +67,7 @@ public class WebSecurityConfig {
         //Exception 가로채기 -> 스프링 시큐리티 자체적으로 예외처리 하지 않도록 설정
         //인증 실패
         http.exceptionHandling().authenticationEntryPoint((request, response, authenticationException) -> {
-            SecurityResponse.fail(response, "로그인에 실패했습니다.", HttpStatus.UNAUTHORIZED);
+            SecurityResponse.fail(response, "로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         });
 
         //권한 실패
