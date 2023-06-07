@@ -1,6 +1,6 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import org.junit.jupiter.api.DisplayName;
@@ -40,23 +40,24 @@ public class UserServiceTest {
         assertThat(userResponseDto.getEmail()).isEqualTo(updateUserRequestDto.getEmail());
     }
 
-    @DisplayName(value = "로그인 정보가 일치하면 로그인된 회원정보 반환 성공")
+    @DisplayName(value = "로그인 성공 후 회원정보 반환 성공")
     @Test
     void t2() {
         //given
         String savedUsername = "Jacob";
 
-        LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
+        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
                 .email("jake@jake.jake")
                 .password("jakejake")
                 .build();
 
-        UserResponseDto userResponseDto = userService.login(loginUserRequestDto);
+        UserResponseDto userResponseDto = userService.login(loginRequestDto);
 
         assertThat(userResponseDto.getUsername()).isEqualTo(savedUsername);
     }
 
-    @DisplayName(value = "현재 회원 정보 가져오기")
+    //todo 시큐리티 적용 후 테스트 수정(LoginId가져오는 방법 변경)
+    @DisplayName(value = "로그인된 현재 회원 정보 가져오기")
     @Test
     void t3() {
         Long loginId = 1L;

@@ -1,7 +1,7 @@
 package com.dss.realworld.user.api;
 
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.app.UserService;
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/users/login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody @Valid LoginUserRequestDto loginUserRequestDto) {
-        UserResponseDto userResponseDto = userService.login(loginUserRequestDto);
+    public ResponseEntity<UserResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
+        UserResponseDto userResponseDto = userService.login(loginRequestDto);
 
         return ResponseEntity.ok(userResponseDto);
     }

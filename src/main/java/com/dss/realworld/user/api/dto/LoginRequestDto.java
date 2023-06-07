@@ -8,24 +8,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 @JsonTypeName(value = "user")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 @Getter
 @NoArgsConstructor
-public class LoginUserRequestDto {
+public class LoginRequestDto {
 
-    @NotBlank(message = "can't empty or space only email")
-    @Email
     private String email;
-
-    @NotBlank(message = "can't empty or space only password")
     private String password;
 
     @Builder
-    public LoginUserRequestDto(String email, String password) {
+    public LoginRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }
