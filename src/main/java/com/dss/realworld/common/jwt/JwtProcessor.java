@@ -8,22 +8,28 @@ import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class JwtProcess {
+public class JwtProcessor {
 
     private final UserRepository userRepository;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public String create(LoginUser loginUser) {
         String jwtToken = JWT.create()
                 .withSubject(loginUser.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtVO.EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(JwtVO.SECRET));
+
+        return JwtVO.TOKEN_PREFIX + jwtToken;
+    }
+
+    public String create(String email) {
+        String jwtToken = JWT.create()
+                .withSubject(email)
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtVO.EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(JwtVO.SECRET));
 
