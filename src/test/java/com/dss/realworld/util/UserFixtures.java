@@ -1,6 +1,7 @@
 package com.dss.realworld.util;
 
 import com.dss.realworld.user.domain.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserFixtures {
 
@@ -8,6 +9,7 @@ public class UserFixtures {
         return User.builder()
                 .username("new_user")
                 .password("new_password")
+                .passwordEncoder(new BCryptPasswordEncoder())
                 .email("new_email@realworld.com")
                 .build();
     }
@@ -16,6 +18,7 @@ public class UserFixtures {
         return User.builder()
                 .username(username)
                 .password(password)
+                .passwordEncoder(new BCryptPasswordEncoder())
                 .email(email)
                 .build();
     }
@@ -26,6 +29,7 @@ public class UserFixtures {
                 .username(username)
                 .email(email)
                 .password(password)
+                .passwordEncoder(new BCryptPasswordEncoder())
                 .build();
     }
 }
