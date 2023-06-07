@@ -3,7 +3,7 @@ package com.dss.realworld.common.config;
 import com.dss.realworld.common.dto.SecurityResponse;
 import com.dss.realworld.common.jwt.JwtAuthenticationFilter;
 import com.dss.realworld.common.jwt.JwtAuthorizationFilter;
-import com.dss.realworld.common.jwt.JwtProcess;
+import com.dss.realworld.common.jwt.JwtProcessor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ import java.util.List;
 public class WebSecurityConfig {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final JwtProcess jwtProcess;
+    private final JwtProcessor jwtProcessor;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -43,8 +43,8 @@ public class WebSecurityConfig {
         @Override
         public void configure(final HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-            builder.addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProcess));
-            builder.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcess));
+            builder.addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProcessor));
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcessor));
             super.configure(builder);
         }
     }

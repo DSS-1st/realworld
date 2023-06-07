@@ -2,7 +2,7 @@ package com.dss.realworld.common.jwt;
 
 import com.dss.realworld.common.auth.LoginUser;
 import com.dss.realworld.common.dto.SecurityResponse;
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -24,14 +24,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AuthenticationManager authenticationManager;
-    private final JwtProcess jwtProcess;
+    private final JwtProcessor jwtProcessor;
 
-    public JwtAuthenticationFilter(final AuthenticationManager authenticationManager, final JwtProcess jwtProcess) {
+    public JwtAuthenticationFilter(final AuthenticationManager authenticationManager, final JwtProcessor jwtProcessor) {
         super(authenticationManager);
         super.setFilterProcessesUrl("/api/users/login");
 
         this.authenticationManager = authenticationManager;
-        this.jwtProcess = jwtProcess;
+        this.jwtProcessor = jwtProcessor;
     }
 
     @Override
@@ -40,8 +40,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         try {
             ObjectMapper om = new ObjectMapper();
-            LoginUserRequestDto loginUserRequestDto = om.readValue(request.getInputStream(), LoginUserRequestDto.class);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserRequestDto.getEmail(), loginUserRequestDto.getPassword());
+            LoginRequestDto loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDto.class);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
             //└>JWT 생성이 아닌 사용자 인증을 위한 토큰 생성
 
             return authenticationManager.authenticate(authenticationToken); //LoginService.loadUserByUsername() 호출
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.debug("디버그: successfulAuthentication() 호출됨");
 
         LoginUser loginUser = (LoginUser) authResult.getPrincipal();
-        String jwtToken = jwtProcess.create(loginUser);
+        String jwtToken = jwtProcessor.create(loginUser);
         response.addHeader(JwtVO.HEADER, jwtToken);
 
         UserResponseDto userResponseDto = new UserResponseDto(loginUser, jwtToken);

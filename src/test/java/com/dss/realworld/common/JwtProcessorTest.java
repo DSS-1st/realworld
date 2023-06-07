@@ -2,7 +2,7 @@ package com.dss.realworld.common;
 
 import com.dss.realworld.common.auth.LoginUser;
 import com.dss.realworld.common.error.exception.UserNotFoundException;
-import com.dss.realworld.common.jwt.JwtProcess;
+import com.dss.realworld.common.jwt.JwtProcessor;
 import com.dss.realworld.common.jwt.JwtVO;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ActiveProfiles(value = "test")
 @Sql(value = "classpath:db/teardown.sql")
 @SpringBootTest
-public class JwtProcessTest {
+public class JwtProcessorTest {
 
     @Autowired
-    JwtProcess jwtProcess;
+    JwtProcessor jwtProcessor;
 
     @Autowired
     UserRepository userRepository;
@@ -36,7 +36,7 @@ public class JwtProcessTest {
         LoginUser loginUser = new LoginUser(user);
 
         //when
-        String jwtToken = jwtProcess.create(loginUser);
+        String jwtToken = jwtProcessor.create(loginUser);
         System.out.println("jwtToken = " + jwtToken);
 
         //then
@@ -50,10 +50,10 @@ public class JwtProcessTest {
         String email = "tom@realworld.com";
         User user = UserFixtures.create(100L, "tom", email, "tomandtoms");
         userRepository.persist(user);
-        String jwtToken = jwtProcess.create(new LoginUser(user)).replace(JwtVO.TOKEN_PREFIX, "");
+        String jwtToken = jwtProcessor.create(new LoginUser(user)).replace(JwtVO.TOKEN_PREFIX, "");
 
         //when
-        LoginUser loginUser = jwtProcess.verify(jwtToken);
+        LoginUser loginUser = jwtProcessor.verify(jwtToken);
 
         //then
         assertThat(loginUser.getUser().getEmail()).isEqualTo(email);
@@ -67,6 +67,6 @@ public class JwtProcessTest {
 
         //when
         //then
-        assertThatThrownBy(() -> jwtProcess.verify(jwtToken)).isInstanceOf(UserNotFoundException.class).hasMessageContaining("해당하는 사용자를 찾을 수 없습니다.");
+        assertThatThrownBy(() -> jwtProcessor.verify(jwtToken)).isInstanceOf(UserNotFoundException.class).hasMessageContaining("해당하는 사용자를 찾을 수 없습니다.");
     }
 }
