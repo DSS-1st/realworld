@@ -21,7 +21,7 @@ public class SecurityConfigTest {
 
     @DisplayName(value = "사용자 인증 없이 인증이 필요한 주소로 접근 시 에러 메시지 반환")
     @Test
-    void authentication_test() throws Exception {
+    void t1() throws Exception {
         //given
         //when
         //then
@@ -29,6 +29,6 @@ public class SecurityConfigTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.statusCode").value(401))
                 .andExpect(jsonPath("$.statusReason").value("Unauthorized"))
-                .andExpect(jsonPath("$.errors.body[0]").value("사용자 인증이 필요합니다."));
+                .andExpect(jsonPath("$.errors.body[0]").value("로그인이 필요합니다."));
     }
 }
