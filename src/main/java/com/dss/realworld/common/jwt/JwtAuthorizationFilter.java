@@ -18,12 +18,12 @@ import java.util.Collections;
 //토큰 검증 로직(모든 주소에서 동작)
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private final JwtProcess jwtProcess;
+    private final JwtProcessor jwtProcessor;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, final JwtProcess jwtProcess) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, final JwtProcessor jwtProcessor) {
         super(authenticationManager);
-        this.jwtProcess = jwtProcess;
+        this.jwtProcessor = jwtProcessor;
     }
 
     @Override
@@ -31,12 +31,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         log.debug("디버그: doFilterInternal() 호출 완료");
 
         if (isHeaderVerified(request, response)) {
+            log.debug("디버그: token 존재 확인");
+
             String token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
-            LoginUser loginUser = jwtProcess.verify(token); // 모든 정보 담고 있을 필요 없음, email만 있어도 됨, 인증 후 MVC 내에서 권한 체크용도
+            LoginUser loginUser = jwtProcessor.verify(token); // 모든 정보 담고 있을 필요 없음, email만 있어도 됨, 인증 후 MVC 내에서 권한 체크용도
+            log.debug("디버그: token 검증 완료");
 
             //임시 세션 생성 by UserDetails or username
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginUser, "", Collections.emptyList());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.debug("디버그: 임시 세션 생성 완료");
         }
 
         chain.doFilter(request, response);
