@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 @Getter
 @NoArgsConstructor
-public class LoginUserRequestDto {
+public class LoginRequestDto {
 
     private String email;
     private String password;
 
     @Builder
-    public LoginUserRequestDto(String email, String password) {
+    public LoginRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -1,7 +1,7 @@
 package com.dss.realworld.user.api;
 
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -88,13 +88,13 @@ class UserControllerTest {
         //given
         String loginUsername = "Jacob";
         String loginUserEmail = "jake@jake.jake";
-        LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
+        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
                 .email(loginUserEmail)
                 .password("jakejake")
                 .build();
 
         //when
-        String requestBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(loginUserRequestDto);
+        String requestBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(loginRequestDto);
 
         //then
         mockMvc.perform(post("/api/users/login")

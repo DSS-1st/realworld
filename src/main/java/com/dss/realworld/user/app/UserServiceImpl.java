@@ -5,7 +5,7 @@ import com.dss.realworld.common.error.exception.DuplicateUsernameException;
 import com.dss.realworld.common.error.exception.PasswordNotMatchedException;
 import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.domain.User;
@@ -68,9 +68,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto login(LoginUserRequestDto loginUserRequestDto) {
-        User user = userRepository.findByEmail(loginUserRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
-        if (!user.isMatch(loginUserRequestDto, passwordEncoder)) throw new PasswordNotMatchedException();
+    public UserResponseDto login(LoginRequestDto loginRequestDto) {
+        User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
+        if (!user.isMatch(loginRequestDto, passwordEncoder)) throw new PasswordNotMatchedException();
 
         return new UserResponseDto(user);
     }

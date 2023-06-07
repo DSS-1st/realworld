@@ -1,6 +1,6 @@
 package com.dss.realworld.user.app;
 
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import org.junit.jupiter.api.DisplayName;
@@ -46,12 +46,12 @@ public class UserServiceTest {
         //given
         String savedUsername = "Jacob";
 
-        LoginUserRequestDto loginUserRequestDto = LoginUserRequestDto.builder()
+        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
                 .email("jake@jake.jake")
                 .password("jakejake")
                 .build();
 
-        UserResponseDto userResponseDto = userService.login(loginUserRequestDto);
+        UserResponseDto userResponseDto = userService.login(loginRequestDto);
 
         assertThat(userResponseDto.getUsername()).isEqualTo(savedUsername);
     }

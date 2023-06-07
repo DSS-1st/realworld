@@ -1,6 +1,6 @@
 package com.dss.realworld.user.domain;
 
-import com.dss.realworld.user.api.dto.LoginUserRequestDto;
+import com.dss.realworld.user.api.dto.LoginRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +39,7 @@ public class User {
         this.image = image;
     }
 
-    public boolean isMatch(LoginUserRequestDto loginUserRequestDto, BCryptPasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(loginUserRequestDto.getPassword(), this.password);
+    public boolean isMatch(LoginRequestDto loginRequestDto, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequestDto.getPassword(), this.password);
     }
 }
