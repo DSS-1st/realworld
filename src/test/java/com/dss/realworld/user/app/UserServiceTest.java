@@ -40,7 +40,7 @@ public class UserServiceTest {
         assertThat(userResponseDto.getEmail()).isEqualTo(updateUserRequestDto.getEmail());
     }
 
-    @DisplayName(value = "로그인 정보가 일치하면 로그인된 회원정보 반환 성공")
+    @DisplayName(value = "로그인 성공 후 회원정보 반환 성공")
     @Test
     void t2() {
         //given
@@ -56,7 +56,8 @@ public class UserServiceTest {
         assertThat(userResponseDto.getUsername()).isEqualTo(savedUsername);
     }
 
-    @DisplayName(value = "현재 회원 정보 가져오기")
+    //todo 시큐리티 적용 후 테스트 수정(LoginId가져오는 방법 변경)
+    @DisplayName(value = "로그인된 현재 회원 정보 가져오기")
     @Test
     void t3() {
         Long loginId = 1L;

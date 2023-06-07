@@ -32,7 +32,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if (isHeaderVerified(request, response)) {
             String token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
-            LoginUser loginUser = jwtProcess.verify(token);
+            LoginUser loginUser = jwtProcess.verify(token); // 모든 정보 담고 있을 필요 없음, email만 있어도 됨, 인증 후 MVC 내에서 권한 체크용도
 
             //임시 세션 생성 by UserDetails or username
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginUser, "", Collections.emptyList());

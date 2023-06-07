@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JwtAuthenticationFilter(final AuthenticationManager authenticationManager, final JwtProcess jwtProcess) {
         super(authenticationManager);
-        setFilterProcessesUrl("/api/users/login");
+        super.setFilterProcessesUrl("/api/users/login");
 
         this.authenticationManager = authenticationManager;
         this.jwtProcess = jwtProcess;
@@ -42,8 +42,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             ObjectMapper om = new ObjectMapper();
             LoginUserRequestDto loginUserRequestDto = om.readValue(request.getInputStream(), LoginUserRequestDto.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserRequestDto.getEmail(), loginUserRequestDto.getPassword());
+            //└>JWT 생성이 아닌 사용자 인증을 위한 토큰 생성
 
-            return authenticationManager.authenticate(authenticationToken);
+            return authenticationManager.authenticate(authenticationToken); //LoginService.loadUserByUsername() 호출
         } catch (Exception e) {
             //아래 예외 발생 후 unsuccessfulAuthentication() 호출됨
             throw new InternalAuthenticationServiceException(e.getMessage());
