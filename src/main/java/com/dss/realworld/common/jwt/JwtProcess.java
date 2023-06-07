@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class JwtProcess {
 
     private final UserRepository userRepository;
