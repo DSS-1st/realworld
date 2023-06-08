@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -54,13 +55,14 @@ class UserControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(username))
                 .andExpect(jsonPath("$..email").value(email))
                 .andExpect(jsonPath("$..token").isNotEmpty());
     }
 
     @DisplayName(value = "updateUserResponseDto가 유효하면 업데이트 성공")
+    @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t2() throws Exception {
         //given
@@ -76,7 +78,7 @@ class UserControllerTest {
         //then
         mockMvc.perform(put("/api/user")
                 .contentType(MediaType.APPLICATION_JSON).content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(updateRequestDto.getUsername()))
                 .andExpect(jsonPath("$..email").value(updateRequestDto.getEmail()))
                 .andExpect(jsonPath("$..image").value(updateRequestDto.getImage()));
@@ -99,13 +101,13 @@ class UserControllerTest {
         //then
         mockMvc.perform(post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON).content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(loginUsername))
                 .andExpect(jsonPath("$..email").value(loginUserEmail));
     }
 
-    //todo 스프링 시큐리티 적용 후 수정
     @DisplayName(value = "현재 로그인한 계정 정보 반환 성공")
+    @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t4() throws Exception {
         //given
@@ -116,7 +118,7 @@ class UserControllerTest {
         //then
         mockMvc.perform(get("/api/user")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(username))
                 .andExpect(jsonPath("$..email").value(email));
     }

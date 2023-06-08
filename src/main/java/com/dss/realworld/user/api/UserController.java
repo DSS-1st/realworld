@@ -1,12 +1,15 @@
 package com.dss.realworld.user.api;
 
+import com.dss.realworld.common.auth.LoginUser;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
 import com.dss.realworld.user.app.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,14 +26,14 @@ public class UserController {
     public ResponseEntity<UserResponseDto> add(@RequestBody @Valid AddUserRequestDto addUserRequestDto, BindingResult bindingResult) {
         UserResponseDto userResponseDto = userService.save(addUserRequestDto);
 
-        return ResponseEntity.ok(userResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
     @PutMapping(value = "/user")
-    public ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateUserRequestDto, BindingResult bindingResult) {
-        UserResponseDto userResponseDto = userService.update(updateUserRequestDto, getLoginUserId());
+    public ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateUserRequestDto, BindingResult bindingResult, @AuthenticationPrincipal LoginUser loginUser) {
+        UserResponseDto userResponseDto = userService.update(updateUserRequestDto, loginUser.getUser().getId());
 
-        return ResponseEntity.ok(userResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
     @PostMapping(value = "/users/login")
@@ -41,13 +44,9 @@ public class UserController {
     }
 
     @GetMapping(value = "/user")
-    public ResponseEntity<UserResponseDto> getCurrentUser() {
-        UserResponseDto userResponseDto = userService.get(getLoginUserId());
+    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal LoginUser loginUser) {
+        UserResponseDto userResponseDto = userService.get(loginUser.getUser().getId());
 
-        return ResponseEntity.ok(userResponseDto);
-    }
-
-    private Long getLoginUserId() {
-        return 1L;
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 }
