@@ -44,17 +44,16 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.persist(comment);
         Comment foundComment = commentRepository.findById(comment.getId()).orElseThrow(CommentNotFoundException::new);
-        AuthorDto author = getAuthor(comment.getUserId());
+        AuthorDto author = getAuthor(foundComment.getUserId());
 
         return new AddCommentResponseDto(foundComment, author);
     }
 
     @Override
-    @Transactional
-    public int delete(final String slug, final Long commentId, final Long userId) {
-        Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+    public AuthorDto getAuthor(final Long userId) {
+        User foundAuthor = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        return commentRepository.delete(commentId, article.getId(), userId);
+        return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage(), false);
     }
 
     @Override
@@ -68,10 +67,28 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public AuthorDto getAuthor(final Long userId) {
+    public List<CommentDto> getAll(final String slug, final Long loginId) {
+        Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+
+        return commentRepository.findAll(foundArticle.getId())
+                .stream()
+                .map(comment -> CommentDto.of(comment, getAuthor(comment.getUserId(), loginId)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public AuthorDto getAuthor(final Long userId, final Long loginId) {
         User foundAuthor = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        int result = followingRepository.isFollowing(foundAuthor.getId(), userId);
+        int result = followingRepository.isFollowing(foundAuthor.getId(), loginId);
 
         return AuthorDto.of(foundAuthor.getUsername(), foundAuthor.getBio(), foundAuthor.getImage(), result == 1);
+    }
+
+    @Override
+    @Transactional
+    public int delete(final String slug, final Long commentId, final Long userId) {
+        Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
+
+        return commentRepository.delete(commentId, article.getId(), userId);
     }
 }
