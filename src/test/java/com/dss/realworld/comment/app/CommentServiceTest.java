@@ -2,6 +2,7 @@ package com.dss.realworld.comment.app;
 
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
 import com.dss.realworld.comment.api.dto.AddCommentResponseDto;
+import com.dss.realworld.comment.api.dto.CommentDto;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.util.CommentFixtures;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,42 +29,41 @@ class CommentServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @DisplayName(value = "매개변수들이 유효하면 댓글 작성 성공")
+    @DisplayName(value = "requestDto가 유효하면 댓글 작성 성공")
     @Test
     void t1() {
         //given
-        AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
-        Long logonUserId = 1L;
+        String comment = "His name was my name too.";
+        AddCommentRequestDto addCommentRequestDto = new AddCommentRequestDto(comment);
+        Long loginId = 1L;
         String slug = "new-title-1";
 
         //when
-        AddCommentResponseDto saveComment = commentService.add(addCommentRequestDto, logonUserId, slug);
+        AddCommentResponseDto saveComment = commentService.add(addCommentRequestDto, loginId, slug);
 
         //then
-        Assertions.assertThat(saveComment.getBody()).isEqualTo("His name was my name too.");
+        Assertions.assertThat(saveComment.getBody()).isEqualTo(comment);
     }
 
-    @DisplayName(value = "commentId가 유효하면 댓글 삭제 성공")
+    @DisplayName(value = "파라미터가 유효하면 댓글 삭제 성공")
     @Test
     void t2() {
         //given
-        Comment comment1 = CommentFixtures.create();
-        commentRepository.persist(comment1);
-
-        Long commnetId = 1L;
-        Long articleId = 1L;
+        String slug = "new-title-1";
+        Long commentId = 1L;
         Long userId = 1L;
 
         //when
-        final int result = commentRepository.delete(commnetId, articleId, userId);
+        final int result = commentService.delete(slug, commentId, userId);
 
         //then
         assertThat(result).isEqualTo(1);
     }
 
-    @DisplayName(value = "slug가 유효하면 comment 리스트 가져오기 성공")
+    @DisplayName(value = "slug가 유효하면 여러 comment 가져오기 성공")
     @Test
     void t3() {
+        //given
         Comment newComment1 = CommentFixtures.create();
         Comment newComment2 = CommentFixtures.create();
         commentRepository.persist(newComment1);
@@ -69,12 +71,10 @@ class CommentServiceTest {
 
         String slug = "new-title-1";
 
-        assertThat(commentService.getAll(slug).size()).isEqualTo(3);
-    }
+        //when
+        List<CommentDto> commentList = commentService.getAll(slug);
 
-    private AddCommentRequestDto createAddCommentRequestDto() {
-        String body = "His name was my name too.";
-
-        return new AddCommentRequestDto(body);
+        //then
+        assertThat(commentList.size()).isEqualTo(3);
     }
 }
