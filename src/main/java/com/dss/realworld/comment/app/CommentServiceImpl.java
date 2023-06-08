@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public AddCommentResponseDto add(AddCommentRequestDto addCommentRequestDto, Long loginId, String slug) {
+    public AddCommentResponseDto add(final AddCommentRequestDto addCommentRequestDto, final Long loginId, final String slug) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         Comment comment = Comment.builder()
@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public int delete(final String slug, final Long commentId, Long userId) {
+    public int delete(final String slug, final Long commentId, final Long userId) {
         Article article = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         return commentRepository.delete(commentId, article.getId(), userId);
@@ -68,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public AuthorDto getAuthor(Long userId) {
+    public AuthorDto getAuthor(final Long userId) {
         User foundAuthor = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         int result = followingRepository.isFollowing(foundAuthor.getId(), userId);
 
