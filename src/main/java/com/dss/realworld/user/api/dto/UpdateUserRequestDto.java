@@ -17,14 +17,14 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UpdateUserRequestDto {
 
-    @NotBlank(message = "can't empty or space only email")
+    @NotBlank(message = "can't empty or space only")
     @Email
     private String email;
 
-    @NotBlank(message = "can't empty or space only username")
+    @NotBlank(message = "can't empty or space only")
     private String username;
 
-    @NotBlank(message = "can't empty or space only password")
+    @NotBlank(message = "can't empty or space only")
     private String password;
 
     private String bio;
