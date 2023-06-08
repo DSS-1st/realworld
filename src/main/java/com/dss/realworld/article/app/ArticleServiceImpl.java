@@ -38,7 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final FollowingRepository followingRepository;
 
     @Override
-    public ArticleResponseDto findBySlug(final String slug, final Long loginId) {
+    public ArticleResponseDto get(final String slug, final Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
 
         return getArticleResponseDto(loginId, foundArticle);
@@ -178,7 +178,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public void delete(String slug, Long loginId) {
+    public void delete(final String slug, final Long loginId) {
         Article foundArticle = articleRepository.findBySlug(slug).orElseThrow(ArticleNotFoundException::new);
         if (foundArticle.isAuthorMatch(loginId)) throw new ArticleAuthorNotMatchException();
 

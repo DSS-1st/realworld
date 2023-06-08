@@ -59,11 +59,11 @@ public class ArticleServiceTest {
     @Test
     void t1() {
         //given
-        Long userId = 1L;
+        Long loginId = 1L;
         CreateArticleRequestDto createArticleRequestDto = createArticleDto();
 
         //when
-        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, userId);
+        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, loginId);
 
         //then
         assertThat(articleResponseDto.getTitle()).isEqualTo(createArticleRequestDto.getTitle());
@@ -79,7 +79,7 @@ public class ArticleServiceTest {
         assertThat(savedArticle.getTitle()).isEqualTo(createArticleRequestDto.getTitle());
 
         //when
-        ArticleResponseDto foundArticle = articleService.findBySlug(savedArticle.getSlug(), userId);
+        ArticleResponseDto foundArticle = articleService.get(savedArticle.getSlug(), userId);
 
         //then
         Assertions.assertThat(foundArticle.getSlug()).isEqualTo(savedArticle.getSlug());
