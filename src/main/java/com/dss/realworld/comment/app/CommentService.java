@@ -13,7 +13,11 @@ public interface CommentService {
 
     int delete(String slug, Long commentId, Long userId);
 
+    List<CommentDto> getAll(String slug);
+
+    List<CommentDto> getAll(String slug, Long loginId);
+
     AuthorDto getAuthor(Long userId);
 
-    List<CommentDto> getAll(String slug);
+    AuthorDto getAuthor(Long userId, Long loginId);
 }

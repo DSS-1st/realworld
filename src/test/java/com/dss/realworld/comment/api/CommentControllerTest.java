@@ -1,7 +1,6 @@
 package com.dss.realworld.comment.api;
 
 import com.dss.realworld.comment.api.dto.AddCommentRequestDto;
-import com.dss.realworld.comment.app.CommentService;
 import com.dss.realworld.comment.domain.Comment;
 import com.dss.realworld.comment.domain.repository.CommentRepository;
 import com.dss.realworld.util.CommentFixtures;
@@ -38,9 +37,6 @@ class CommentControllerTest {
 
     @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
-    private CommentService commentService;
 
     @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 작성 성공")
     @WithUserDetails(value = "jake@jake.jake")
@@ -89,16 +85,13 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.errors.body[0]").value("로그인이 필요합니다."));
     }
 
-    @DisplayName(value = "AddCommentRequestDto와 Slug가 NotNull이 아니면 댓글 삭제 성공")
+    @DisplayName(value = "slug, commentId가 유효하면 댓글 삭제 성공")
     @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t3() throws Exception {
         //given
-        Long commentId = 1L;
-        Long loginId = 1L;
         String slug = "new-title-1";
-        AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
-        commentService.add(addCommentRequestDto, loginId, slug);
+        Long commentId = 1L;
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -114,11 +107,8 @@ class CommentControllerTest {
     @Test
     void t4() throws Exception {
         //given
-        Long commentId = 1L;
-        Long loginId = 1L;
         String slug = "new-title-1";
-        AddCommentRequestDto addCommentRequestDto = createAddCommentRequestDto();
-        commentService.add(addCommentRequestDto, loginId, slug);
+        Long commentId = 1L;
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -132,12 +122,15 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.errors.body[0]").value("로그인이 필요합니다."));
     }
 
-    @DisplayName(value = "Slug 값이 유효하면 댓글 리스트 가져오기 성공")
+    @DisplayName(value = "로그인 상태에서 댓글 목록 중에 팔로우한 상대의 댓글은 following 상태가 true")
+    @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t5() throws Exception {
         //given
-        Comment newComment1 = CommentFixtures.create();
-        Comment newComment2 = CommentFixtures.create();
+        Long followingAuthorId = 2L;
+        String followingAuthorName = "Kate";
+        Comment newComment1 = CommentFixtures.create(followingAuthorId);
+        Comment newComment2 = CommentFixtures.create(followingAuthorId);
 
         commentRepository.persist(newComment1);
         commentRepository.persist(newComment2);
@@ -156,14 +149,53 @@ class CommentControllerTest {
             .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.comments.size()").value(3))
-            .andExpect(jsonPath("$.comments[0].id").value(1))
-            .andExpect(jsonPath("$.comments[0].id").isNumber())
-            .andExpect(jsonPath("$.comments[0].createdAt").exists())
-            .andExpect(jsonPath("$.comments[0].updatedAt").exists())
-            .andExpect(jsonPath("$.comments[0].body").exists())
-            .andExpect(jsonPath("$.comments[0].author.username").exists())
+            .andExpect(jsonPath("$.comments[1].id").exists())
+            .andExpect(jsonPath("$.comments[2].id").exists())
+            .andExpect(jsonPath("$.comments[1].createdAt").exists())
+            .andExpect(jsonPath("$.comments[1].updatedAt").exists())
+            .andExpect(jsonPath("$.comments[1].body").exists())
+            .andExpect(jsonPath("$.comments[1].author.username").value(followingAuthorName))
+            .andExpect(jsonPath("$.comments[2].author.username").value(followingAuthorName))
             .andExpect(jsonPath("$.comments[0].author.following").value(false))
-            .andExpect(jsonPath("$.comments[0].author.following").value(false));
+            .andExpect(jsonPath("$.comments[1].author.following").value(true))
+            .andExpect(jsonPath("$.comments[2].author.following").value(true));
+    }
+
+    @DisplayName(value = "로그인 없이 댓글 목록 요청 시 following 상태 false")
+    @Test
+    void t6() throws Exception {
+        //given
+        Long AuthorId = 1L;
+        String AuthorName = "Jacob";
+
+        Comment newComment1 = CommentFixtures.create();
+        Comment newComment2 = CommentFixtures.create();
+
+        commentRepository.persist(newComment1);
+        commentRepository.persist(newComment2);
+
+        String slug = "new-title-1";
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles/{slug}/comments", slug)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(mockRequest);
+
+        //then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.comments.size()").value(3))
+                .andExpect(jsonPath("$.comments[0].id").value(AuthorId))
+                .andExpect(jsonPath("$.comments[0].createdAt").exists())
+                .andExpect(jsonPath("$.comments[0].updatedAt").exists())
+                .andExpect(jsonPath("$.comments[0].body").exists())
+                .andExpect(jsonPath("$.comments[0].author.username").value(AuthorName))
+                .andExpect(jsonPath("$.comments[0].author.following").value(false))
+                .andExpect(jsonPath("$.comments[1].author.following").value(false))
+                .andExpect(jsonPath("$.comments[2].author.following").value(false));
     }
 
     private AddCommentRequestDto createAddCommentRequestDto() {

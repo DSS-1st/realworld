@@ -68,11 +68,11 @@ class CommentServiceTest {
         Comment newComment2 = CommentFixtures.create();
         commentRepository.persist(newComment1);
         commentRepository.persist(newComment2);
-
         String slug = "new-title-1";
+        Long loginId = 1L;
 
         //when
-        List<CommentDto> commentList = commentService.getAll(slug);
+        List<CommentDto> commentList = commentService.getAll(slug, loginId);
 
         //then
         assertThat(commentList.size()).isEqualTo(3);
