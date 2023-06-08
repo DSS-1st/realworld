@@ -17,21 +17,26 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping(value = "/profiles/{username}")
-    public ResponseEntity<ProfileResponseDto> get(@PathVariable String username, @AuthenticationPrincipal LoginUser loginUser) {
-        ProfileResponseDto profileResponseDto = profileService.get(username, loginUser.getUser().getId());
+    public ResponseEntity<ProfileResponseDto> get(@PathVariable final String username,
+                                                  @AuthenticationPrincipal final LoginUser loginUser) {
+        ProfileResponseDto profileResponseDto;
+        if (loginUser == null) profileResponseDto = profileService.get(username, null);
+        else profileResponseDto = profileService.get(username, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponseDto);
     }
 
     @PostMapping(value = "/profiles/{username}/follow")
-    public ResponseEntity<ProfileResponseDto> follow(@PathVariable String username, @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<ProfileResponseDto> follow(@PathVariable final String username,
+                                                     @AuthenticationPrincipal final LoginUser loginUser) {
         ProfileResponseDto profileResponseDto = profileService.follow(username, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponseDto);
     }
 
     @DeleteMapping(value = "/profiles/{username}/follow")
-    public ResponseEntity<ProfileResponseDto> unfollow(@PathVariable String username, @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<ProfileResponseDto> unfollow(@PathVariable final String username,
+                                                       @AuthenticationPrincipal final LoginUser loginUser) {
         ProfileResponseDto profileResponseDto = profileService.unFollow(username, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponseDto);

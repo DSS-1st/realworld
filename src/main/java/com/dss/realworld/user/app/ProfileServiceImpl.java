@@ -20,7 +20,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final FollowingRepository followingRepository;
 
     @Override
-    public ProfileResponseDto get(String username, Long loginId) {
+    public ProfileResponseDto get(final String username, final Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         int result = followingRepository.isFollowing(targetUser.getId(), loginId);
 
@@ -29,7 +29,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Transactional
     @Override
-    public ProfileResponseDto follow(String username, Long loginId) {
+    public ProfileResponseDto follow(final String username, final Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if (followingRepository.isFollowing(targetUser.getId(), loginId) != 0) throw new DuplicateFollowingException();
 
@@ -41,7 +41,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Transactional
     @Override
-    public ProfileResponseDto unFollow(String username, Long loginId) {
+    public ProfileResponseDto unFollow(final String username, final Long loginId) {
         User targetUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         followingRepository.delete(targetUser.getId(), loginId);
@@ -49,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
         return getProfileResponseDto(targetUser, false);
     }
 
-    private ProfileResponseDto getProfileResponseDto(User targetUser, boolean isFollow) {
+    private ProfileResponseDto getProfileResponseDto(final User targetUser, final boolean isFollow) {
         return ProfileResponseDto.builder()
                 .username(targetUser.getUsername())
                 .bio(targetUser.getBio())

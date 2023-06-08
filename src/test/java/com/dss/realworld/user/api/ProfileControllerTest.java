@@ -15,13 +15,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles(value = "test")
 @Sql(value = {"classpath:db/teardown.sql", "classpath:db/dataSetup.sql"})
-@SpringBootTest
 @AutoConfigureMockMvc
+@SpringBootTest
 public class ProfileControllerTest {
 
     @Autowired
@@ -30,7 +31,7 @@ public class ProfileControllerTest {
     @Autowired
     private FollowingRepository followingRepository;
 
-    @DisplayName(value = "username이 유효하면 조회 성공")
+    @DisplayName(value = "로그인 상태에서 username이 유효하면 조회 성공")
     @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t1() throws Exception {
@@ -43,8 +44,28 @@ public class ProfileControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
+                .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$..username").value(username));
+                .andExpect(jsonPath("$.profile.username").value(username))
+                .andExpect(jsonPath("$.profile.following").value(true));
+    }
+
+    @DisplayName(value = "로그인 없이도 username이 유효하면 조회 성공")
+    @Test
+    void t1_1() throws Exception {
+        //given
+        String username = "Kate";
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/profiles/" + username);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.profile.username").value(username))
+                .andExpect(jsonPath("$.profile.following").value(false));
     }
 
     @DisplayName(value = "username이 유효하면 팔로우 성공")
@@ -58,9 +79,10 @@ public class ProfileControllerTest {
         //when
         //then
         mockMvc.perform(post("/api/profiles/{username}/follow", targetName))
+                .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$..username").value(targetName))
-                .andExpect(jsonPath("$..following").value(true));
+                .andExpect(jsonPath("$.profile.username").value(targetName))
+                .andExpect(jsonPath("$.profile.following").value(true));
     }
 
     @DisplayName(value = "username이 유효하면 팔로우 취소")
@@ -73,7 +95,10 @@ public class ProfileControllerTest {
         //when
         //then
         mockMvc.perform(delete("/api/profiles/{username}/follow", targetName))
-                .andExpect(status().isCreated());
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.profile.username").value(targetName))
+                .andExpect(jsonPath("$.profile.following").value(false));
     }
 
     @DisplayName(value = "이미 팔로우한 상태이면 예외 메시지 반환")
@@ -86,6 +111,7 @@ public class ProfileControllerTest {
         //when
         //then
         mockMvc.perform(post("/api/profiles/{username}/follow", targetName))
+                .andDo(print())
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errors.body[0]").value("이미 팔로우한 사용자입니다."));
     }
