@@ -8,7 +8,7 @@ import com.dss.realworld.common.dto.AuthorDto;
 
 public interface ArticleService {
 
-    ArticleResponseDto findBySlug(String slug, Long loginId);
+    ArticleResponseDto get(String slug, Long loginId);
 
     ArticleResponseDto save(CreateArticleRequestDto createArticleRequestDto, Long loginId);
 
