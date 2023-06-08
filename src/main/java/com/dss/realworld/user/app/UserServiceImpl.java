@@ -4,6 +4,7 @@ import com.dss.realworld.common.error.exception.DuplicateEmailException;
 import com.dss.realworld.common.error.exception.DuplicateUsernameException;
 import com.dss.realworld.common.error.exception.PasswordNotMatchedException;
 import com.dss.realworld.common.error.exception.UserNotFoundException;
+import com.dss.realworld.common.jwt.JwtProcessor;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtProcessor jwtProcessor;
 
     @Transactional
     @Override
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
         User foundUser = userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        return new UserResponseDto(foundUser);
+        return new UserResponseDto(foundUser, jwtProcessor.create(foundUser.getEmail()));
     }
 
     private void checkDuplicateUser(final User user) {
@@ -64,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userRepository.findByEmail(updateValue.getEmail()).orElseThrow(UserNotFoundException::new);
 
-        return new UserResponseDto(updatedUser);
+        return new UserResponseDto(updatedUser, jwtProcessor.create(updatedUser.getEmail()));
     }
 
     @Override
@@ -72,13 +74,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
         if (!user.isMatch(loginRequestDto, passwordEncoder)) throw new PasswordNotMatchedException();
 
-        return new UserResponseDto(user);
+        return new UserResponseDto(user, jwtProcessor.create(user.getEmail()));
     }
 
     @Override
-    public UserResponseDto get(Long loginUserId) {
-        User foundUser = userRepository.findById(loginUserId).orElseThrow(UserNotFoundException::new);
+    public UserResponseDto get(Long loginId) {
+        User foundUser = userRepository.findById(loginId).orElseThrow(UserNotFoundException::new);
 
-        return new UserResponseDto(foundUser);
+        return new UserResponseDto(foundUser, jwtProcessor.create(foundUser.getEmail()));
     }
 }

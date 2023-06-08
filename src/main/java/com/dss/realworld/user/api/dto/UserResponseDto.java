@@ -19,9 +19,9 @@ public class UserResponseDto {
     private final String bio;
     private final String image;
 
-    public UserResponseDto(User user) {
+    public UserResponseDto(User user, String token) {
         this.email = user.getEmail();
-        this.token = "";
+        this.token = token;
         this.username = user.getUsername();
         this.bio = user.getBio();
         this.image = user.getImage();

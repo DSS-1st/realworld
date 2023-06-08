@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -21,6 +22,9 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @DisplayName(value = "User 생성 후 username으로 조회 성공")
     @Test
     void t1() {
@@ -28,11 +32,13 @@ public class UserRepositoryTest {
         User newUser1 = User.builder()
                 .username("json")
                 .password("jsonjson")
+                .passwordEncoder(passwordEncoder)
                 .email("json@json.json")
                 .build();
         User newUser2 = User.builder()
                 .username("kite")
                 .password("kitekite")
+                .passwordEncoder(passwordEncoder)
                 .email("kite@kite.kite")
                 .build();
 
@@ -52,11 +58,13 @@ public class UserRepositoryTest {
         User newUser1 = User.builder()
                 .username("json")
                 .password("jsonjson")
+                .passwordEncoder(passwordEncoder)
                 .email("json@json.json")
                 .build();
         User newUser2 = User.builder()
                 .username("kite")
                 .password("kitekite")
+                .passwordEncoder(passwordEncoder)
                 .email("kite@kite.kite")
                 .build();
 
@@ -82,6 +90,7 @@ public class UserRepositoryTest {
                 .image("image")
                 .username("blabla")
                 .password("1234")
+                .passwordEncoder(passwordEncoder)
                 .build();
 
         //when
