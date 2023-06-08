@@ -5,9 +5,11 @@ import com.dss.realworld.article.api.dto.ArticleResponseDto;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
+import com.dss.realworld.common.auth.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,69 +23,78 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping
-    public ResponseEntity<ArticleListResponseDto> list(@RequestParam(value = "tag", required = false) String tag,
-                                                       @RequestParam(value = "author", required = false) String author,
-                                                       @RequestParam(value = "favorited", required = false) String favorited,
+    public ResponseEntity<ArticleListResponseDto> list(@RequestParam(value = "tag", required = false) final String tag,
+                                                       @RequestParam(value = "author", required = false) final String author,
+                                                       @RequestParam(value = "favorited", required = false) final String favorited,
                                                        @RequestParam(required = false, defaultValue = "0") final int offset,
-                                                       @RequestParam(required = false, defaultValue = "20") final int limit) {
-        ArticleListResponseDto articles = articleService.list(tag, author, favorited, getLoginUserId(), limit, offset);
+                                                       @RequestParam(required = false, defaultValue = "20") final int limit,
+                                                       @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleListResponseDto articles;
+        if (loginUser == null) articles = articleService.list(tag, author, favorited, null, limit, offset);
+        else articles = articleService.list(tag, author, favorited, loginUser.getUser().getId(), limit, offset);
 
-        return ResponseEntity.ok(articles);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articles);
     }
 
     @GetMapping(value = "/{slug}")
-    public ResponseEntity<ArticleResponseDto> findBySlug(@PathVariable final String slug) {
-        ArticleResponseDto articleResponseDto = articleService.findBySlug(slug, getLoginUserId());
+    public ResponseEntity<ArticleResponseDto> get(@PathVariable final String slug,
+                                                  @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleResponseDto articleResponseDto;
+        if (loginUser == null) articleResponseDto = articleService.get(slug, null);
+        else articleResponseDto = articleService.get(slug, loginUser.getUser().getId());
 
-        return ResponseEntity.ok(articleResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @GetMapping(value = "/feed")
     public ResponseEntity<ArticleListResponseDto> feed(@RequestParam(required = false, defaultValue = "0") final int offset,
-                                                       @RequestParam(required = false, defaultValue = "20") final int limit) {
-        ArticleListResponseDto articles = articleService.feed(getLoginUserId(), limit, offset);
+                                                       @RequestParam(required = false, defaultValue = "20") final int limit,
+                                                       @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleListResponseDto articles = articleService.feed(loginUser.getUser().getId(), limit, offset);
 
-        return ResponseEntity.ok(articles);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articles);
     }
 
     @PostMapping
-    public ResponseEntity<ArticleResponseDto> create(@RequestBody @Valid CreateArticleRequestDto createArticleRequestDto, BindingResult bindingResult) {
-        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, getLoginUserId());
+    public ResponseEntity<ArticleResponseDto> create(@RequestBody @Valid final CreateArticleRequestDto createArticleRequestDto,
+                                                     final BindingResult bindingResult,
+                                                     @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @PutMapping(value = "/{slug}")
-    public ResponseEntity<ArticleResponseDto> update(@RequestBody @Valid final UpdateArticleRequestDto updateArticleRequestDto, BindingResult bindingResult,
-                                                     @PathVariable final String slug) {
-        ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, getLoginUserId(), slug);
+    public ResponseEntity<ArticleResponseDto> update(@RequestBody @Valid final UpdateArticleRequestDto updateArticleRequestDto,
+                                                     final BindingResult bindingResult,
+                                                     @PathVariable final String slug,
+                                                     @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, loginUser.getUser().getId(), slug);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @DeleteMapping(value = "/{slug}")
-    public ResponseEntity delete(@PathVariable final String slug) {
-        articleService.delete(slug, getLoginUserId());
+    public ResponseEntity delete(@PathVariable final String slug,
+                                 @AuthenticationPrincipal final LoginUser loginUser) {
+        articleService.delete(slug, loginUser.getUser().getId());
 
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/{slug}/favorite")
-    public ResponseEntity<ArticleResponseDto> favorite(@PathVariable final String slug) {
-        ArticleResponseDto articleResponseDto = articleService.favorite(slug, getLoginUserId());
+    public ResponseEntity<ArticleResponseDto> favorite(@PathVariable final String slug,
+                                                       @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleResponseDto articleResponseDto = articleService.favorite(slug, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
     }
 
     @DeleteMapping(value = "/{slug}/favorite")
-    public ResponseEntity<ArticleResponseDto> unfavorite(@PathVariable final String slug) {
-        ArticleResponseDto articleResponseDto = articleService.unfavorite(slug, getLoginUserId());
+    public ResponseEntity<ArticleResponseDto> unfavorite(@PathVariable final String slug,
+                                                         @AuthenticationPrincipal final LoginUser loginUser) {
+        ArticleResponseDto articleResponseDto = articleService.unfavorite(slug, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
-    }
-
-    // todo SecurityContextHolder에서 인증 정보 얻기
-    private Long getLoginUserId() {
-        return 1L;
     }
 }
