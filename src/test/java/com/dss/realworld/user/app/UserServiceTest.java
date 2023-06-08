@@ -1,12 +1,17 @@
 package com.dss.realworld.user.app;
 
+import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
 import com.dss.realworld.user.api.dto.UserResponseDto;
+import com.dss.realworld.user.domain.User;
+import com.dss.realworld.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -19,6 +24,9 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @DisplayName(value = "updateUserRequestDto 값이 유효하면 업데이트 성공")
     @Test
@@ -51,19 +59,25 @@ public class UserServiceTest {
                 .password("jakejake")
                 .build();
 
+        //when
         UserResponseDto userResponseDto = userService.login(loginRequestDto);
 
+        //then
         assertThat(userResponseDto.getUsername()).isEqualTo(savedUsername);
     }
 
-    //todo 시큐리티 적용 후 테스트 수정(LoginId가져오는 방법 변경)
     @DisplayName(value = "로그인된 현재 회원 정보 가져오기")
+    @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t3() {
-        Long loginId = 1L;
+        //given
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User foundUser = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
-        UserResponseDto currentUser = userService.get(loginId);
+        //when
+        UserResponseDto currentUser = userService.get(foundUser.getId());
 
+        //then
         assertThat(currentUser.getUsername()).isEqualTo("Jacob");
         assertThat(currentUser.getEmail()).isEqualTo("jake@jake.jake");
     }

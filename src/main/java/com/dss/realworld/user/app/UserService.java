@@ -13,5 +13,5 @@ public interface UserService {
 
     UserResponseDto login(LoginRequestDto loginRequestDto);
 
-    UserResponseDto get(Long loginUserId);
+    UserResponseDto get(Long loginId);
 }
