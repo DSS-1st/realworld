@@ -63,10 +63,11 @@ public class JwtProcessorTest {
     @Test
     void t3() {
         //given
-        String jwtToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXRlMTIzNEByZWFsd29ybGQuY29tIiwiZXhwIjoxNjg2NzI0NjcxfQ.uKt3OdmQzCfebUs2JpJxtIGfZK-DXmgIzpcEP1XTOSyi-eocCsgw46DPvwAoDkJPNELJg7rV12ExuEur8ywUzg";
+        String email = "non_existent_user@realworld.com";
+        String token = jwtProcessor.create(email).replace(JwtVO.TOKEN_PREFIX, "");
 
         //when
         //then
-        assertThatThrownBy(() -> jwtProcessor.verify(jwtToken)).isInstanceOf(UserNotFoundException.class).hasMessageContaining("해당하는 사용자를 찾을 수 없습니다.");
+        assertThatThrownBy(() -> jwtProcessor.verify(token)).isInstanceOf(UserNotFoundException.class).hasMessageContaining("해당하는 사용자를 찾을 수 없습니다.");
     }
 }
