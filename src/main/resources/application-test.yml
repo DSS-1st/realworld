@@ -26,3 +26,7 @@ logging:
       sqlonly: OFF
       sqltiming: INFO
       connection : OFF
+
+jwt:
+  secret: DSS01ALLCHAN
+  expirationTime: 604800000

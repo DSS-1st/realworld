@@ -8,6 +8,7 @@ import com.dss.realworld.common.error.exception.UserNotFoundException;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -16,13 +17,19 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProcessor {
 
+    @Value(value = "${jwt.secret}")
+    private String secret;
+
+    @Value(value = "${jwt.expirationTime}")
+    private int expirationTime;
+
     private final UserRepository userRepository;
 
     public String create(LoginUser loginUser) {
         String jwtToken = JWT.create()
                 .withSubject(loginUser.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtVO.EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(JwtVO.SECRET));
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
+                .sign(Algorithm.HMAC512(secret));
 
         return JwtVO.TOKEN_PREFIX + jwtToken;
     }
@@ -30,14 +37,14 @@ public class JwtProcessor {
     public String create(String email) {
         String jwtToken = JWT.create()
                 .withSubject(email)
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtVO.EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(JwtVO.SECRET));
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
+                .sign(Algorithm.HMAC512(secret));
 
         return JwtVO.TOKEN_PREFIX + jwtToken;
     }
 
     public LoginUser verify(String token) {
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(JwtVO.SECRET)).build().verify(token);
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
         String email = decodedJWT.getSubject();
         User foundUser = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
