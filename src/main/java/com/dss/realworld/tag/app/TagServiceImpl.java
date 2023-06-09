@@ -21,7 +21,7 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public void persist(Set<Tag> tagSet) {
+    public void persist(final Set<Tag> tagSet) {
         try {
             tagSet.forEach(element -> tagRepository.persist(element));
         } catch (DuplicateKeyException e) {
@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public String findByName(String name) {
+    public String findByName(final String name) {
         String result = tagRepository.findByName(name).orElseThrow(TagNotFoundException::new);
 
         return result;
@@ -46,7 +46,7 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public int delete(String name) {
+    public int delete(final String name) {
         return tagRepository.delete(name);
     }
 }

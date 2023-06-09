@@ -12,7 +12,7 @@ public class SecurityResponse {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityResponse.class);
 
-    public static void fail(HttpServletResponse response, String message, HttpStatus httpStatus) throws IOException {
+    public static void fail(final HttpServletResponse response, final String message, final HttpStatus httpStatus) throws IOException {
         String reasonPhrase = HttpStatus.UNAUTHORIZED.getReasonPhrase();
         if (httpStatus.value() == 403) reasonPhrase = HttpStatus.FORBIDDEN.getReasonPhrase();
         ErrorResponse errorResponse = new ErrorResponse(httpStatus.value(), reasonPhrase, message);
@@ -25,7 +25,7 @@ public class SecurityResponse {
         response.getWriter().println(responseBody);
     }
 
-    public static void success(HttpServletResponse response, Object dto) {
+    public static void success(final HttpServletResponse response, final Object dto) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String responseBody = objectMapper.writeValueAsString(dto);

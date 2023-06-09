@@ -49,7 +49,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         log.debug("디버그: SecurityFilterChain 빈 등록완료");
 
         http.httpBasic().disable();

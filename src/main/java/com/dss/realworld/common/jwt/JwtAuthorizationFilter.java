@@ -20,7 +20,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final JwtProcessor jwtProcessor;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, final JwtProcessor jwtProcessor) {
+    public JwtAuthorizationFilter(final AuthenticationManager authenticationManager, final JwtProcessor jwtProcessor) {
         super(authenticationManager);
         this.jwtProcessor = jwtProcessor;
     }
@@ -44,7 +44,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
-    private boolean isHeaderVerified(HttpServletRequest request, HttpServletResponse response) {
+    private boolean isHeaderVerified(final HttpServletRequest request, final HttpServletResponse response) {
         String header = request.getHeader(JwtVO.HEADER);
         if (header == null || !header.startsWith(JwtVO.TOKEN_PREFIX)) {
             return false;

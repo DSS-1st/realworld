@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto save(AddUserRequestDto addUserRequestDto) {
+    public UserResponseDto save(final AddUserRequestDto addUserRequestDto) {
         User user = User.builder()
                 .username(addUserRequestDto.getUsername())
                 .email(addUserRequestDto.getEmail())
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto update(UpdateUserRequestDto updateUserRequestDto, Long loginId) {
+    public UserResponseDto update(final UpdateUserRequestDto updateUserRequestDto, final Long loginId) {
         User foundUser = userRepository.findById(loginId).orElseThrow(UserNotFoundException::new);
         User updateValue = foundUser.builder()
                 .email(updateUserRequestDto.getEmail())
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto login(LoginRequestDto loginRequestDto) {
+    public UserResponseDto login(final LoginRequestDto loginRequestDto) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
         if (!user.isMatch(loginRequestDto, passwordEncoder)) throw new PasswordNotMatchedException();
 
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto get(Long loginId) {
+    public UserResponseDto get(final Long loginId) {
         User foundUser = userRepository.findById(loginId).orElseThrow(UserNotFoundException::new);
 
         return new UserResponseDto(foundUser, jwtProcessor.create(foundUser.getEmail()));
