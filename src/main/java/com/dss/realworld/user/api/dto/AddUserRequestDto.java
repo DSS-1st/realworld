@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -17,14 +18,15 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class AddUserRequestDto {
 
-    @NotBlank(message = "can't empty or space only username")
+    @NotBlank(message = "can't empty or space only")
     private String username;
 
-    @NotBlank(message = "can't empty or space only email")
+    @NotBlank(message = "can't empty or space only")
     @Email
     private String email;
 
-    @NotBlank(message = "can't empty or space only password")
+    @NotBlank(message = "can't empty or space only")
+    @Length(min = 8, max = 16)
     private String password;
 
     @Builder
