@@ -25,7 +25,7 @@ public class JwtProcessor {
 
     private final UserRepository userRepository;
 
-    public String create(LoginUser loginUser) {
+    public String create(final LoginUser loginUser) {
         String jwtToken = JWT.create()
                 .withSubject(loginUser.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
@@ -34,7 +34,7 @@ public class JwtProcessor {
         return JwtVO.TOKEN_PREFIX + jwtToken;
     }
 
-    public String create(String email) {
+    public String create(final String email) {
         String jwtToken = JWT.create()
                 .withSubject(email)
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
@@ -43,7 +43,7 @@ public class JwtProcessor {
         return JwtVO.TOKEN_PREFIX + jwtToken;
     }
 
-    public LoginUser verify(String token) {
+    public LoginUser verify(final String token) {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
         String email = decodedJWT.getSubject();
         User foundUser = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);

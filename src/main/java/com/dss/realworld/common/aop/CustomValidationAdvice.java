@@ -24,7 +24,7 @@ public class CustomValidationAdvice {
     }
 
     @Around(value = "postMapping() || putMapping()")
-    public Object validateAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object validateAdvice(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         for (Object arg : proceedingJoinPoint.getArgs()) checkOrThrow(arg);
 
         return proceedingJoinPoint.proceed();

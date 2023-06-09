@@ -23,28 +23,31 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/users")
-    public ResponseEntity<UserResponseDto> add(@RequestBody @Valid AddUserRequestDto addUserRequestDto, BindingResult bindingResult) {
+    public ResponseEntity<UserResponseDto> add(@RequestBody @Valid final AddUserRequestDto addUserRequestDto,
+                                               final BindingResult bindingResult) {
         UserResponseDto userResponseDto = userService.save(addUserRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
     @PutMapping(value = "/user")
-    public ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateUserRequestDto, BindingResult bindingResult, @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<UserResponseDto> update(@RequestBody @Valid final UpdateUserRequestDto updateUserRequestDto,
+                                                  final BindingResult bindingResult,
+                                                  @AuthenticationPrincipal final LoginUser loginUser) {
         UserResponseDto userResponseDto = userService.update(updateUserRequestDto, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
     @PostMapping(value = "/users/login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
+    public ResponseEntity<UserResponseDto> login(@RequestBody @Valid final LoginRequestDto loginRequestDto) {
         UserResponseDto userResponseDto = userService.login(loginRequestDto);
 
         return ResponseEntity.ok(userResponseDto);
     }
 
     @GetMapping(value = "/user")
-    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal final LoginUser loginUser) {
         UserResponseDto userResponseDto = userService.get(loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);

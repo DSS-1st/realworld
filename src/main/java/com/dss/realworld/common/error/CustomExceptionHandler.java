@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(value = CustomValidationException.class)
-    public ResponseEntity<ErrorResponse> handleApiException(CustomValidationException e) {
+    public ResponseEntity<ErrorResponse> handleApiException(final CustomValidationException e) {
         return ResponseEntity
                 .status(e.getStatus())
                 .body(new ErrorResponse(
@@ -26,7 +26,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(value = AbstractBaseException.class)
-    public ResponseEntity<ErrorResponse> handleApiException(AbstractBaseException e) {
+    public ResponseEntity<ErrorResponse> handleApiException(final AbstractBaseException e) {
         return ResponseEntity
                 .status(e.getStatus())
                 .body(new ErrorResponse(
@@ -38,7 +38,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(final Exception e) {
         log.error("HttpStatus: {} {}\nMessage: {}\n",
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
