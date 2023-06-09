@@ -32,12 +32,11 @@ public class WebSecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        log.debug("디버그: BCryptPasswordEncoder 빈 등록완료");
+        log.debug("디버그: BCryptPasswordEncoder Bean 등록완료");
 
         return new BCryptPasswordEncoder();
     }
 
-    //JwtAuthenticationFilter 등록
     public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
 
         @Override
@@ -53,19 +52,16 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.debug("디버그: SecurityFilterChain 빈 등록완료");
 
-        http.httpBasic().disable(); //브라우저 팝업창을 이용한 사용자 인증 끔
-        http.formLogin().disable(); //<form> 로그인 끔
-        http.headers().frameOptions().disable(); //iframe 불허
+        http.httpBasic().disable();
+        http.formLogin().disable();
+        http.headers().frameOptions().disable();
 
-        http.csrf().disable(); //postMan 사용을 위해 끔
-        http.cors().configurationSource(configurationSource()); //cors 설정 등록
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //JSessionId 서버에서 미관리
+        http.csrf().disable();
+        http.cors().configurationSource(configurationSource());
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        //JwtAuthenticationFilter 적용
         http.apply(new CustomSecurityFilterManager());
 
-        //Exception 가로채기 -> 스프링 시큐리티 자체적으로 예외처리 하지 않도록 설정
-        //인증 실패
         http.exceptionHandling().authenticationEntryPoint((request, response, authenticationException) -> {
             SecurityResponse.fail(response, "로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         });
@@ -87,11 +83,11 @@ public class WebSecurityConfig {
         log.debug("디버그: CorsConfigurationSource 설정이 SecurityFilterChain에 등록완료");
 
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("http://localhost:8081");
         configuration.addAllowedHeader("*");
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        configuration.addAllowedOriginPattern("*"); //모든 IP주소 허용
-        configuration.setAllowCredentials(true); //클라이언트에서 쿠키 요청 허용
         configuration.addExposedHeader("Authorization");
+        configuration.setAllowedMethods(List.of("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
