@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,22 +56,23 @@ class UserControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(username))
                 .andExpect(jsonPath("$..email").value(email))
                 .andExpect(jsonPath("$..token").isNotEmpty());
     }
 
-    @DisplayName(value = "updateUserResponseDto가 유효하면 업데이트 성공")
+    @DisplayName(value = "UpdateUserRequestDto가 유효하면 업데이트 성공")
     @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t2() throws Exception {
         //given
         UpdateUserRequestDto updateRequestDto = UpdateUserRequestDto.builder()
                 .username("name")
-                .password("pw")
+                .password("password")
                 .email("email@naver.com")
-                .image("iamgae")
+                .image("imageUrl")
                 .build();
         //when
         String requestBody = objectMapper.writeValueAsString(updateRequestDto);
@@ -78,6 +80,7 @@ class UserControllerTest {
         //then
         mockMvc.perform(put("/api/user")
                 .contentType(MediaType.APPLICATION_JSON).content(requestBody))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(updateRequestDto.getUsername()))
                 .andExpect(jsonPath("$..email").value(updateRequestDto.getEmail()))
@@ -101,6 +104,7 @@ class UserControllerTest {
         //then
         mockMvc.perform(post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON).content(requestBody))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(loginUsername))
                 .andExpect(jsonPath("$..email").value(loginUserEmail));
@@ -118,6 +122,7 @@ class UserControllerTest {
         //then
         mockMvc.perform(get("/api/user")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..username").value(username))
                 .andExpect(jsonPath("$..email").value(email));
@@ -145,6 +150,7 @@ class UserControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
+                .andDo(print())
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errors.body[0]").value("이미 존재하는 사용자 이름입니다."));
     }
@@ -171,7 +177,37 @@ class UserControllerTest {
 
         //then
         mockMvc.perform(mockRequest)
+                .andDo(print())
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errors.body[0]").value("이미 존재하는 Email입니다."));
+    }
+
+
+    @DisplayName(value = "password 길이가 올바르지 않으면 예외 메시지 반환")
+    @Test
+    void t7() throws Exception {
+        //given
+        String username = "Jacob123";
+        String email = "jake123@realworld.com";
+        String password = "1234";
+        AddUserRequestDto user = AddUserRequestDto.builder()
+                .username(username)
+                .email(email)
+                .password(password)
+                .build();
+
+        //when
+        String jsonString = objectMapper.writeValueAsString(user);
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(jsonString);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.body[0]").value("password : length must be between 8 and 16"));
     }
 }
