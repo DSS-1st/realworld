@@ -66,7 +66,6 @@ public class WebSecurityConfig {
             SecurityResponse.fail(response, "로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         });
 
-        //권한 실패
         http.exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
             SecurityResponse.fail(response, "권한이 없습니다.", HttpStatus.FORBIDDEN);
         });

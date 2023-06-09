@@ -42,22 +42,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             ObjectMapper om = new ObjectMapper();
             LoginRequestDto loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDto.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
-            //└>JWT 생성이 아닌 사용자 인증을 위한 토큰 생성
 
-            return authenticationManager.authenticate(authenticationToken); //LoginService.loadUserByUsername() 호출
+            return authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
-            //아래 예외 발생 후 unsuccessfulAuthentication() 호출됨
             throw new InternalAuthenticationServiceException(e.getMessage());
         }
     }
 
-    //로그인 실패 시 작동
     @Override
     protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException failed) throws IOException {
         SecurityResponse.fail(response, "로그인 실패", HttpStatus.UNAUTHORIZED);
     }
 
-    //로그인 성공 시 작동
     @Override
     protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain, final Authentication authResult) {
         log.debug("디버그: successfulAuthentication() 호출됨");
