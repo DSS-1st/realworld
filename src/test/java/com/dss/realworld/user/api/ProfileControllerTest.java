@@ -73,7 +73,7 @@ public class ProfileControllerTest {
     @Test
     void t2() throws Exception {
         //given
-        followingRepository.delete(2L, 1L); //기존 데이터 삭제
+        followingRepository.delete(2L, 1L);
         String targetName = "Kate";
 
         //when
