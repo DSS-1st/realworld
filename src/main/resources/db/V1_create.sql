@@ -50,8 +50,8 @@ CREATE TABLE `article_tag`
     `tag_id` BIGINT NOT NULL,
     `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`article_tag_id`),
-    INDEX `IX_article_id` (`article_id` ASC) INVISIBLE,
-    INDEX `IX_tag_id` (`tag_id` ASC) INVISIBLE,
+    INDEX `IX_article_id` (`article_id` ASC) VISIBLE,
+    INDEX `IX_tag_id` (`tag_id` ASC) VISIBLE,
     CONSTRAINT `FK_article_tag_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`),
     CONSTRAINT `FK_article_tag_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`)
 );
@@ -80,7 +80,7 @@ CREATE TABLE `following`
     `login_id` BIGINT NOT NULL,
     `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`following_id`),
-    INDEX `IX_target_id` (`target_id` ASC) INVISIBLE,
+    INDEX `IX_target_id` (`target_id` ASC) VISIBLE,
     INDEX `IX_login_id` (`login_id` ASC) VISIBLE,
     UNIQUE INDEX `UK_target_id_login_id` (`target_id` ASC, `login_id` ASC) VISIBLE,
     CONSTRAINT `FK_following_users_target_id` FOREIGN KEY (`target_id`) REFERENCES `users` (`user_id`),
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `article_users`
     `favorited_id` bigint NOT NULL,
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`article_users_id`),
-    UNIQUE KEY `UX_article_id_favorited_id` (`article_id`,`favorited_id`) INVISIBLE,
+    UNIQUE KEY `UX_article_id_favorited_id` (`article_id`,`favorited_id`) VISIBLE,
     KEY `IX_article_id` (`article_id`) VISIBLE,
     KEY `IX_favorited_id` (`favorited_id`) VISIBLE,
     CONSTRAINT `FK_article_users_users_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`),
