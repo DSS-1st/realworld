@@ -3,8 +3,11 @@ package com.dss.realworld.article.api;
 import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
+import com.dss.realworld.article.domain.ArticleUsers;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.article.domain.repository.ArticleRepository;
+import com.dss.realworld.article.domain.repository.ArticleTagRepository;
+import com.dss.realworld.article.domain.repository.ArticleUsersRepository;
 import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.util.ArticleFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +45,12 @@ public class ArticleControllerTest {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleTagRepository articleTagRepository;
+
+    @Autowired
+    private ArticleUsersRepository articleUsersRepository;
 
     @Autowired
     private FollowingRepository followingRepository;
@@ -337,26 +346,28 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..favoritesCount").value(0));
     }
 
-    @DisplayName(value = "팔로우한 유저가 있으면 팔로우한 유저가 작성한 article 불러오기 성공")
+    @DisplayName(value = "팔로우한 유저가 있으면 팔로우한 유저가 작성한 article 페이징 성공")
     @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t9() throws Exception {
         //given
-        String username = "Kate";
+        String followingUser = "Kate"; //팔로우한 유저의 게시물 30개 생성
+        ArticleFixtures.saveArticleSample(articleRepository, 11, 40, 1L, 2L);
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .get("/api/articles/feed");
+                .get("/api/articles/feed")
+                .param("offset", "20");
 
         //then
         mockMvc.perform(mockRequest)
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.articles[0].author.username").value(username))
+                .andExpect(jsonPath("$.articles[0].author.username").value(followingUser))
                 .andExpect(jsonPath("$.articles[0].author.following").value(true))
-                .andExpect(jsonPath("$.articles[1].author.username").value(username))
+                .andExpect(jsonPath("$.articles[1].author.username").value(followingUser))
                 .andExpect(jsonPath("$.articles[1].author.following").value(true))
-                .andExpect(jsonPath("$.articlesCount").value(2));
+                .andExpect(jsonPath("$.articlesCount").value(12)); //@Sql(dataSetup.sql)에서 사용된 초기화 데이터 2개 포함
     }
 
     @DisplayName(value = "팔로우한 유저가 없으면 빈 목록 반환 성공")
@@ -394,7 +405,30 @@ public class ArticleControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.articles[0].favorited").value(true))
+                .andExpect(jsonPath("$.articles[0].favoritesCount").value(1))
                 .andExpect(jsonPath("$.articles[0].author.following").value(true))
+                .andExpect(jsonPath("$.articlesCount").value(1));
+    }
+
+    @DisplayName(value = "Author를 팔로우하지 않고 Author의 게시글을 좋아한 사용자 이름으로 검색 시 게시글 조회 성공")
+    @WithUserDetails(value = "kate@realworld.com")
+    @Test
+    void t11_1() throws Exception {
+        //given
+        String favoritedBy = "Kate";
+        articleUsersRepository.persist(new ArticleUsers(1L, 2L));
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.get("/api/articles")
+                .param("favorited", favoritedBy);
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.articles[0].favorited").value(true))
+                .andExpect(jsonPath("$.articles[0].favoritesCount").value(1))
+                .andExpect(jsonPath("$.articles[0].author.following").value(false))
                 .andExpect(jsonPath("$.articlesCount").value(1));
     }
 
@@ -418,7 +452,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$.articlesCount").value(3));
     }
 
-    @DisplayName(value = "검색조건에 해당하는 글이 없을 경우 빈 목록 반환")
+    @DisplayName(value = "로그인 상태에서 검색조건에 해당하는 글이 없을 경우 빈 목록 반환")
     @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t13() throws Exception {
@@ -453,5 +487,76 @@ public class ArticleControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.articles").isEmpty())
                 .andExpect(jsonPath("$.articlesCount").value(0));
+    }
+
+    @DisplayName(value = "로그인 없이 author로 필터링하여 게시글 목록 페이징 성공")
+    @Test
+    void t15() throws Exception {
+        //given
+        //조회 대상 author ID가 2인 게시글 20개 생성
+        ArticleFixtures.saveArticleSample(articleRepository, 11, 30, 1L, 2L);
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles")
+                .param("author", "Kate")
+                .param("offset", "20");
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.articles[0].favorited").value(false))
+                .andExpect(jsonPath("$.articles[0].author.following").value(false))
+                .andExpect(jsonPath("$.articles[1].favorited").value(false))
+                .andExpect(jsonPath("$.articles[1].author.following").value(false))
+                .andExpect(jsonPath("$.articlesCount").value(2)); //@Sql(dataSetup.sql)에서 사용된 초기화 데이터 2개 포함
+    }
+
+    @DisplayName(value = "로그인 없이 tag로 필터링하여 게시글 목록 페이징 성공")
+    @Test
+    void t16() throws Exception {
+        //given
+        //조회 대상 tag ID가 1(dvorak)인 게시글 20개 생성
+        String tag = "dvorak";
+        ArticleFixtures.saveArticleTagSample(articleRepository, articleTagRepository, 21, 30, 1L, 2L, 1L, 2L);
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles")
+                .param("tag", tag)
+                .param("offset", "20");
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.articles[0].favorited").value(false))
+                .andExpect(jsonPath("$.articles[0].author.following").value(false))
+                .andExpect(jsonPath("$.articlesCount").value(1)); //@Sql(dataSetup.sql)에서 사용된 초기화 데이터 1개 포함
+    }
+
+    @DisplayName(value = "로그인한 상태에서 favorited로 필터링하여 게시글 목록 페이징 성공")
+    @WithUserDetails(value = "jake@jake.jake")
+    @Test
+    void t17() throws Exception {
+        //given
+        //조회 대상 favorited ID가 1(Jacob)인 게시글 20개 생성
+        String favoritedBy = "Jacob";
+        ArticleFixtures.saveArticleUsersSample(articleRepository, articleUsersRepository, 11, 30, 1L, 2L, 2L, 1L);
+
+        //when
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .get("/api/articles")
+                .param("favorited", favoritedBy)
+                .param("offset", "20");
+
+        //then
+        mockMvc.perform(mockRequest)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.articles[0].favorited").value(true))
+                .andExpect(jsonPath("$.articles[0].favoritesCount").value(1))
+                .andExpect(jsonPath("$.articlesCount").value(1)); //@Sql(dataSetup.sql)에서 사용된 초기화 데이터 1개 포함
     }
 }
