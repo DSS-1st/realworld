@@ -34,16 +34,6 @@ public class ArticleFixtures {
                 .build();
     }
 
-    public static Article of(String slug, Long userId) {
-        return Article.builder()
-                .title("How to train your dragon")
-                .slug(slug)
-                .description("Ever wonder how?")
-                .body("You have to believe")
-                .userId(userId)
-                .build();
-    }
-
     public static Article of(String title, String slug, Long userId) {
         return Article.builder()
                 .title(title)

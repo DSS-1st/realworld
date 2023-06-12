@@ -8,10 +8,10 @@ insert into article(title, slug, body, description, user_id)
 values ('new title 1', 'new-title-1', 'body content', 'article description', 1);
 
 insert into article(title, slug, body, description, user_id)
-values ('new title 100', 'new-title-100', 'body content', 'article description', 2);
+values ('new title 2', 'new-title-2', 'body content', 'article description', 2);
 
 insert into article(title, slug, body, description, user_id)
-values ('new title 101', 'new-title-101', 'body content', 'article description', 2);
+values ('new title 3', 'new-title-3', 'body content', 'article description', 2);
 
 insert into tag(name)
 values ('dvorak');
