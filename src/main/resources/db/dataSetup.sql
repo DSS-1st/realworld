@@ -38,4 +38,4 @@ insert into article_tag(article_id, tag_id)
 values (1, 3);
 
 insert into article_users(article_id, favorited_id)
-values (3, 1)
+values (3, 1);

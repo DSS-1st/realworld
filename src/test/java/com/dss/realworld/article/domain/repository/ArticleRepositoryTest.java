@@ -4,11 +4,11 @@ import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.domain.Article;
 import com.dss.realworld.article.domain.Slug;
 import com.dss.realworld.common.error.exception.ArticleNotFoundException;
-import com.dss.realworld.user.domain.Following;
 import com.dss.realworld.user.domain.User;
 import com.dss.realworld.user.domain.repository.FollowingRepository;
 import com.dss.realworld.user.domain.repository.UserRepository;
 import com.dss.realworld.util.ArticleFixtures;
+import com.dss.realworld.util.FollowingFixtures;
 import com.dss.realworld.util.UserFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -126,11 +126,11 @@ public class ArticleRepositoryTest {
         userRepository.persist(loginUser);
         Long midRangeAuthorId = 1L;
         Long endRangeAuthorId = 2L;
-        saveFollowingSample(midRangeAuthorId, endRangeAuthorId, loginUser);
+        FollowingFixtures.saveFollowingSample(followingRepository, midRangeAuthorId, endRangeAuthorId, loginUser);
 
         int midRange = 25;
         int endRange = 30;
-        saveArticleSample(midRange, endRange, midRangeAuthorId, endRangeAuthorId);
+        ArticleFixtures.saveArticleSample(articleRepository, midRange, endRange, midRangeAuthorId, endRangeAuthorId);
 
         //when
         int limit = 20;
@@ -143,26 +143,6 @@ public class ArticleRepositoryTest {
         assertThat(articleFeed.get(6).getUserId()).isEqualTo(1); //saveSample()에서 저장한 글 작성자 1번
         assertThat(articleFeed.get(0).getId()).isEqualTo(endRange + 3); //테이블 생성 시 기본 추가되는 Article 3개 포함
         assertThat(articleFeed.size()).isEqualTo(limit);
-    }
-
-    private void saveFollowingSample(final Long targetId1, final Long targetId2, final User loginUser) {
-        followingRepository.persist(new Following(targetId1, loginUser.getId()));
-        followingRepository.persist(new Following(targetId2, loginUser.getId()));
-    }
-
-    private void saveArticleSample(int midRange, int endRange, final Long midRangeAuthorId, final Long endRangeAuthorId) {
-        String title = "test sample title ";
-
-        for (int i = 1; i < midRange; i++) {
-            Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
-            Article article = ArticleFixtures.of(title + i, Slug.of(title, articleId).getValue(), midRangeAuthorId);
-            articleRepository.persist(article);
-        }
-        for (int i = midRange; i <= endRange; i++) {
-            Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
-            Article article = ArticleFixtures.of(title + i, Slug.of(title, articleId).getValue(), endRangeAuthorId);
-            articleRepository.persist(article);
-        }
     }
 
     @DisplayName(value = "특정 tag가 등록된 게시글 조회 성공")
