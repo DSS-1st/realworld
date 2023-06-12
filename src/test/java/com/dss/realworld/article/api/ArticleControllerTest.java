@@ -211,7 +211,7 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..tagList[2]").value(tag4));
     }
 
-    @DisplayName(value = "이미 존재하는 tag(dvorak)도 저장 성공")
+    @DisplayName(value = "이미 존재하는 tag(dvorak)가 일부 포함될 경우 저장 성공")
     @WithUserDetails(value = "jake@jake.jake")
     @Test
     void t6() throws Exception {
@@ -252,6 +252,48 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$..tagList[0]").value(tag2))
                 .andExpect(jsonPath("$..tagList[1]").value(tag3))
                 .andExpect(jsonPath("$..tagList[2]").value(tag4));
+    }
+
+    @DisplayName(value = "이미 존재하는 tag가 모두 포함될 경우에도 게시글 저장 성공")
+    @WithUserDetails(value = "jake@jake.jake")
+    @Test
+    void t6_1() throws Exception {
+        //given
+        String title = "How to train your dragon";
+        String description = "Ever wonder how?";
+        String body = "You have to believe";
+        String tag1 = "dvorak";
+        String tag2 = "qwerty";
+        String tag3 = "sebul";
+        List<String> tags = List.of(tag1, tag2, tag3);
+        CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body, tags);
+        Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
+
+        String requestBody = objectMapper.writeValueAsString(newArticle);
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/api/articles")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(mockRequest);
+
+        //then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$..title").value(title))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, articleId).getValue()))
+                .andExpect(jsonPath("$..favorited").value(false))
+                .andExpect(jsonPath("$..following").value(false))
+                .andExpect(jsonPath("$..username").value("Jacob"))
+                .andExpect(jsonPath("$..description").value(description))
+                .andExpect(jsonPath("$..body").value(body))
+                .andExpect(jsonPath("$..tagList.length()").value(3))
+                .andExpect(jsonPath("$..tagList[0]").value(tag1))
+                .andExpect(jsonPath("$..tagList[1]").value(tag2))
+                .andExpect(jsonPath("$..tagList[2]").value(tag3));
     }
 
     @DisplayName(value = "article, favoritedId가 유효하면 좋아요 성공")
