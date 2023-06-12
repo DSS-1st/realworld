@@ -55,7 +55,7 @@ public class ArticleControllerTest {
         String description = "Ever wonder how?";
         String body = "You have to believe";
         CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body);
-        Long maxId = articleRepository.findMaxId().get();
+        Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
 
         String requestBody = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -72,7 +72,7 @@ public class ArticleControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, articleId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob"))
@@ -104,7 +104,7 @@ public class ArticleControllerTest {
     @Test
     void t3() throws Exception {
         //given
-        String slug = "new-title-100";
+        String slug = "new-title-2";
 
         //when
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -182,7 +182,7 @@ public class ArticleControllerTest {
         String tag4 = "hij";
         List<String> tags = List.of(tag1, tag2, tag3, tag4);
         CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body, tags);
-        Long maxId = articleRepository.findMaxId().get();
+        Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
 
         String requestBody = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -199,7 +199,7 @@ public class ArticleControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, articleId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob"))
@@ -225,7 +225,7 @@ public class ArticleControllerTest {
         String tag4 = "dvorak";
         List<String> tags = List.of(tag1, tag2, tag3, tag4);
         CreateArticleRequestDto newArticle = ArticleFixtures.createRequestDto(title, description, body, tags);
-        Long maxId = articleRepository.findMaxId().get();
+        Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
 
         String requestBody = objectMapper.writeValueAsString(newArticle);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -242,7 +242,7 @@ public class ArticleControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$..title").value(title))
-                .andExpect(jsonPath("$..slug").value(Slug.of(title, maxId).getValue()))
+                .andExpect(jsonPath("$..slug").value(Slug.of(title, articleId).getValue()))
                 .andExpect(jsonPath("$..favorited").value(false))
                 .andExpect(jsonPath("$..following").value(false))
                 .andExpect(jsonPath("$..username").value("Jacob"))

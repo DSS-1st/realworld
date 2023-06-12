@@ -128,7 +128,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public ArticleResponseDto save(final CreateArticleRequestDto createArticleRequestDto, final Long loginId) {
         Long maxId = articleRepository.findMaxId().orElse(0L);
-        Article article = createArticleRequestDto.convert(loginId, maxId);
+        Article article = createArticleRequestDto.convert(loginId, maxId + 1);
         articleRepository.persist(article);
 
         Set<Tag> tags = getTagSet(createArticleRequestDto);

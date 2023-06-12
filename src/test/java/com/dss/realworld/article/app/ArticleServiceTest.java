@@ -267,43 +267,17 @@ public class ArticleServiceTest {
     @Test
     void t13() {
         //given
-        User loginUser = UserFixtures.create("newUser03", "user03pwd", "user03@realworld.com");
-        userRepository.persist(loginUser);
-        Long midRangeAuthorId = 1L;
-        Long endRangeAuthorId = 2L;
-        SaveFollowingSample(midRangeAuthorId, endRangeAuthorId, loginUser);
-
-        int midRange = 11;
-        int endRange = 30;
-        saveArticleSample(midRange, endRange, midRangeAuthorId, endRangeAuthorId); //AuthorId가 2L인 Article 20개 생성(11~30)
-
-        String author = userRepository.findById(endRangeAuthorId).get().getUsername(); //Kate
+        Long loginId = 1L;
+        String author = userRepository.findById(2L).get().getUsername(); //Kate
 
         //when
         int limit = 20;
-        int offset = 20;
-        ArticleListResponseDto articles = articleService.list(null, author, null, loginUser.getId(), limit, offset);
+        int offset = 0;
+        ArticleListResponseDto articles = articleService.list(null, author, null, loginId, limit, offset);
 
         //then
         assertThat(articles.getArticles().get(0).getAuthor().getUsername()).isEqualTo(author);
         assertThat(articles.getArticles().get(1).getAuthor().isFollowing()).isTrue();
         assertThat(articles.getArticlesCount()).isEqualTo(2); //@Sql에 선언된 샘플 데이터 2개 포함
-    }
-
-    private void SaveFollowingSample(final Long targetId1, final Long targetId2, final User loginUser) {
-        followingRepository.persist(new Following(targetId1, loginUser.getId()));
-        followingRepository.persist(new Following(targetId2, loginUser.getId()));
-    }
-
-    private void saveArticleSample(int midRange, int endRange, final Long midRangeAuthorId, final Long endRangeAuthorId) {
-        for (int i = 1; i < midRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, midRangeAuthorId);
-            articleRepository.persist(article);
-        }
-
-        for (int i = midRange; i <= endRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, endRangeAuthorId);
-            articleRepository.persist(article);
-        }
     }
 }

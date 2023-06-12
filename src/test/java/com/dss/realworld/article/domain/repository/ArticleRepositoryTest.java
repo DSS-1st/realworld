@@ -118,7 +118,7 @@ public class ArticleRepositoryTest {
         assertThat(updatedArticle.getSlug()).isEqualTo(newSlug);
     }
 
-    @DisplayName(value = "팔로우한 사용자 2명의 게시글을 조회하기 성공")
+    @DisplayName(value = "팔로우한 사용자 2명의 게시글 목록을 조회하기 성공")
     @Test
     void t7() {
         //given
@@ -126,7 +126,7 @@ public class ArticleRepositoryTest {
         userRepository.persist(loginUser);
         Long midRangeAuthorId = 1L;
         Long endRangeAuthorId = 2L;
-        SaveFollowingSample(midRangeAuthorId, endRangeAuthorId, loginUser);
+        saveFollowingSample(midRangeAuthorId, endRangeAuthorId, loginUser);
 
         int midRange = 25;
         int endRange = 30;
@@ -145,18 +145,22 @@ public class ArticleRepositoryTest {
         assertThat(articleFeed.size()).isEqualTo(limit);
     }
 
-    private void SaveFollowingSample(final Long targetId1, final Long targetId2, final User loginUser) {
+    private void saveFollowingSample(final Long targetId1, final Long targetId2, final User loginUser) {
         followingRepository.persist(new Following(targetId1, loginUser.getId()));
         followingRepository.persist(new Following(targetId2, loginUser.getId()));
     }
 
     private void saveArticleSample(int midRange, int endRange, final Long midRangeAuthorId, final Long endRangeAuthorId) {
+        String title = "test sample title ";
+
         for (int i = 1; i < midRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, midRangeAuthorId);
+            Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
+            Article article = ArticleFixtures.of(title + i, Slug.of(title, articleId).getValue(), midRangeAuthorId);
             articleRepository.persist(article);
         }
         for (int i = midRange; i <= endRange; i++) {
-            Article article = ArticleFixtures.of("test sample" + i, endRangeAuthorId);
+            Long articleId = articleRepository.findMaxId().orElse(0L) + 1;
+            Article article = ArticleFixtures.of(title + i, Slug.of(title, articleId).getValue(), endRangeAuthorId);
             articleRepository.persist(article);
         }
     }
