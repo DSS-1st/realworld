@@ -75,11 +75,12 @@ public class ArticleTagRepositoryTest {
     void t4() {
         //given
         Long articleId = 1L;
+        long articleTagCount = articleTagRepository.countByArticleId(articleId);
 
         //when
         int result = articleTagRepository.deleteByArticleId(articleId);
 
         //then
-        assertThat(result).isEqualTo(1);
+        assertThat(result).isEqualTo(articleTagCount);
     }
 }

@@ -18,4 +18,6 @@ public interface ArticleTagRepository {
     int delete(Long id);
 
     int deleteByArticleId(Long articleId);
+
+    long countByArticleId(Long articleId);
 }

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dss.realworld.article.domain.repository.ArticleTagRepository">
     <insert id="persist" parameterType="ArticleTag" useGeneratedKeys="true" keyProperty="id" keyColumn="article_tag_id">
-        insert into article_tag(article_id, tag_id)
+        insert ignore into article_tag(article_id, tag_id)
         values(#{articleId}, #{tagId})
     </insert>
 
@@ -18,6 +18,12 @@
         select name
         from article_tag a join tag b on a.tag_id = b.tag_id
         where article_id = #{articleId};
+    </select>
+
+    <select id="countByArticleId" resultType="long">
+        select count(*)
+        from article_tag
+        where article_id = #{articleId}
     </select>
 
     <delete id="delete" parameterType="Long">

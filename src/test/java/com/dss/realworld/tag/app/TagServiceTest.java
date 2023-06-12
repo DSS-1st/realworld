@@ -42,18 +42,19 @@ public class TagServiceTest {
         assertThat(foundTags.getTags().size()).isEqualTo(2);
     }
 
-    @DisplayName(value = "중복된 tag name 추가 시 예외 발생")
+    @DisplayName(value = "중복된 tag name 저장 시도 시에도 저장 성공")
     @Test
     void t2() {
         //given
+        String duplicateTag = "qwer";
+
         Set<Tag> tagSet = new HashSet<>();
-        tagSet.add(new Tag("qwer"));
-        tagSet.add(new Tag("qwer"));
         tagSet.add(new Tag("asdf"));
+        tagSet.add(new Tag(duplicateTag));
         tagService.persist(tagSet);
 
         Set<Tag> tagSet2 = new HashSet<>();
-        tagSet2.add(new Tag("qwer"));
+        tagSet2.add(new Tag(duplicateTag));
 
         //when
         //then

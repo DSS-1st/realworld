@@ -32,10 +32,10 @@ insert into article_tag(article_id, tag_id)
 values (1, 1);
 
 insert into article_tag(article_id, tag_id)
-values (2, 2);
+values (1, 2);
 
 insert into article_tag(article_id, tag_id)
-values (3, 3);
+values (1, 3);
 
 insert into article_users(article_id, favorited_id)
 values (3, 1)
