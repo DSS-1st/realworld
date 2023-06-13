@@ -1,5 +1,5 @@
 # RealWorld
-***
+
 ### 개요  
 * 소셜 블로깅 사이트(e.g. Medium.com) Backend 구현 프로젝트
 * 테스트 코드를 기반으로 실무자 PR 리뷰를 통한 완성도 제고
@@ -17,7 +17,7 @@
 * Article API
   * [Step-1](https://github.com/DSS-1st/realworld/pull/7), [Step-2](https://github.com/DSS-1st/realworld/pull/9), [Step-3](https://github.com/DSS-1st/realworld/pull/18)
 * Comment API
-  * [Step-1](https://github.com/DSS-1st/realworld/pull/11), [Step-2](https://github.com/DSS-1st/realworld/pull/34)
+  * [⭐Step-1](https://github.com/DSS-1st/realworld/pull/11), [Step-2](https://github.com/DSS-1st/realworld/pull/34)
 
 ### ERD
   ![ERD_realworld.png](src%2Fmain%2Fresources%2Fdb%2FERD_realworld.png)
@@ -117,7 +117,7 @@
     * 제목이 게시글 내용을 함축하므로 제목을 기반으로 Slug를 생성하도록 구현
     * 유일성 문제는 게시글이 생성될 때 만들어지는 PK 번호가 접미사로 붙도록 하여 해결
     * 그런데 insert 되기 전에 PK 번호를 알아내어 insert 하는 MySQL 쿼리가 존재하지 않음
-    * 이에 Article 테이블의 마지막 PK를 조회 후 Slug 접미사 생성 파라미터에 +1을 추가하도록 구현([전체 코드 링크](https://github.com/DSS-1st/realworld/blob/dfbb3f6fb155670cabe1190b9ce8f8b330b445de/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L127-L138))
+    * 이에 Article 테이블의 마지막 PK를 조회 후 Slug 접미사 생성 파라미터에 +1을 추가하도록 구현([원본 링크](https://github.com/DSS-1st/realworld/blob/dfbb3f6fb155670cabe1190b9ce8f8b330b445de/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L127-L138))
       ```java
       @Override
       @Transactional
@@ -132,7 +132,7 @@
         return getArticleResponseDto(article, loginId);
       }
       ```
-    * Article Update의 경우 Slug 접미사에 Article PK가 그대로 사용되어야 하므로 Slug 생성 시 기존 PK 사용하도록 구현([전체 코드 링크](https://github.com/DSS-1st/realworld/blob/dfbb3f6fb155670cabe1190b9ce8f8b330b445de/src/main/java/com/dss/realworld/article/domain/Article.java#L51-L58C6))
+    * Article Update의 경우 Slug 접미사에 Article PK가 그대로 사용되어야 하므로 Slug 생성 시 기존 PK 사용하도록 구현([원본 링크](https://github.com/DSS-1st/realworld/blob/dfbb3f6fb155670cabe1190b9ce8f8b330b445de/src/main/java/com/dss/realworld/article/domain/Article.java#L51-L58C6))
       ```java
       public Article updateArticle(final UpdateArticleRequestDto updateArticleRequestDto) {
         this.slug = Slug.of(updateArticleRequestDto.getTitle(), this.id).getValue();
@@ -149,7 +149,7 @@
     * 조회 결과를 페이징할 수 있어야 함(기본값: 1페이지당 게시글 20개)
     * 로그인 여부에 따라 게시글 좋아요, 작성자 팔로우 여부가 다르게 표시되어야 함
   * 해결 과정
-    * 검색조건과 연결된 테이블은 총 4가지(article_tag, tag, article_users, users)이며 article을 driving table로 left join 하여 검색 결과에 해당하는 article이 조회되도록 구현
+    * 검색조건과 연결된 테이블은 총 4가지(article_tag, tag, article_users, users)이며 article을 driving table로 left join 하여 검색 결과에 해당하는 article이 조회되도록 구현[(원본 링크)](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/resources/mapper/ArticleRepository.xml#L53-L75)
       ```sql
       <select id="list" resultType="Article">
         select a.article_id as id, slug, title, description, body, a.user_id, a.created_at, a.updated_at
@@ -175,7 +175,7 @@
         limit #{limit} offset #{offset}
       </select>
       ```
-    * 위에서 얻은 article 목록을 태그, 팔로우, 좋아요 정보와 결합
+    * 위에서 얻은 article 목록을 태그, 팔로우, 좋아요 정보와 결합[(원본 링크)](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L56-L65)
       ```java
       private ArticleDtoBinder bindArticleDto(final Long loginId, final Article article) {
         List<String> tagList = articleTagRepository.findTagsByArticleId(article.getId());
@@ -189,7 +189,7 @@
       }
       ```
       * `loginId`는 컨트롤러 계층에서 `@AuthenticationPrincipal`을 통해 `SecurityContextHolder`에서 구함
-    * 결합한 데이터를 API 응답 형식에 맞게 DTO로 반환
+    * 결합한 데이터를 API 응답 형식에 맞게 DTO로 반환[(원본 링크)](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L41-L50)
       ```java
       public ArticleListResponseDto list(final String tag, final String author, final String favorited, final Long loginId, int limit, int offset) {
         List<Article> foundArticles = articleRepository.list(tag, author, favorited, limit, offset);
