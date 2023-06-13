@@ -259,5 +259,5 @@
   * 실행 후 터미널에서 `Ctrl + C` 입력하여 종료 가능
 
 ### 노션 저장소 링크
-* [참고 자료](https://www.notion.so/allchan/aae94d2d1e0c469ca51a127c0a026d55?v=2cd05d89df60400d936a6b6701e1d633&pvs=4)
 * [트러블 슈팅](https://www.notion.so/allchan/74c8db21df554b30b07b70793a424dc9?v=fef94141df5144af94e6e8cae923e8bf&pvs=4)
+* [참고 자료](https://www.notion.so/allchan/aae94d2d1e0c469ca51a127c0a026d55?v=2cd05d89df60400d936a6b6701e1d633&pvs=4)
