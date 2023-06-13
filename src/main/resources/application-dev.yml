@@ -4,11 +4,6 @@ spring:
     url: jdbc:log4jdbc:mysql://localhost:3306/realworld
     username: admin_dss
     password: 1234
-  sql:
-    init:
-      mode: always
-      schemaLocations: classpath:db/V1_create.sql
-      dataLocations: classpath:db/dataSetup.sql
 
 mybatis:
   mapperLocations: classpath:mapper/**/**.xml
