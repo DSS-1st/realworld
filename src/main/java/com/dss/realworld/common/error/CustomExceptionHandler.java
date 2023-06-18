@@ -6,12 +6,25 @@ import com.dss.realworld.common.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
 public class CustomExceptionHandler {
+
+    public static void checkOrThrow(final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> messageList = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> fieldError.getField() + " : " + fieldError.getDefaultMessage())
+                    .collect(Collectors.toList());
+            throw new CustomValidationException(messageList);
+        }
+    }
 
     @ExceptionHandler(value = CustomValidationException.class)
     public ResponseEntity<ErrorResponse> handleApiException(final CustomValidationException e) {

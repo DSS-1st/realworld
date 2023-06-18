@@ -1,6 +1,7 @@
 package com.dss.realworld.user.api;
 
 import com.dss.realworld.common.auth.LoginUser;
+import com.dss.realworld.common.error.CustomExceptionHandler;
 import com.dss.realworld.user.api.dto.AddUserRequestDto;
 import com.dss.realworld.user.api.dto.LoginRequestDto;
 import com.dss.realworld.user.api.dto.UpdateUserRequestDto;
@@ -25,6 +26,8 @@ public class UserController {
     @PostMapping(value = "/users")
     public ResponseEntity<UserResponseDto> add(@RequestBody @Valid final AddUserRequestDto addUserRequestDto,
                                                final BindingResult bindingResult) {
+        CustomExceptionHandler.checkOrThrow(bindingResult);
+
         UserResponseDto userResponseDto = userService.save(addUserRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
@@ -34,6 +37,8 @@ public class UserController {
     public ResponseEntity<UserResponseDto> update(@RequestBody @Valid final UpdateUserRequestDto updateUserRequestDto,
                                                   final BindingResult bindingResult,
                                                   @AuthenticationPrincipal final LoginUser loginUser) {
+        CustomExceptionHandler.checkOrThrow(bindingResult);
+
         UserResponseDto userResponseDto = userService.update(updateUserRequestDto, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
