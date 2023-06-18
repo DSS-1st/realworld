@@ -8,7 +8,7 @@
 * 오픈 소스 [RealWorld Backend API 사양](https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints) 준수  
 
 ### 담당 영역
-* [올찬](https://github.com/a11chan): Article, Tag, Exception, Authentication, [프로젝트 대시보드]((https://www.notion.so/allchan/RealWorld-384b3d9131c64a28a43619ff02de17e3?pvs=4))
+* [올찬](https://github.com/a11chan): Article, Tag, 예외 처리, 인증, DB 모델링, [프로젝트 대시보드](https://www.notion.so/allchan/RealWorld-384b3d9131c64a28a43619ff02de17e3?pvs=4)
 * [풀바셋](https://github.com/sdongpil): User, Profile, Comment
 
 ### 실무자 4명의 PR 리뷰 적용  
@@ -44,9 +44,9 @@
     * 조회 결과를 페이징할 수 있어야 함(기본값: 1페이지당 게시글 20개)
     * 로그인 여부에 따라 게시글 좋아요, 작성자 팔로우 여부가 다르게 표시되어야 함
   * 해결 과정
-    * 검색조건과 연결된 테이블은 총 4가지(article_tag, tag, article_users, users)이며 article을 driving table로 left join 하여 검색 결과에 해당하는 article이 조회되도록 구현[(해당 코드)](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/resources/mapper/ArticleRepository.xml#L53-L75)
-    * 위에서 얻은 article 목록을 태그, 팔로우, 좋아요 정보와 결합[(해당 코드)](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L56-L65)
-    * 결합한 데이터를 API 응답 형식에 맞게 DTO로 반환[(해당 코드)](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L41-L50)
+    * 검색조건과 연결된 테이블은 총 4가지(article_tag, tag, article_users, users)이며 article을 driving table로 left join 하여 검색 결과에 해당하는 article이 조회되도록 구현([해당 코드](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/resources/mapper/ArticleRepository.xml#L53-L75))
+    * 위에서 얻은 article 목록을 태그, 팔로우, 좋아요 정보와 결합([해당 코드](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L56-L65))
+    * 결합한 데이터를 API 응답 형식에 맞게 DTO로 반환([해당 코드](https://github.com/DSS-1st/realworld/blob/53c69ea03482d9d39b54ddc4e1aa78376114a354/src/main/java/com/dss/realworld/article/app/ArticleServiceImpl.java#L41-L50))
     * 검색 결과가 없으면 빈 객체를 반환, 있으면 stream을 통해 domain 계층의 데이터를 DTO 객체로 변환
 
 ### 사용 기술
