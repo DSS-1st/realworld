@@ -6,6 +6,7 @@ import com.dss.realworld.comment.api.dto.CommentDto;
 import com.dss.realworld.comment.api.dto.CommentListResponseDto;
 import com.dss.realworld.comment.app.CommentService;
 import com.dss.realworld.common.auth.LoginUser;
+import com.dss.realworld.common.error.CustomExceptionHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,8 @@ public class CommentController {
     public ResponseEntity<AddCommentResponseDto> add(@RequestBody @Valid final AddCommentRequestDto addCommentRequestDto, final BindingResult bindingResult,
                                                      @AuthenticationPrincipal final LoginUser loginUser,
                                                      @PathVariable final String slug) {
+        CustomExceptionHandler.checkOrThrow(bindingResult);
+
         AddCommentResponseDto addCommentResponseDto = commentService.add(addCommentRequestDto, loginUser.getUser().getId(), slug);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addCommentResponseDto);

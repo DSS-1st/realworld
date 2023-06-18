@@ -6,6 +6,7 @@ import com.dss.realworld.article.api.dto.CreateArticleRequestDto;
 import com.dss.realworld.article.api.dto.UpdateArticleRequestDto;
 import com.dss.realworld.article.app.ArticleService;
 import com.dss.realworld.common.auth.LoginUser;
+import com.dss.realworld.common.error.CustomExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,8 @@ public class ArticleController {
     public ResponseEntity<ArticleResponseDto> create(@RequestBody @Valid final CreateArticleRequestDto createArticleRequestDto,
                                                      final BindingResult bindingResult,
                                                      @AuthenticationPrincipal final LoginUser loginUser) {
+        CustomExceptionHandler.checkOrThrow(bindingResult);
+
         ArticleResponseDto articleResponseDto = articleService.save(createArticleRequestDto, loginUser.getUser().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
@@ -69,6 +72,8 @@ public class ArticleController {
                                                      final BindingResult bindingResult,
                                                      @PathVariable final String slug,
                                                      @AuthenticationPrincipal final LoginUser loginUser) {
+        CustomExceptionHandler.checkOrThrow(bindingResult);
+
         ArticleResponseDto articleResponseDto = articleService.update(updateArticleRequestDto, loginUser.getUser().getId(), slug);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(articleResponseDto);
