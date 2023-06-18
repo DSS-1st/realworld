@@ -149,7 +149,7 @@ public class ArticleServiceImpl implements ArticleService {
         return getArticleResponseDto(article, loginId);
     }
 
-    private static Set<Tag> getTagSet(final CreateArticleRequestDto createArticleRequestDto) {
+    private Set<Tag> getTagSet(final CreateArticleRequestDto createArticleRequestDto) {
         return createArticleRequestDto.getTagList().stream()
                 .map(Tag::new)
                 .collect(Collectors.toSet());
