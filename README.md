@@ -86,6 +86,6 @@
   * 실행 후 터미널에서 `Ctrl + C` 입력하여 종료 가능
 
 ### 참고 문서
-* [프로젝트 회고](https://allchan.notion.site/81350cdeaf984dbcbe397087f73b9385?pvs=4)
-* [프로젝트 대시보드](https://allchan.notion.site/RealWorld-384b3d9131c64a28a43619ff02de17e3?pvs=4)
+* 프로젝트 회고: https://bit.ly/3Jodl1I
+* 프로젝트 대시보드: https://bit.ly/3JkAzpr
   * 작업현황, 개발수칙, 트러블 슈팅, 참고 자료, 모임 내용 정리
