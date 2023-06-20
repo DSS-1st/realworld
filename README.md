@@ -8,10 +8,10 @@
 * 오픈 소스 [RealWorld Backend API 사양](https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints) 준수  
 
 ### 담당 영역
-* [올찬](https://github.com/a11chan): Article, Tag, 예외 처리, 인증, DB 모델링, [프로젝트 대시보드](https://www.notion.so/allchan/RealWorld-384b3d9131c64a28a43619ff02de17e3?pvs=4)
+* [올찬](https://github.com/a11chan): Article, Tag, 예외 처리, 인증, DB 모델링
 * [풀바셋](https://github.com/sdongpil): User, Profile, Comment
 
-### 실무자 4명의 PR 리뷰 적용  
+### 실무자 4명의 코드 리뷰 적용  
 * User API
   * [Step-1](https://github.com/DSS-1st/realworld/pull/2), [Step-2](https://github.com/DSS-1st/realworld/pull/3), [Step-3](https://github.com/DSS-1st/realworld/pull/4), [Step-4](https://github.com/DSS-1st/realworld/pull/5), [Step-5](https://github.com/DSS-1st/realworld/pull/30)
 * Article API
