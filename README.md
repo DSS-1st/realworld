@@ -85,7 +85,7 @@
   * `http://localhost:8080/` 을 호스트 주소로 하여 [API Endpoints](https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints) 사용 가능
   * 실행 후 터미널에서 `Ctrl + C` 입력하여 종료 가능
 
-### Notion 링크
+### 참고 문서
 * [프로젝트 회고](https://allchan.notion.site/81350cdeaf984dbcbe397087f73b9385?pvs=4)
-* [트러블 슈팅](https://www.notion.so/allchan/74c8db21df554b30b07b70793a424dc9?v=fef94141df5144af94e6e8cae923e8bf&pvs=4)
-* [Git Convention](https://allchan.notion.site/Git-Convention-1c5a5b669ab04216990db3ca4e9553e6?pvs=4)
+* [프로젝트 대시보드](https://allchan.notion.site/RealWorld-384b3d9131c64a28a43619ff02de17e3?pvs=4)
+  * 작업현황, 개발수칙, 트러블 슈팅, 참고 자료, 모임 내용 정리
