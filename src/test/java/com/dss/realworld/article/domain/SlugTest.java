@@ -1,8 +1,9 @@
 package com.dss.realworld.article.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SlugTest {
 
@@ -18,7 +19,7 @@ public class SlugTest {
         System.out.println("value = " + value);
 
         //then
-        Assertions.assertThat(value).isEqualTo("abc--------------------------def-1");
+        assertThat(value).isEqualTo("abc--------------------------def-1");
     }
 
     @DisplayName(value = "정규 표현식 퍼센트 인코딩 문자 변경 확인(역순)")
@@ -33,7 +34,7 @@ public class SlugTest {
         System.out.println("value = " + value);
 
         //then
-        Assertions.assertThat(value).isEqualTo("abc--------------------------def-10");
+        assertThat(value).isEqualTo("abc--------------------------def-10");
     }
 
     @DisplayName(value = "정규 표현식 퍼센트 인코딩 문자 변경 확인(단어 사이)")
@@ -48,6 +49,6 @@ public class SlugTest {
         System.out.println("value = " + value);
 
         //then
-        Assertions.assertThat(value).isEqualTo("abc-a-b-c-d-e-f-g-h-i-j-k-l-m-n-o-p-1-2-3-4-5-6-7-def-10");
+        assertThat(value).isEqualTo("abc-a-b-c-d-e-f-g-h-i-j-k-l-m-n-o-p-1-2-3-4-5-6-7-def-10");
     }
 }
