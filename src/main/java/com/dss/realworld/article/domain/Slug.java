@@ -9,7 +9,7 @@ public final class Slug {
     private final String value;
 
     private Slug(final String title, final Long articleId) {
-        this.value = title.trim().toLowerCase().replaceAll("[\\&|[\\uFE30-\\uFFA0]|\\’|\\”|\\s\\?\\,\\.]+", "-") + '-' + articleId;
+        this.value = title.trim().toLowerCase().replaceAll("[:/?#\\[\\]@!$&'\"`()*+,.;=%\\s]", "-") + '-' + articleId;
     }
 
     public static Slug of(final String title, final Long articleId) {
