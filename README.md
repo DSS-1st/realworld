@@ -19,6 +19,38 @@
 * Comment API
   * [⭐Step-1](https://github.com/DSS-1st/realworld/pull/11), [Step-2](https://github.com/DSS-1st/realworld/pull/34)
 
+### 트러블슈팅
+
+<details>
+<summary>Testcontainers를 통한 멱등성 있는 테스트 환경 구축</summary>
+<div markdown="1">
+
+* 이슈: 다른 사람이 프로젝트를 내려 받아 테스트 코드를 실행하면, DB 관련 테스트는 전부 실패
+* 원인: 테스트 환경과 동일한 DB를 다른 로컬 환경에서 자동으로 구성하도록 구현하지 못함
+* 해결 과정
+  * [코드 리뷰](https://github.com/DSS-1st/realworld/pull/9#issuecomment-1530553357)를 통해 힌트를 얻어 Testcontainers 라이브러리를 적용하여 테스트 시 자동으로 DB를 구축하는 데에 성공했지만, 테스트 클래스마다 Docker 컨테이너가 실행되고 종료되어 테스트가 지연
+  * 모든 테스트가 종료될 때까지 컨테이너를 재사용할 수 있는 방법이 필요하여 Testcontainers 공식 문서와 여러 기술 블로그 확인 결과, application.yml 파일에서 데이터 소스를 Testcontainers로 지정하면 재사용할 수 있음을 확인
+  * 개발 환경과 테스트 환경의 DB 설정을 분리하여 application.yml 파일을 작성하고 @ActiveProfiles를 통해 테스트 코드에 적용
+* 결과: 컨테이너를 재사용하도록 최적화하여 테스트 소요 시간을 1/3로 축소, 다른 환경에서 모든 테스트가 통과됨을 확인, 이를 통해 다른 사람이 쉽고 빠르게 애플리케이션이 어떻게 동작하는지 파악 가능
+
+</div>
+</details>
+
+<details>
+<summary>@JsonTypeInfo 사용으로 DTO 구조 단순화</summary>
+<div markdown="1">
+
+* 이슈: API 요청/응답에 사용되는 DTO 내부의 이너 클래스 사용으로 코드 복잡도 증가
+* 원인: API Spec에 맞게 JSON 데이터 이름을 정하려면 DTO 내부에 이너 클래스 생성 필요
+* 해결 과정
+  * @JsonRootName을 통해 이너 클래스 없이 JSON 데이터 이름을 지정할 수 있도록 개선
+  * 하지만 @JsonRootName이 필요 없는 경우에도 적용되어 API Spec 위반 사례 발생
+  * 일부 DTO만 적용될 수 있도록 @JsonTypeInfo, @JsonTypeName을 함께 사용하여 @JsonRootName 대체
+* 결과: DTO 구조 단순화 및 코드 가독성 개선
+
+</div>
+</details>
+
 ### ERD
   ![ERD_realworld.png](src%2Fmain%2Fresources%2Fdb%2FERD_realworld.png)
 
